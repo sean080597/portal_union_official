@@ -30,19 +30,20 @@ class Student extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function relations(){
-        return $this->belongsToMany('App\Relation');
+    public function events(){
+        return $this->belongsToMany('App\Event', 'student_events');
     }
 
-    public function events(){
-        return $this->belongsToMany('App\Event');
+    public function relations()
+    {
+        return $this->belongsToMany('App\Relation', 'student_relations');
     }
 
     public function criteria_mandatories(){
-        return $this->belongsToMany('App\CriteriaMandatory');
+        return $this->belongsToMany('App\CriteriaMandatory', 'student_criteria_mandatories');
     }
 
     public function criteria_selfregis(){
-        return $this->belongsToMany('App\CriteriaSelfregis');
+        return $this->belongsToMany('App\CriteriaSelfregis', 'student_criteria_selregis');
     }
 }

@@ -1,5 +1,8 @@
 <?php
-
+use App\Faculty;
+use App\ClassRoom;
+use App\Student;
+use App\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

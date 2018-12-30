@@ -19,18 +19,6 @@ class Faculty extends Model
         return $this->hasMany('App\ClassRoom');
     }
 
-    public function secretary(){
-        return $this->belongsTo('App\User');
-    }
-
-    public function deputySecretary1(){
-        return $this->belongsTo('App\User');
-    }
-
-    public function deputySecretary2(){
-        return $this->belongsTo('App\User');
-    }
-	
 	public function students()
     {
         return $this->hasManyThrough(
@@ -41,5 +29,17 @@ class Faculty extends Model
             'id', // Local key on faculties table...
             'id' // Local key on classrooms table...
         );
+    }
+
+    public function secretary(){
+        return User::with('student')->where('id', $this->uid_secretary)->first();
+    }
+
+    public function deputy_secretary_1(){
+        return User::where('id', $this->uid_deputysecre1)->first();
+    }
+
+    public function deputy_secretary_2(){
+        return User::where('id', $this->uid_deputysecre2)->first();
     }
 }

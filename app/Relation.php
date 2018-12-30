@@ -14,7 +14,8 @@ class Relation extends Model
         'role'
     ];
 
-    public function students(){
-        return $this->belongsToMany('App\Student');
+    public function students()
+    {
+        return $this->belongsToMany('App\Student', 'student_relations');
     }
 }
