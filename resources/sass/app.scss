@@ -18,3 +18,41 @@
 @import "_sidebar.scss";
 @import "_navbar.scss";
 @import "_footer.scss";
+@import "_note.scss";
+@import "_table.scss";
+.info-section{
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem;
+    line-height: 1.8rem;
+    border-bottom: 1px dashed #d1c9bf;
+    border-left: 1px solid #d1c9bf;
+    border-right: 1px solid #d1c9bf;
+}
+.task, .message{
+    display: block;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+.message-item{
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    textarea{
+        border: none;
+        background-color: #fff !important;
+    }
+    label{
+        font-weight: bold;
+    }
+}
+table thead tr th{
+    font-weight: 500;
+}
+table tbody tr th{
+    font-weight: 100 !important;
+    a{
+        color:#3276b1;
+    }
+}

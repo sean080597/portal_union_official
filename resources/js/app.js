@@ -5,9 +5,25 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+// require('./bootstrap');
 
 window.Vue = require('vue');
+
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+let routes = [
+    { path: '/', component: require('./components/Dashboard.vue').default },
+    { path: '/faculties-admin', component: require('./components/FacultiesAdmin.vue').default },
+    { path: '/faculties', component: require('./components/FacultiesClient.vue').default },
+    { path: '/classrooms', component: require('./components/ClassRoomsClient.vue').default },
+    { path: '/students', component: require('./components/StudentsClient.vue').default },
+    { path: '/student-profile', component: require('./components/StudentProfileClient.vue').default },
+]
+
+const router = new VueRouter({
+    routes // short for `routes: routes`
+})
 
 /**
  * The following block of code may be used to automatically register your
@@ -29,5 +45,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router
 });

@@ -47,7 +47,7 @@
             </div>
         </nav><!-- End navbar -->
 
-        <section class="wrapper">
+        <section class="wrapper" id="app">
             <nav id="sidebar">
                 <section class="sidebar-header d-flex flex-column align-items-center">
                     <div class="wrap-avatar">
@@ -57,15 +57,27 @@
                 </section>
                 <ul class="list-unstyled components" id="test">
                     <li class="active">
-                        <a href="/">Trang Chủ</a>
+                        <router-link to="/">Trang Chủ</>
                     </li>
+                    @if (auth()->user()->role_id == 'adm')
+                    <li>
+                        <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
+                        <ul class="collapse list-unstyled" id="quan-ly-admin">
+                            <li><a href="#">Đoàn viên</a></li>
+                            <li><a href="#">Lớp</a></li>
+                            <li><router-link to="/faculties-admin">Khoa</router-link></li>
+                            <li><a href="#">Tài khoản</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Thống Kê</a></li>
+                    @endif
                     <li>
                         <a href="#thong-tin-dv" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Thông tin đoàn viên</a>
                         <ul class="collapse list-unstyled" id="thong-tin-dv">
-                            <li><a href="ThongTin.html">Thông tin cá nhân</a></li>
-                            <li><a href="ThongTinLop.html">Thông tin lớp</a></li>
-                            <li><a href="ThongTinKhoa.html">Thông tin khoa</a></li>
-                            <li><a href="ThongTinTruong.html">Thông tin trường</a></li>
+                            <li><router-link to="/student-profile">Thông tin cá nhân</></li>
+                            <li><router-link to="/students">Thông tin lớp</></li>
+                            <li><router-link to="/classrooms">Thông tin khoa</router-link></li>
+                            <li><router-link to="/faculties">Thông tin trường</router-link></li>
                         </ul>
                     </li>
                     <li>
@@ -73,10 +85,10 @@
                             ĐG đoàn viên
                         </a>
                         <ul class="collapse list-unstyled" id="ql-dv">
-                            <li><a href="QLTong.html">ĐG cá nhân</a></li>
-                            <li><a href="QLTongLop.html">Lớp quản lý</a></li>
-                            <li><a href="QLTongKhoa.html">Khoa quản lý</a></li>
-                            <li><a href="QLTongTruong.html">Trường quản lý</a></li>
+                            <li><a href="#">ĐG cá nhân</a></li>
+                            <li><a href="#">Lớp quản lý</a></li>
+                            <li><a href="#">Khoa quản lý</a></li>
+                            <li><a href="#">Trường quản lý</a></li>
                         </ul>
                     </li>
                     <li><a href="#">Hỗ trợ</a></li>
@@ -102,7 +114,8 @@
                 <section class="main-content"><!-- Main content -->
 
 <!---------------------------------------------------------------------------------------------------------->
-                    @yield('content')
+                    {{-- @yield('content') --}}
+                    <router-view></router-view>
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                 </section><!-- End main content -->
@@ -113,10 +126,11 @@
         </section>
     </section>
     <!-- Bootstrap core JavaScript-->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous" defer></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous" defer></script>
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('theme/JS/javascript.js') }}" async></script>
-    @yield('link_js')
+    {{-- @yield('link_js') --}}
 </body>
 </html>

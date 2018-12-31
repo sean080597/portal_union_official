@@ -1,10 +1,4 @@
-@extends('layouts.app')
-
-@section('link_css')
-
-@endsection
-
-@section('content')
+<template>
 <div class="wrapper d-flex flex-column">
     <section class="task">
         <h5><i class="fas fa-tasks"></i>Công việc cần làm<span class="badge badge-primary">1</span></h5>
@@ -98,4 +92,4 @@
         </section>
     </section>
 </div>
-@endsection
+</template>
