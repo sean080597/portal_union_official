@@ -11,7 +11,7 @@
 
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @yield('link_css')
+    {{-- @yield('link_css') --}}
 </head>
 <body>
     <section class="container-fluid">
@@ -116,6 +116,7 @@
 <!---------------------------------------------------------------------------------------------------------->
                     {{-- @yield('content') --}}
                     <router-view></router-view>
+                    <vue-progress-bar></vue-progress-bar>
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                 </section><!-- End main content -->

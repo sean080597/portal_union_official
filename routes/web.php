@@ -17,3 +17,7 @@ use App\User;
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+//handle hashbang in VueJS
+Route::any('/{all}', function () {
+    return view('layouts.app');
+})->where(['all' => '.*']);

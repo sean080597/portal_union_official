@@ -9,8 +9,37 @@
 
 window.Vue = require('vue');
 
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
+window.Fire = new Vue();
+
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+const toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+window.toast = toast;
+
+import VueProgressBar from 'vue-progressbar';
+Vue.use(VueProgressBar, {
+    color: '#0063ae',
+    failedColor: 'red',
+    thickness: '5px',
+})
+
+import moment from 'moment';
+
+import axios from 'axios';
+window.axios = axios;
+
+import { Form, HasError, AlertError } from 'vform';
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+window.Form = Form;
+
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
 
 let routes = [
     { path: '/', component: require('./components/Dashboard.vue').default },
@@ -19,11 +48,21 @@ let routes = [
     { path: '/classrooms', component: require('./components/ClassRoomsClient.vue').default },
     { path: '/students', component: require('./components/StudentsClient.vue').default },
     { path: '/student-profile', component: require('./components/StudentProfileClient.vue').default },
-]
+];
 
 const router = new VueRouter({
+    mode: 'history',
+    hash: false,
     routes // short for `routes: routes`
-})
+});
+
+Vue.filter('upText', function (text) {
+    return text.toUpperCase();
+});
+
+Vue.filter('myDate', function(created){
+    return moment(created).format('MMMM Do YYYY');
+});
 
 /**
  * The following block of code may be used to automatically register your
