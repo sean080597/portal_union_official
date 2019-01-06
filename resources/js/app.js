@@ -51,8 +51,9 @@ let routes = [
 ];
 
 const router = new VueRouter({
-    mode: 'history',
-    hash: false,
+    mode: 'history', //removes # (hashtag) from url
+    base: '/',
+    fallback: true, //router should fallback to hash (#) mode when the browser does not support history.pushState
     routes // short for `routes: routes`
 });
 
