@@ -15,7 +15,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router';
 import {routes} from './routes';
-import StoreData from './store';
 import { Form, HasError, AlertError } from 'vform';
 import VueProgressBar from 'vue-progressbar';
 import Swal from 'sweetalert2';
@@ -26,7 +25,6 @@ import moment from 'moment';
 Vue.use(VueRouter);
 Vue.use(Vuex)
 
-const store = new Vuex.Store(StoreData);
 //vue form
 Vue.component(HasError.name, HasError);
 Vue.component(AlertError.name, AlertError);
@@ -83,6 +81,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
-    store,
     router
 });
