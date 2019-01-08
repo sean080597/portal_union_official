@@ -5,13 +5,39 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-// require('./bootstrap');
+require('./bootstrap');
 
 window.Vue = require('vue');
 
 window.Fire = new Vue();
 
+import Vue from 'vue'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router';
+import {routes} from './routes';
+import StoreData from './store';
+import { Form, HasError, AlertError } from 'vform';
+import VueProgressBar from 'vue-progressbar';
 import Swal from 'sweetalert2';
+//moment js
+import moment from 'moment';
+
+//vueX & vueRouter
+Vue.use(VueRouter);
+Vue.use(Vuex)
+
+const store = new Vuex.Store(StoreData);
+//vue form
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+window.Form = Form;
+//vue progressbar
+Vue.use(VueProgressBar, {
+    color: '#0063ae',
+    failedColor: 'red',
+    thickness: '5px',
+})
+//Sweet Alert 2
 window.Swal = Swal;
 const toast = Swal.mixin({
     toast: true,
@@ -20,35 +46,6 @@ const toast = Swal.mixin({
     timer: 3000
 });
 window.toast = toast;
-
-import VueProgressBar from 'vue-progressbar';
-Vue.use(VueProgressBar, {
-    color: '#0063ae',
-    failedColor: 'red',
-    thickness: '5px',
-})
-
-import moment from 'moment';
-
-import axios from 'axios';
-window.axios = axios;
-
-import { Form, HasError, AlertError } from 'vform';
-Vue.component(HasError.name, HasError);
-Vue.component(AlertError.name, AlertError);
-window.Form = Form;
-
-import VueRouter from 'vue-router';
-Vue.use(VueRouter);
-
-let routes = [
-    { path: '/', component: require('./components/Dashboard.vue').default },
-    { path: '/faculties-admin', component: require('./components/FacultiesAdmin.vue').default },
-    { path: '/faculties', component: require('./components/FacultiesClient.vue').default },
-    { path: '/classrooms', component: require('./components/ClassRoomsClient.vue').default },
-    { path: '/students', component: require('./components/StudentsClient.vue').default },
-    { path: '/student-profile', component: require('./components/StudentProfileClient.vue').default },
-];
 
 const router = new VueRouter({
     mode: 'history', //removes # (hashtag) from url
@@ -86,5 +83,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    store,
     router
 });
