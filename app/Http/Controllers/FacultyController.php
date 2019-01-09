@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class FacultyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,7 @@ class FacultyController extends Controller
      */
     public function index()
     {
-        //
+        return Faculty::orderBy('name', 'ASC')->paginate(10);
     }
 
     /**
@@ -35,7 +39,17 @@ class FacultyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'id' => 'required|string|max:4|unique:faculties',
+            'name' => 'required|string|max:50',
+            'note' => 'max:20',
+        ]);
+
+        return Faculty::create([
+            'id' => $request['id'],
+            'name' => $request['name'],
+            'note' => $request['note'],
+        ]);
     }
 
     /**
@@ -67,9 +81,17 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Faculty $faculty)
+    public function update(Request $request, $idToUpdate)
     {
-        //
+        $fa = Faculty::findOrfail($idToUpdate);
+        //unique faculty_id --> no space
+        $this->validate($request, [
+            'id' => 'required|string|max:4|unique:faculties,id,'.$fa->id,
+            'name' => 'required|string|max:50',
+            'note' => 'max:20',
+        ]);
+        $fa->update($request->all());
+        return ['message' => 'Updated Faculty'];
     }
 
     /**
@@ -78,8 +100,9 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Faculty $faculty)
+    public function destroy($faculty_id)
     {
-        //
+        Faculty::findOrfail($faculty_id)->delete();
+        return ['message' => 'Deleted Faculty'];
     }
 }

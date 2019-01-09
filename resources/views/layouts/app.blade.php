@@ -64,7 +64,7 @@
                         <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
                         <ul class="collapse list-unstyled" id="quan-ly-admin">
                             <li><a href="#">Đoàn viên</a></li>
-                            <li><a href="#">Lớp</a></li>
+                            <li><router-link to="/classrooms-admin">Lớp</router-link></li>
                             <li><router-link to="/faculties-admin">Khoa</router-link></li>
                             <li><a href="#">Tài khoản</a></li>
                         </ul>

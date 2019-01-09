@@ -1754,6 +1754,361 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ClassRoomsAdmin.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ClassRoomsAdmin.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      editMode: true,
+      classrooms: {},
+      faculties: {},
+      selected_faculty_id: '',
+      form: new Form({
+        idToUpdate: '',
+        id: '',
+        faculty_id: ''
+      })
+    };
+  },
+  methods: {
+    loadClassrooms: function loadClassrooms() {
+      var _this = this;
+
+      this.$Progress.start();
+      axios.get('api/classroom_admin').then(function (_ref) {
+        var data = _ref.data;
+        return _this.classrooms = data.data;
+      });
+      axios.get('api/faculty_admin').then(function (_ref2) {
+        var data = _ref2.data;
+        return _this.faculties = data.data;
+      });
+      this.$Progress.finish();
+    },
+    newModal: function newModal() {
+      this.editMode = false;
+      this.form.reset();
+      $('#modalClassRoomAdmin').modal('show');
+    },
+    editModal: function editModal(classroom) {
+      this.editMode = true;
+      this.form.reset();
+      $('#modalClassRoomAdmin').modal('show');
+      this.form.fill(classroom);
+      this.form.idToUpdate = classroom.id;
+      this.form.selected_faculty_id = classroom.faculty_id;
+    },
+    createClassRoom: function createClassRoom() {
+      this.$Progress.start();
+      this.form.post('api/classroom_admin').then(function () {
+        //set event to reload faculties
+        Fire.$emit('ReloadClassRoom');
+        $('#modalClassRoomAdmin').modal('hide');
+        toast({
+          type: 'success',
+          title: 'Tạo lớp thành công'
+        });
+      }).catch(function () {
+        swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+      });
+      this.$Progress.finish();
+    },
+    deleteClassRoom: function deleteClassRoom(classroom_id) {
+      var _this2 = this;
+
+      Swal({
+        title: 'Bạn có chắc chắn muốn xóa?',
+        text: "Bạn sẽ không thể hoàn lại dữ liệu này!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xóa!'
+      }).then(function (result) {
+        if (result.value) {
+          //send request to server
+          _this2.form.delete('api/classroom_admin/' + classroom_id).then(function () {
+            //set event to reload faculties
+            Fire.$emit('ReloadClassRoom');
+
+            if (result.value) {
+              Swal('Đã xóa!', 'Đã xóa lớp thành công.', 'success');
+            }
+          }).catch(function () {
+            swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+          });
+        }
+      });
+    },
+    updateClassRoom: function updateClassRoom() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.put('api/classroom_admin/' + this.form.idToUpdate).then(function () {
+        $('#modalClassRoomAdmin').modal('hide');
+        toast({
+          type: 'success',
+          title: 'Sửa lớp thành công'
+        }); //set event to reload faculties
+
+        Fire.$emit('ReloadClassRoom');
+
+        _this3.$Progress.finish();
+      }).catch(function () {
+        _this3.$Progress.fail();
+      });
+    }
+  },
+  created: function created() {
+    var _this4 = this;
+
+    this.loadClassrooms();
+    Fire.$on('ReloadClassRoom', function () {
+      _this4.loadClassrooms();
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Dashboard.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Dashboard.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'home',
+  computed: {
+    welcome: function welcome() {
+      return this.$store.getters.welcome;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -1940,7 +2295,8 @@ __webpack_require__.r(__webpack_exports__);
           type: 'success',
           title: 'Tạo khoa thành công'
         });
-      }).catch(function () {//show error or sth
+      }).catch(function () {
+        swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
       });
       this.$Progress.finish();
     },
@@ -40639,6 +40995,576 @@ var AlertSuccess_Component = normalizeComponent(
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wrap-table" }, [
+    _c("div", { staticClass: "row" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._m(1),
+      _vm._v(" "),
+      _vm._m(2),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-9 mb-2" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-success mb-2",
+            attrs: { href: "#" },
+            on: { click: _vm.newModal }
+          },
+          [_c("i", { staticClass: "fas fa-plus-circle" }), _vm._v(" Thêm Lớp")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "table-responsive" }, [
+      _c(
+        "table",
+        {
+          staticClass: "table table-striped table-hover table-bordered",
+          attrs: { id: "table" }
+        },
+        [
+          _vm._m(3),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.classrooms, function(classroom, index) {
+              return _c("tr", { key: classroom.id }, [
+                _vm._m(4, true),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(index + 1))
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(_vm._f("upText")(classroom.id)))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(_vm._s(classroom.faculty.name) + " "),
+                  classroom.faculty.note !== null
+                    ? _c("span", [
+                        _vm._v("/ " + _vm._s(classroom.faculty.note))
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-center" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "text-primary",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.editModal(classroom)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-user-edit" })]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "text-center" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "text-danger",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.deleteClassRoom(classroom.id)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-trash-alt" })]
+                  )
+                ])
+              ])
+            }),
+            0
+          )
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modalClassRoomAdmin",
+          tabindex: "-1",
+          role: "dialog",
+          "data-backdrop": "static",
+          "data-keyboard": "false",
+          "aria-label": "modalClassRoomAdmin",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-md modal-dialog-centered" },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h4",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.editMode,
+                        expression: "!editMode"
+                      }
+                    ],
+                    staticClass: "modal-title"
+                  },
+                  [_vm._v("Tạo mới")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "h4",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.editMode,
+                        expression: "editMode"
+                      }
+                    ],
+                    staticClass: "modal-title"
+                  },
+                  [_vm._v("Sửa lớp")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("×")]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.editMode
+                        ? _vm.updateClassRoom()
+                        : _vm.createClassRoom()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.id,
+                              expression: "form.id"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("id") },
+                          attrs: {
+                            type: "text",
+                            name: "id",
+                            placeholder: "Tên lớp"
+                          },
+                          domProps: { value: _vm.form.id },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "id", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "id" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    !_vm.editMode
+                      ? _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.faculty_id,
+                                    expression: "form.faculty_id"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has(
+                                    "faculty_id"
+                                  )
+                                },
+                                attrs: { name: "faculty_id", id: "faculty_id" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.form,
+                                      "faculty_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  {
+                                    attrs: {
+                                      value: "0",
+                                      disabled: "",
+                                      selected: ""
+                                    }
+                                  },
+                                  [_vm._v("=== Chọn Khoa / Viện ===")]
+                                ),
+                                _vm._v(" "),
+                                _vm._l(_vm.faculties, function(faculty, index) {
+                                  return _c(
+                                    "option",
+                                    {
+                                      key: index,
+                                      domProps: { value: faculty.id }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(faculty.name) +
+                                          " "
+                                      ),
+                                      faculty.note !== null
+                                        ? _c("span", [
+                                            _vm._v("/ " + _vm._s(faculty.note))
+                                          ])
+                                        : _vm._e()
+                                    ]
+                                  )
+                                })
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c("has-error", {
+                              attrs: { form: _vm.form, field: "faculty_id" }
+                            })
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editMode
+                      ? _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.faculty_id,
+                                    expression: "form.faculty_id"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has(
+                                    "faculty_id"
+                                  )
+                                },
+                                attrs: { name: "faculty_id", id: "faculty_id" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.form,
+                                      "faculty_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  {
+                                    attrs: {
+                                      value: "0",
+                                      disabled: "",
+                                      selected: ""
+                                    }
+                                  },
+                                  [_vm._v("=== Chọn Khoa / Viện ===")]
+                                ),
+                                _vm._v(" "),
+                                _vm._l(_vm.faculties, function(faculty, index) {
+                                  return _c(
+                                    "option",
+                                    {
+                                      key: index,
+                                      domProps: {
+                                        value: faculty.id,
+                                        selected:
+                                          faculty.id == _vm.selected_faculty_id
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(faculty.name) +
+                                          " "
+                                      ),
+                                      faculty.note !== null
+                                        ? _c("span", [
+                                            _vm._v("/ " + _vm._s(faculty.note))
+                                          ])
+                                        : _vm._e()
+                                    ]
+                                  )
+                                })
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c("has-error", {
+                              attrs: { form: _vm.form, field: "faculty_id" }
+                            })
+                          ],
+                          1
+                        )
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.editMode,
+                            expression: "!editMode"
+                          }
+                        ],
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Tạo")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.editMode,
+                            expression: "editMode"
+                          }
+                        ],
+                        staticClass: "btn btn-success",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Sửa")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("Close")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 mb-2" }, [
+      _c("div", { staticClass: "input-group" }, [
+        _c("div", { staticClass: "input-group-prepend" }, [
+          _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+            _vm._v("Lọc")
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            staticClass: "form-control",
+            attrs: { name: "state", id: "maxRows" }
+          },
+          [
+            _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "0", selected: "" } }, [
+              _vm._v("Tất cả")
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-9 mb-2" }, [
+      _c("div", { staticClass: "input-group" }, [
+        _c("div", { staticClass: "input-group-prepend" }, [
+          _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+            _vm._v("Tìm kiếm")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "text", id: "table-search" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-3 mb-2" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-secondary",
+            attrs: { type: "button", id: "select-all" }
+          },
+          [_vm._v("Chọn hết")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          { staticClass: "btn btn-danger", attrs: { type: "button" } },
+          [_vm._v("Xóa")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", { staticStyle: { width: "10px" } }),
+        _vm._v(" "),
+        _c(
+          "th",
+          { staticClass: "text-center", staticStyle: { width: "10px" } },
+          [_vm._v("STT")]
+        ),
+        _vm._v(" "),
+        _c("th", { staticClass: "width" }, [_vm._v("Lớp")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width" }, [_vm._v("Khoa")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center", attrs: { colspan: "2" } }, [
+          _vm._v("Tác vụ")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-center" }, [
+      _c("input", { attrs: { type: "checkbox" } })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ClassRoomsClient.vue?vue&type=template&id=ae5c8d94&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ClassRoomsClient.vue?vue&type=template&id=ae5c8d94& ***!
@@ -40701,266 +41627,269 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "wrapper d-flex flex-column" }, [
+    _c("h1", [_vm._v(_vm._s(_vm.welcome))]),
+    _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
+    _vm._m(1)
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wrapper d-flex flex-column" }, [
-      _c("section", { staticClass: "task" }, [
-        _c("h5", [
-          _c("i", { staticClass: "fas fa-tasks" }),
-          _vm._v("Công việc cần làm"),
-          _c("span", { staticClass: "badge badge-primary" }, [_vm._v("1")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-md-12" }, [
-            _c("div", { staticClass: "table-responsive-lg" }, [
-              _c(
-                "table",
-                {
-                  staticClass:
-                    "table table-bordered table-striped table-hover table-sm"
-                },
-                [
-                  _c("thead", { staticClass: "thead-dark" }, [
-                    _c("tr", [
+    return _c("section", { staticClass: "task" }, [
+      _c("h5", [
+        _c("i", { staticClass: "fas fa-tasks" }),
+        _vm._v("Công việc cần làm"),
+        _c("span", { staticClass: "badge badge-primary" }, [_vm._v("1")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-12" }, [
+          _c("div", { staticClass: "table-responsive-lg" }, [
+            _c(
+              "table",
+              {
+                staticClass:
+                  "table table-bordered table-striped table-hover table-sm"
+              },
+              [
+                _c("thead", { staticClass: "thead-dark" }, [
+                  _c("tr", [
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-center",
+                        staticStyle: { width: "80px" }
+                      },
+                      [_vm._v("STT")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-center",
+                        staticStyle: { "min-width": "160px" }
+                      },
+                      [_vm._v("Năm học")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-left",
+                        staticStyle: { "min-width": "330px" }
+                      },
+                      [_vm._v("Công việc")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "th",
+                      {
+                        staticClass: "text-center",
+                        staticStyle: { "min-width": "160px" }
+                      },
+                      [_vm._v("Tình trạng")]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tbody", [
+                  _c("tr", [
+                    _c("th", { staticClass: "text-center" }, [_vm._v("1")]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-center" }, [
+                      _vm._v("2015-2016")
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-left" }, [
+                      _c("a", { attrs: { href: "dashboard.html" } }, [
+                        _vm._v("Đóng tiền đoàn phí năm học 2015-2016")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-center" }, [
                       _c(
-                        "th",
-                        {
-                          staticClass: "text-center",
-                          staticStyle: { width: "80px" }
-                        },
-                        [_vm._v("STT")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-center",
-                          staticStyle: { "min-width": "160px" }
-                        },
-                        [_vm._v("Năm học")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-left",
-                          staticStyle: { "min-width": "330px" }
-                        },
-                        [_vm._v("Công việc")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "th",
-                        {
-                          staticClass: "text-center",
-                          staticStyle: { "min-width": "160px" }
-                        },
-                        [_vm._v("Tình trạng")]
+                        "span",
+                        { staticClass: "badge badge-pill badge-success" },
+                        [_vm._v("Xong")]
                       )
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("tbody", [
-                    _c("tr", [
-                      _c("th", { staticClass: "text-center" }, [_vm._v("1")]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-center" }, [
-                        _vm._v("2015-2016")
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-left" }, [
-                        _c("a", { attrs: { href: "dashboard.html" } }, [
-                          _vm._v("Đóng tiền đoàn phí năm học 2015-2016")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-center" }, [
-                        _c(
-                          "span",
-                          { staticClass: "badge badge-pill badge-success" },
-                          [_vm._v("Xong")]
-                        )
+                  _c("tr", [
+                    _c("th", { staticClass: "text-center" }, [_vm._v("2")]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-center" }, [
+                      _vm._v("2016-2017")
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-left" }, [
+                      _c("a", { attrs: { href: "dashboard.html" } }, [
+                        _vm._v("Đóng tiền đoàn phí năm học 2016-2017")
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("tr", [
-                      _c("th", { staticClass: "text-center" }, [_vm._v("2")]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-center" }, [
-                        _vm._v("2016-2017")
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-left" }, [
-                        _c("a", { attrs: { href: "dashboard.html" } }, [
-                          _vm._v("Đóng tiền đoàn phí năm học 2016-2017")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-center" }, [
-                        _c(
-                          "span",
-                          { staticClass: "badge badge-pill badge-success" },
-                          [_vm._v("Xong")]
-                        )
+                    _c("th", { staticClass: "text-center" }, [
+                      _c(
+                        "span",
+                        { staticClass: "badge badge-pill badge-success" },
+                        [_vm._v("Xong")]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("th", { staticClass: "text-center" }, [_vm._v("3")]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-center" }, [
+                      _vm._v("2017-2018")
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-left" }, [
+                      _c("a", { attrs: { href: "dashboard.html" } }, [
+                        _vm._v("Đóng tiền đoàn phí năm học 2017-2018")
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("tr", [
-                      _c("th", { staticClass: "text-center" }, [_vm._v("3")]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-center" }, [
-                        _vm._v("2017-2018")
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-left" }, [
-                        _c("a", { attrs: { href: "dashboard.html" } }, [
-                          _vm._v("Đóng tiền đoàn phí năm học 2017-2018")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "text-center" }, [
-                        _c(
-                          "span",
-                          { staticClass: "badge badge-pill badge-warning" },
-                          [_vm._v("Chưa")]
-                        )
-                      ])
+                    _c("th", { staticClass: "text-center" }, [
+                      _c(
+                        "span",
+                        { staticClass: "badge badge-pill badge-warning" },
+                        [_vm._v("Chưa")]
+                      )
                     ])
                   ])
-                ]
-              )
-            ])
+                ])
+              ]
+            )
           ])
         ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("section", { staticClass: "message" }, [
+      _c("h5", [
+        _c("i", { staticClass: "fas fa-bullhorn" }),
+        _vm._v(" "),
+        _c("span", [_vm._v(" Thông báo")])
       ]),
       _vm._v(" "),
-      _c("section", { staticClass: "message" }, [
-        _c("h5", [
-          _c("i", { staticClass: "fas fa-bullhorn" }),
-          _vm._v(" "),
-          _c("span", [_vm._v(" Thông báo")])
-        ]),
-        _vm._v(" "),
-        _c("section", { staticClass: "wrapper d-flex flex-column" }, [
-          _c("article", { staticClass: "message-item" }, [
-            _c("form", { staticClass: "form-group", attrs: { action: "/" } }, [
-              _c("label", { attrs: { for: "title" } }, [_vm._v("Title")]),
-              _vm._v(" "),
-              _c(
-                "textarea",
-                {
-                  staticClass: "form-control",
-                  attrs: { name: "title", id: "title", rows: "5", disabled: "" }
-                },
-                [
-                  _vm._v(
-                    "\r\n                        HEllo<br>hello<br>Xem hướng dẫn\r\n                    "
-                  )
-                ]
-              )
-            ]),
+      _c("section", { staticClass: "wrapper d-flex flex-column" }, [
+        _c("article", { staticClass: "message-item" }, [
+          _c("form", { staticClass: "form-group", attrs: { action: "/" } }, [
+            _c("label", { attrs: { for: "title" } }, [_vm._v("Title")]),
             _vm._v(" "),
-            _c("ul", { staticClass: "row list-unstyled" }, [
-              _c("li", { staticClass: "col-md-3" }, [
-                _c(
-                  "div",
-                  { staticClass: "embed-responsive embed-responsive-16by9" },
-                  [
-                    _c("iframe", {
-                      staticClass: "embed-responsive-item",
-                      attrs: {
-                        src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
-                      }
-                    })
-                  ]
+            _c(
+              "textarea",
+              {
+                staticClass: "form-control",
+                attrs: { name: "title", id: "title", rows: "5", disabled: "" }
+              },
+              [
+                _vm._v(
+                  "\r\n                        HEllo<br>hello<br>Xem hướng dẫn\r\n                    "
                 )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "col-md-3" }, [
-                _c(
-                  "div",
-                  { staticClass: "embed-responsive embed-responsive-16by9" },
-                  [
-                    _c("iframe", {
-                      staticClass: "embed-responsive-item",
-                      attrs: {
-                        src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
-                      }
-                    })
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "col-md-3" }),
-              _vm._v(" "),
-              _c("li", { staticClass: "col-md-3" })
-            ])
+              ]
+            )
           ]),
           _vm._v(" "),
-          _c("article", { staticClass: "message-item" }, [
-            _c("form", { staticClass: "form-group", attrs: { action: "/" } }, [
-              _c("label", { attrs: { for: "title" } }, [_vm._v("Title")]),
-              _vm._v(" "),
+          _c("ul", { staticClass: "row list-unstyled" }, [
+            _c("li", { staticClass: "col-md-3" }, [
               _c(
-                "textarea",
-                {
-                  staticClass: "form-control",
-                  attrs: {
-                    name: "title",
-                    id: "title1",
-                    rows: "5",
-                    disabled: ""
-                  }
-                },
+                "div",
+                { staticClass: "embed-responsive embed-responsive-16by9" },
                 [
-                  _vm._v(
-                    "\r\n                            HEllo<br>hello<br>xem hướng dẫn\r\n                        "
-                  )
+                  _c("iframe", {
+                    staticClass: "embed-responsive-item",
+                    attrs: {
+                      src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
+                    }
+                  })
                 ]
               )
             ]),
             _vm._v(" "),
-            _c("ul", { staticClass: "row list-unstyled" }, [
-              _c("li", { staticClass: "col-md-3" }, [
-                _c(
-                  "div",
-                  { staticClass: "embed-responsive embed-responsive-16by9" },
-                  [
-                    _c("iframe", {
-                      staticClass: "embed-responsive-item",
-                      attrs: {
-                        src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
-                      }
-                    })
-                  ]
+            _c("li", { staticClass: "col-md-3" }, [
+              _c(
+                "div",
+                { staticClass: "embed-responsive embed-responsive-16by9" },
+                [
+                  _c("iframe", {
+                    staticClass: "embed-responsive-item",
+                    attrs: {
+                      src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
+                    }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "col-md-3" }),
+            _vm._v(" "),
+            _c("li", { staticClass: "col-md-3" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("article", { staticClass: "message-item" }, [
+          _c("form", { staticClass: "form-group", attrs: { action: "/" } }, [
+            _c("label", { attrs: { for: "title" } }, [_vm._v("Title")]),
+            _vm._v(" "),
+            _c(
+              "textarea",
+              {
+                staticClass: "form-control",
+                attrs: { name: "title", id: "title1", rows: "5", disabled: "" }
+              },
+              [
+                _vm._v(
+                  "\r\n                            HEllo<br>hello<br>xem hướng dẫn\r\n                        "
                 )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "col-md-3" }, [
-                _c(
-                  "div",
-                  { staticClass: "embed-responsive embed-responsive-16by9" },
-                  [
-                    _c("iframe", {
-                      staticClass: "embed-responsive-item",
-                      attrs: {
-                        src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
-                      }
-                    })
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "col-md-3" }),
-              _vm._v(" "),
-              _c("li", { staticClass: "col-md-3" })
-            ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("ul", { staticClass: "row list-unstyled" }, [
+            _c("li", { staticClass: "col-md-3" }, [
+              _c(
+                "div",
+                { staticClass: "embed-responsive embed-responsive-16by9" },
+                [
+                  _c("iframe", {
+                    staticClass: "embed-responsive-item",
+                    attrs: {
+                      src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
+                    }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "col-md-3" }, [
+              _c(
+                "div",
+                { staticClass: "embed-responsive embed-responsive-16by9" },
+                [
+                  _c("iframe", {
+                    staticClass: "embed-responsive-item",
+                    attrs: {
+                      src: "https://www.youtube.com/embed/2DBcmzKfdx8?rel=0"
+                    }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "col-md-3" }),
+            _vm._v(" "),
+            _c("li", { staticClass: "col-md-3" })
           ])
         ])
       ])
@@ -56588,14 +57517,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
-/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
-/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
-/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.common.js");
+/* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vform__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-progressbar */ "./node_modules/vue-progressbar/dist/vue-progressbar.js");
+/* harmony import */ var vue_progressbar__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_progressbar__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_8__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -56611,25 +57541,27 @@ window.Fire = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 
 
 
+
  //moment js
 
  //vueX & vueRouter
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]); //vue form
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
+var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store(_store__WEBPACK_IMPORTED_MODULE_4__["default"]); //vue form
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component(vform__WEBPACK_IMPORTED_MODULE_4__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["HasError"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component(vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_4__["AlertError"]);
-window.Form = vform__WEBPACK_IMPORTED_MODULE_4__["Form"]; //vue progressbar
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component(vform__WEBPACK_IMPORTED_MODULE_5__["HasError"].name, vform__WEBPACK_IMPORTED_MODULE_5__["HasError"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component(vform__WEBPACK_IMPORTED_MODULE_5__["AlertError"].name, vform__WEBPACK_IMPORTED_MODULE_5__["AlertError"]);
+window.Form = vform__WEBPACK_IMPORTED_MODULE_5__["Form"]; //vue progressbar
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_5___default.a, {
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_6___default.a, {
   color: '#0063ae',
   failedColor: 'red',
   thickness: '5px'
 }); //Sweet Alert 2
 
-window.Swal = sweetalert2__WEBPACK_IMPORTED_MODULE_6___default.a;
-var toast = sweetalert2__WEBPACK_IMPORTED_MODULE_6___default.a.mixin({
+window.Swal = sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a;
+var toast = sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.mixin({
   toast: true,
   position: 'top-end',
   showConfirmButton: false,
@@ -56649,7 +57581,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.filter('upText', function (text) {
   return text.toUpperCase();
 });
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.filter('myDate', function (created) {
-  return moment__WEBPACK_IMPORTED_MODULE_7___default()(created).format('MMMM Do YYYY');
+  return moment__WEBPACK_IMPORTED_MODULE_8___default()(created).format('MMMM Do YYYY');
 });
 /**
  * The following block of code may be used to automatically register your
@@ -56670,6 +57602,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('example-component', __webp
 
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
+  store: store,
   router: router
 });
 
@@ -56727,6 +57660,75 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/ClassRoomsAdmin.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/ClassRoomsAdmin.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ClassRoomsAdmin_vue_vue_type_template_id_1d56afb4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4& */ "./resources/js/components/ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4&");
+/* harmony import */ var _ClassRoomsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ClassRoomsAdmin.vue?vue&type=script&lang=js& */ "./resources/js/components/ClassRoomsAdmin.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ClassRoomsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ClassRoomsAdmin_vue_vue_type_template_id_1d56afb4___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ClassRoomsAdmin_vue_vue_type_template_id_1d56afb4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ClassRoomsAdmin.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ClassRoomsAdmin.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/ClassRoomsAdmin.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClassRoomsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ClassRoomsAdmin.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ClassRoomsAdmin.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClassRoomsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ClassRoomsAdmin_vue_vue_type_template_id_1d56afb4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ClassRoomsAdmin.vue?vue&type=template&id=1d56afb4&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ClassRoomsAdmin_vue_vue_type_template_id_1d56afb4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ClassRoomsAdmin_vue_vue_type_template_id_1d56afb4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -56793,15 +57795,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Dashboard_vue_vue_type_template_id_040e2ab9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Dashboard.vue?vue&type=template&id=040e2ab9& */ "./resources/js/components/Dashboard.vue?vue&type=template&id=040e2ab9&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Dashboard.vue?vue&type=script&lang=js& */ "./resources/js/components/Dashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Dashboard_vue_vue_type_template_id_040e2ab9___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Dashboard_vue_vue_type_template_id_040e2ab9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -56815,6 +57819,20 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/components/Dashboard.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Dashboard.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/Dashboard.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Dashboard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Dashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -57150,6 +58168,9 @@ var routes = [{
   path: '/faculties-admin',
   component: __webpack_require__(/*! ./components/FacultiesAdmin.vue */ "./resources/js/components/FacultiesAdmin.vue").default
 }, {
+  path: '/classrooms-admin',
+  component: __webpack_require__(/*! ./components/ClassRoomsAdmin.vue */ "./resources/js/components/ClassRoomsAdmin.vue").default
+}, {
   path: '/faculties',
   component: __webpack_require__(/*! ./components/FacultiesClient.vue */ "./resources/js/components/FacultiesClient.vue").default
 }, {
@@ -57162,6 +58183,30 @@ var routes = [{
   path: '/student-profile',
   component: __webpack_require__(/*! ./components/StudentProfileClient.vue */ "./resources/js/components/StudentProfileClient.vue").default
 }];
+
+/***/ }),
+
+/***/ "./resources/js/store.js":
+/*!*******************************!*\
+  !*** ./resources/js/store.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    welcomeMessage: 'Welcome to my vue App'
+  },
+  getters: {
+    welcome: function welcome(state) {
+      return state.welcomeMessage;
+    }
+  },
+  mutations: {},
+  actions: {}
+});
 
 /***/ }),
 
@@ -57183,8 +58228,8 @@ var routes = [{
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\portal_union_official\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\portal_union_official\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\portal_union_official-lab\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\portal_union_official-lab\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

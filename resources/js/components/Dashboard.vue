@@ -1,5 +1,6 @@
 <template>
 <div class="wrapper d-flex flex-column">
+    <h1>{{ welcome }}</h1>
     <section class="task">
         <h5><i class="fas fa-tasks"></i>Công việc cần làm<span class="badge badge-primary">1</span></h5>
         <div class="row">
@@ -93,3 +94,14 @@
     </section>
 </div>
 </template>
+
+<script>
+export default {
+    name: 'home',
+    computed: {
+        welcome(){
+            return this.$store.getters.welcome
+        }
+    }
+}
+</script>

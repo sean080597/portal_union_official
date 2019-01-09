@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class ClassRoomController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,8 @@ class ClassRoomController extends Controller
      */
     public function index()
     {
-        //
+        // return ClassRoom::orderBy('id', 'ASC')->paginate(40);
+        return ClassRoom::with('faculty')->orderBy('id', 'ASC')->paginate(40);
     }
 
     /**
@@ -35,7 +40,15 @@ class ClassRoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'id' => 'required|string|max:10|unique:class_rooms',
+            'faculty_id' => 'required|string|max:50',
+        ]);
+
+        return ClassRoom::create([
+            'id' => strtoupper($request['id']),
+            'faculty_id' => $request['faculty_id'],
+        ]);
     }
 
     /**
@@ -67,9 +80,16 @@ class ClassRoomController extends Controller
      * @param  \App\ClassRoom  $classRoom
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ClassRoom $classRoom)
+    public function update(Request $request, $idToUpdate)
     {
-        //
+        $cla = ClassRoom::findOrfail($idToUpdate);
+        //unique faculty_id --> no space
+        $this->validate($request, [
+            'id' => 'required|string|max:10|unique:class_rooms,id,'.$cla->id,
+            'faculty_id' => 'required|string|max:4',
+        ]);
+        $cla->update($request->all());
+        return ['message' => 'Updated ClassRoom'];
     }
 
     /**
@@ -78,8 +98,9 @@ class ClassRoomController extends Controller
      * @param  \App\ClassRoom  $classRoom
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClassRoom $classRoom)
+    public function destroy($classroom_id)
     {
-        //
+        ClassRoom::findOrfail($classroom_id)->delete();
+        return ['message' => 'Deleted ClassRoom'];
     }
 }

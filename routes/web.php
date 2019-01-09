@@ -16,8 +16,6 @@ use App\User;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
-
 Route::group(['middleware' => ['auth']], function () {
   //handle hashbang in VueJS
   Route::get('{path}', function() {

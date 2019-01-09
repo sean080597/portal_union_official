@@ -17,4 +17,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResources(['faculty_admin' => 'API\FacultyController']);
+Route::apiResources(['faculty_admin' => 'FacultyController']);
+Route::apiResources(['classroom_admin' => 'ClassRoomController']);
