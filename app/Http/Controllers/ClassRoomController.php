@@ -21,6 +21,11 @@ class ClassRoomController extends Controller
         return ClassRoom::with('faculty')->orderBy('id', 'ASC')->paginate(40);
     }
 
+    public function index_client($faculty_id)
+    {
+        return ClassRoom::with('secretary')->where('faculty_id', $faculty_id)->orderBy('id', 'ASC')->paginate(40);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -101,5 +106,10 @@ class ClassRoomController extends Controller
     {
         ClassRoom::findOrfail($classroom_id)->delete();
         return ['message' => 'Deleted ClassRoom'];
+    }
+
+    //get account type in secretary, deputy_secretary
+    public function getFacultyAccounts($faculty_id){
+        return ClassRoom::with(['secretary', 'deputySecretary1', 'deputySecretary2'])->where('faculty_id', $faculty_id)->first();
     }
 }

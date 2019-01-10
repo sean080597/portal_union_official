@@ -17,10 +17,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Admin
 Route::apiResources(['role_admin' => 'RoleController']);
 Route::apiResources(['user_admin' => 'UserController']);
 Route::apiResources(['faculty_admin' => 'FacultyController']);
 Route::apiResources(['classroom_admin' => 'ClassRoomController']);
 
+//Client
+//Faculty
 Route::get('/getSchoolAccounts', 'FacultyController@getSchoolAccounts');
 Route::get('/getUserStudentInfo/{user_id}', 'UserController@getUserStudentInfo');
+//ClassRoom
+Route::get('/getFacultyAccounts/{faculty_id}', 'ClassRoomController@getFacultyAccounts');
+Route::get('/getClassroomsClient/{faculty_id}', 'ClassRoomController@index_client');

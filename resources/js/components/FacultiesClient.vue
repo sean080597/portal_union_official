@@ -1,15 +1,15 @@
 <template>
     <div class="wrap-table">
         <div class="note-info">
-            <div class="row" v-for="(schAccs, index) in schoolAccounts" :key="index">
+            <div class="row" v-for="(schAcc, index) in schoolAccounts" :key="index">
                 <p class="col-sm-4">
-                    <span v-if="schAccs.role_id == 'sec'">Bí thư: </span>
-                    <span v-if="schAccs.role_id == 'de1' || schAccs.role_id == 'de2'">Phó bí thư: </span>
-                    {{ schAccs.name }}
+                    <span v-if="schAcc.role_id == 'sec'">Bí thư: </span>
+                    <span v-if="schAcc.role_id == 'de1' || schAcc.role_id == 'de2'">Phó bí thư: </span>
+                    {{ schAcc.name }}
                 </p>
                 <div class="col-sm-8 row">
-                    <p class="col-5"><span>ĐT: </span>{{ schAccs.phone }}</p>
-                    <p class="col-7 px-0"><span>Email: </span>{{ schAccs.email }}</p>
+                    <p class="col-5"><span>ĐT: </span>{{ schAcc.phone }}</p>
+                    <p class="col-7 px-0"><span>Email: </span>{{ schAcc.email }}</p>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                         <td v-if="faculty.secretary != null">{{ faculty.secretary.phone }}</td>
                         <td v-else></td>
                         <td class="text-center text-primary">
-                            <router-link to="/classrooms"><i class="far fa-eye"></i></router-link>
+                            <router-link :to="'/classrooms/' + faculty.id"><i class="far fa-eye"></i></router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">hello</span>

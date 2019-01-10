@@ -59,7 +59,8 @@
                     <li class="active">
                         <router-link to="/">Trang Chủ</>
                     </li>
-                    @if (auth()->user()->role_id == 'adm')
+                    @if (auth()->user()->role_id == 'adm'
+                    || auth()->user()->role_id == 'sch')
                     <li>
                         <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
                         <ul class="collapse list-unstyled" id="quan-ly-admin">

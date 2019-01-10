@@ -24,14 +24,14 @@ class ClassRoom extends Model
     }
 
     public function secretary(){
-        return $this->belongsTo('App\User');
+        return $this->hasOne('App\User', 'id', 'uid_secretary');
     }
 
     public function deputySecretary1(){
-        return $this->belongsTo('App\User');
+        return $this->hasOne('App\User', 'id', 'uid_deputysecre1');
     }
 
     public function deputySecretary2(){
-        return $this->belongsTo('App\User');
+        return $this->hasOne('App\User', 'id', 'uid_deputysecre2');
     }
 }
