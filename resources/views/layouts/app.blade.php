@@ -66,7 +66,7 @@
                             <li><a href="#">Đoàn viên</a></li>
                             <li><router-link to="/classrooms-admin">Lớp</router-link></li>
                             <li><router-link to="/faculties-admin">Khoa</router-link></li>
-                            <li><a href="#">Tài khoản</a></li>
+                            <li><router-link to="/users-admin">Tài khoản</router-link></li>
                         </ul>
                     </li>
                     <li><a href="#">Thống Kê</a></li>

@@ -59,7 +59,7 @@ Vue.filter('upText', function (text) {
 });
 
 Vue.filter('myDate', function(created){
-    return moment(created).format('MMMM Do YYYY');
+    return moment(created).locale('vi').format('L HH:mm');
 });
 
 /**

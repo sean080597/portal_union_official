@@ -17,5 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::apiResources(['role_admin' => 'RoleController']);
+Route::apiResources(['user_admin' => 'UserController']);
 Route::apiResources(['faculty_admin' => 'FacultyController']);
 Route::apiResources(['classroom_admin' => 'ClassRoomController']);

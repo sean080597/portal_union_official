@@ -79,22 +79,10 @@
                                     class="form-control" :class="{ 'is-invalid': form.errors.has('id') }">
                                 <has-error :form="form" field="id"></has-error>
                             </div>
-                            <div class="form-group" v-if="!editMode">
+                            <div class="form-group">
                                 <select name="faculty_id" v-model="form.faculty_id" id="faculty_id" class="form-control" :class="{'is-invalid': form.errors.has('faculty_id')}">
-                                    <option value="0" disabled selected>=== Chọn Khoa / Viện ===</option>
-                                    <option v-for="(faculty, index) in faculties" :key="index" :value="faculty.id">
-                                        {{ faculty.name }} <span v-if="faculty.note !== null">/ {{ faculty.note }}</span>
-                                    </option>
-                                </select>
-                                <has-error :form="form" field="faculty_id"></has-error>
-                            </div>
-                            <div class="form-group" v-if="editMode">
-                                <select name="faculty_id" v-model="form.faculty_id" id="faculty_id" class="form-control" :class="{'is-invalid': form.errors.has('faculty_id')}">
-                                    <option value="0" disabled selected>=== Chọn Khoa / Viện ===</option>
-                                    <option v-for="(faculty, index) in faculties" :key="index"
-                                    :value="faculty.id" :selected="faculty.id == selected_faculty_id">
-                                        {{ faculty.name }} <span v-if="faculty.note !== null">/ {{ faculty.note }}</span>
-                                    </option>
+                                    <option value="" disabled>=== Chọn Khoa / Viện ===</option>
+                                    <option v-for="(faculty, index) in faculties" :key="index" :value="faculty.id">{{ faculty.name }} <span v-if="faculty.note !== null">/ {{ faculty.note }}</span></option>
                                 </select>
                                 <has-error :form="form" field="faculty_id"></has-error>
                             </div>
@@ -119,7 +107,6 @@ export default {
             editMode: true,
             classrooms: {},
             faculties: {},
-            selected_faculty_id: '',
             form: new Form({
                 idToUpdate: '',
                 id: '',
@@ -145,7 +132,6 @@ export default {
             $('#modalClassRoomAdmin').modal('show');
             this.form.fill(classroom);
             this.form.idToUpdate = classroom.id;
-            this.form.selected_faculty_id = classroom.faculty_id;
         },
         createClassRoom(){
             this.$Progress.start();

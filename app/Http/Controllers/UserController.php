@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Student;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return User::with('role')->latest()->paginate(40);
     }
 
     /**
@@ -35,7 +40,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|max:50',
+            'email' => 'required|string|max:191|email|unique:users',
+            'password' => 'required|string|min:6',
+            'role_id' => 'required|string|max:50'
+        ]);
+
+        // User::create([
+        //     'name' => $request['name'],
+        //     'email' => $request['email'],
+        //     'password' => bcrypt($request['password']),
+        //     'role_id' => $request['role_id'],
+        // ]);
+
+        // return Student::create([
+        //     'name' => 'Flight 10'
+        // ]);
     }
 
     /**

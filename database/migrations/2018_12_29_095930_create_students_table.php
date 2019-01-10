@@ -17,6 +17,7 @@ class CreateStudentsTable extends Migration
             $table->char('id', 10);
             $table->string('name', 50);
             $table->string('address', 100)->nullable();
+            $table->char('phone', 10)->default('0123456789');
             $table->string('image')->nullable();
             $table->boolean('sex')->default('0');
             $table->date('birthday')->nullable();

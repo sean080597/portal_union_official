@@ -18,7 +18,6 @@ class ClassRoomController extends Controller
      */
     public function index()
     {
-        // return ClassRoom::orderBy('id', 'ASC')->paginate(40);
         return ClassRoom::with('faculty')->orderBy('id', 'ASC')->paginate(40);
     }
 
