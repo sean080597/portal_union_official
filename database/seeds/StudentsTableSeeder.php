@@ -16,7 +16,6 @@ class StudentsTableSeeder extends Seeder
             'id' => $stu_id,
             'name' => $n,
             'address' => $faker->address,
-            'phone' => "0".rand(100, 999).rand(100,999).rand(10, 99).rand(0, 9),
             'birthday' => Carbon::createFromTimeStamp($faker->dateTimeBetween('-30 days', '+30 days')->getTimestamp()),
             'class_room_id' => $c,
             'user_id' => $count,

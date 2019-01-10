@@ -32,14 +32,14 @@ class Faculty extends Model
     }
 
     public function secretary(){
-        return User::with('student')->where('id', $this->uid_secretary)->first();
+        return $this->hasOne('App\User', 'id', 'uid_secretary');
     }
 
     public function deputy_secretary_1(){
-        return User::where('id', $this->uid_deputysecre1)->first();
+        return $this->hasOne('App\User', 'id', 'uid_deputysecre1');
     }
 
     public function deputy_secretary_2(){
-        return User::where('id', $this->uid_deputysecre2)->first();
+        return $this->hasOne('App\User', 'id', 'uid_deputysecre2');
     }
 }

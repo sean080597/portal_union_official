@@ -21,3 +21,6 @@ Route::apiResources(['role_admin' => 'RoleController']);
 Route::apiResources(['user_admin' => 'UserController']);
 Route::apiResources(['faculty_admin' => 'FacultyController']);
 Route::apiResources(['classroom_admin' => 'ClassRoomController']);
+
+Route::get('/getSchoolAccounts', 'FacultyController@getSchoolAccounts');
+Route::get('/getUserStudentInfo/{user_id}', 'UserController@getUserStudentInfo');

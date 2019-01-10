@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Faculty;
+use App\User;
 use Illuminate\Http\Request;
 
 class FacultyController extends Controller
@@ -18,7 +19,7 @@ class FacultyController extends Controller
      */
     public function index()
     {
-        return Faculty::orderBy('name', 'ASC')->paginate(10);
+        return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(10);
     }
 
     /**
@@ -104,5 +105,10 @@ class FacultyController extends Controller
     {
         Faculty::findOrfail($faculty_id)->delete();
         return ['message' => 'Deleted Faculty'];
+    }
+
+    //get account type in secretary, deputy_secretary
+    public function getSchoolAccounts(){
+        return User::whereIn('role_id', ['sec', 'de1', 'de2'])->get();
     }
 }

@@ -12,6 +12,7 @@ class UsersTableSeeder extends Seeder
         $email_sv = empty($e) ? $faker->email : $e;
         DB::table('users')->insert([
             'name' => $n,
+            'phone' => "0".rand(100, 999).rand(100,999).rand(10, 99).rand(0, 9),
             'email' => $email_sv,
             'password' => bcrypt($p),
             'role_id' => 'stu',

@@ -103,4 +103,9 @@ class UserController extends Controller
     {
         //
     }
+
+    //get user with student info
+    public function getUserStudentInfo($user_id){
+        return User::with('student')->findOrfail($user_id);
+    }
 }
