@@ -6,5 +6,5 @@ export const routes = [
     { path: '/faculties', component: require('./components/FacultiesClient.vue').default },
     { path: '/classrooms/:faculty_id', component: require('./components/ClassRoomsClient.vue').default },
     { path: '/students/:classroom_id', component: require('./components/StudentsClient.vue').default },
-    { path: '/student-profile', component: require('./components/StudentProfileClient.vue').default },
+    { path: '/student-profile/:student_id', component: require('./components/StudentProfileClient.vue').default },
 ];

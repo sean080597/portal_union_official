@@ -91,12 +91,11 @@
                         <td>{{ index + 1 }}</td>
                         <td>{{ student.id }}</td>
                         <td>{{ student.name }}</td>
-                        <td>{{ student.birthday | myBirthDay }}</td>
+                        <td>{{ student.birthday | myDateFormat }}</td>
                         <td>{{ student.user.email }}</td>
                         <td>{{ student.user.phone }}</td>
                         <td class="text-center text-primary">
-                            <!-- <router-link :to="'/students/' + student.id"><i class="far fa-eye"></i></router-link> -->
-                            <a href="#"><i class="far fa-eye"></i></a>
+                            <router-link :to="'/student-profile/' + student.id"><i class="far fa-eye"></i></router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">hello</span>
@@ -119,9 +118,12 @@ export default {
     methods: {
         loadStudents(){
             this.$Progress.start();
-            axios.get('/api/getClassroomAccs/' + this.classroom_id).then(({data}) => (this.classroomLeaderAccs = data));
-            axios.get('/api/getStudentsClient/' + this.classroom_id).then(({data}) => (this.students = data.data));
-            this.$Progress.finish();
+            axios.get('/api/getClassroomAccs/' + this.classroom_id).then(({data}) => (
+                this.classroomLeaderAccs = data, this.$Progress.increase(30)
+            ));
+            axios.get('/api/getStudentsClient/' + this.classroom_id).then(({data}) => (
+                this.students = data.data, this.$Progress.finish()
+            ));
         }
     },
     created() {

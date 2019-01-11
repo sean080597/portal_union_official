@@ -26,10 +26,17 @@ Route::apiResources(['classroom_admin' => 'ClassRoomController']);
 //Client
 //Faculty
 Route::get('/getSchoolLeaderAccs', 'FacultyController@getSchoolLeaderAccs');
-Route::get('/getUserStudentInfo/{user_id}', 'UserController@getUserStudentInfo');
+
 //ClassRoom
 Route::get('/getFacultyLeaderAccs/{faculty_id}', 'FacultyController@getFacultyLeaderAccs');
 Route::get('/getClassroomsClient/{faculty_id}', 'ClassRoomController@index_client');
+
 //Student
 Route::get('/getClassroomAccs/{classroom_id}', 'ClassRoomController@getClassroomAccs');
 Route::get('/getStudentsClient/{classroom_id}', 'StudentController@index_client');
+
+//get user student info by user_id
+Route::get('/getUserStudentInfoByUserId/{user_id}', 'UserController@getUserStudentInfoByUserId');
+//get user student info by student_id
+Route::get('/getUserStudentInfoByStuId/{student_id}', 'UserController@getUserStudentInfoByStuId');
+Route::get('/getRelationsByStuId/{student_id}', 'StudentController@getRelationsByStuId');

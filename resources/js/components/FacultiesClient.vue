@@ -82,9 +82,12 @@ export default {
     methods: {
         loadFaculties(){
             this.$Progress.start();
-            axios.get('api/getSchoolLeaderAccs').then(({data}) => (this.schoolLeaderAccs = data));
-            axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
-            this.$Progress.finish();
+            axios.get('api/getSchoolLeaderAccs').then(({data}) => (
+                this.schoolLeaderAccs = data, this.$Progress.increase(30)
+            ));
+            axios.get('api/faculty_admin').then(({data}) => (
+                this.faculties = data.data, this.$Progress.finish()
+            ));
         },
     },
     created() {

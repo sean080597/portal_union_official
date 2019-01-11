@@ -23,7 +23,11 @@ class Student extends Model
     ];
 
     public function classroom(){
-        return $this->belongsTo('App\ClassRoom');
+        return $this->belongsTo('App\ClassRoom', 'class_room_id', 'id');
+    }
+
+    public function faculty() {
+        return $this->classroom->faculty();
     }
 
     public function user(){

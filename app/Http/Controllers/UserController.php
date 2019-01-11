@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Student;
 use Illuminate\Http\Request;
+use App\ClassRoom;
+use DB;
 
 class UserController extends Controller
 {
@@ -104,8 +106,17 @@ class UserController extends Controller
         //
     }
 
-    //get user with student info
-    public function getUserStudentInfo($user_id){
+    //get user with student info by user_id
+    public function getUserStudentInfoByUserId($user_id){
         return User::with('student')->findOrfail($user_id);
+    }
+
+    //get user with student info by student_id
+    public function getUserStudentInfoByStuId($student_id){
+        return DB::table('students AS s')->select('s.*', 's.id as mssv', 'f.name as faculty_name', 'u.*')
+        ->join('users AS u', 'u.id', '=', 's.user_id')
+        ->join('class_rooms AS c', 'c.id', '=', 's.class_room_id')
+        ->join('faculties AS f', 'f.id', '=', 'c.faculty_id')
+        ->where('s.id', $student_id)->get();
     }
 }

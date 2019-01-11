@@ -19,7 +19,7 @@ class StudentController extends Controller
 
     public function index_client($classroom_id)
     {
-        return Student::with('user')->where('class_room_id', $classroom_id)->paginate(40);
+        return Student::with('user')->where('class_room_id', $classroom_id)->paginate(30);
     }
 
     /**
@@ -86,5 +86,10 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         //
+    }
+
+    public function getRelationsByStuId($student_id)
+    {
+        return Student::findOrfail($student_id)->relations;
     }
 }

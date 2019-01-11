@@ -146,7 +146,7 @@ export default {
                 });
             })
             .catch(() => {
-                swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+                Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
             });
             this.$Progress.finish();
         },
@@ -175,7 +175,7 @@ export default {
                         }
                     })
                     .catch(() => {
-                        swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+                        Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
                     });
                 }
             })

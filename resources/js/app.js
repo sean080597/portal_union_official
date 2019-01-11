@@ -58,12 +58,16 @@ Vue.filter('upText', function (text) {
     return text.toUpperCase();
 });
 
-Vue.filter('myDate', function(created){
-    return moment(created).locale('vi').format('L HH:mm');
+Vue.filter('myDateTimeFormat', function(created){
+    return moment(created).locale('vi').format('L LT');
 });
 
-Vue.filter('myBirthDay', function(birthday){
-    return moment(birthday).locale('vi').format('L');
+Vue.filter('myDateFormat', function(birthday){
+    return moment(birthday).locale('vi').format('L'); // 01/11/2019
+});
+
+Vue.filter('myTimeDateFormat', function(updated_time){
+    return moment(updated_time).locale('vi').format('LT L');//10:35 29/12/2018
 });
 
 /**

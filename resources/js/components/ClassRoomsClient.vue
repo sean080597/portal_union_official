@@ -119,9 +119,12 @@ export default {
     methods: {
         loadClassrooms(){
             this.$Progress.start();
-            axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(({data}) => (this.facultyLeaderAccs = data));
-            axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (this.classrooms = data.data));
-            this.$Progress.finish();
+            axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(({data}) => (
+                this.facultyLeaderAccs = data, this.$Progress.increase(30)
+            ));
+            axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (
+                this.classrooms = data.data, this.$Progress.finish()
+            ));
         },
     },
     created() {

@@ -1,15 +1,193 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card card-default">
-                    <div class="card-header">Student Profile Component</div>
-
-                    <div class="card-body">
-                        I'm an example Student component.
+    <div class="row">
+        <div class="col-lg-3 d-flex flex-column align-items-center">
+            <img class="img-fluid mb-3" :src="'/theme/images/img_avatar1.png'" alt="Chania" width="120">
+            <div class="note-success">
+                <p>Cập nhật gần nhất: <br>{{ student_info.updated_at | myTimeDateFormat }}</p>
+            </div>
+            <div class="note-info">
+                <p>Yêu cầu chỉnh sửa các thông tin khác xin liên hệ:</p>
+                <ul>
+                    <li><p>PHÒNG CÔNG TÁC SINH VIÊN</p></li>
+                    <li><p>Trụ sở: 475A (số cũ:144/24) Điện Biên Phủ, P.25, Q.Bình Thạnh, TP.HCM</p></li>
+                    <li><p>ĐT: (028) 3 5120782</p></li>
+                    <li><p>Fax: (028) 3 5120784</p></li>
+                    <li><a href="http://daotao.hutech.edu.vn/" target="_blank">daotao@hutech.edu.vn</a></li>
+                </ul>
+            </div>
+            <div class="note-warning">
+                <p>Lưu ý: <span class="text-danger">(*)</span> Dữ liệu không được phép để trống</p>
+            </div>
+        </div>
+        <form @submit.prevent="submitChangeInfoStudent" class="col-lg-9 d-flex flex-column align-items-center">
+            <div class="row info-section">
+                <div class="col-md-6">Mã số sinh viên: <span class="font-weight-bold">{{ student_info.mssv }}</span> </div>
+                <div class="col-md-6">Họ và tên: <span class="font-weight-bold">{{ student_info.name }}</span> </div>
+                <div class="col-md-6">Lớp: <span class="font-weight-bold">{{ student_info.class_room_id }}</span> </div>
+                <div class="col-md-6">Ngày sinh: <span>{{ student_info.birthday | myDateFormat }}</span> </div>
+                <div class="col-md-6">Khoa: <span class="font-weight-bold">{{ student_info.faculty_name }}</span> </div>
+                <div class="col-md-6">Niên khóa: <span>2015-2019</span> </div>
+                <div class="col-md-6">Chuyên ngành: <span class="font-weight-bold">{{ student_info.faculty_name }}</span> </div>
+            </div>
+            <div class="info-section">
+                <h5>Thông tin sinh viên</h5>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="sex">Giới tính <span class="text-danger">(*)</span></label>
+                        <select name="sex" id="sex" class="form-control">
+                            <option value="-1" disabled>=== Chọn giới tính ===</option>
+                            <option value="1" :selected="student_info.sex">Nam</option>
+                            <option value="0" :selected="!student_info.sex">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="hometown">Nơi sinh: <span class="text-danger">(*)</span></label>
+                        <select name="hometown" id="hometown" class="form-control">
+                            <option value="-1" selected>Chọn Tỉnh / TP</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email: <span class="text-danger">(*)</span></label>
+                        <input type="email" class="form-control" id="email" :value="student_info.email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="phonenum">Điện thoại: <span class="text-danger">(*)</span></label>
+                        <input type="number" class="form-control" id="phonenum" :value="student_info.phone">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="doan">Ngày vào đoàn: <span class="text-danger">(*)</span></label>
+                        <input type="date" class="form-control" id="doan" :value="student_info.union_date">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dantoc">Dân tộc:</label>
+                        <input type="text" class="form-control" id="dantoc" :value="student_info.ethnic">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tongiao">Tôn giáo:</label>
+                        <input type="text" class="form-control" id="tongiao" :value="student_info.religion">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="vanhoa">Trình độ văn hóa: <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" id="vanhoa" value="12 / 12" disabled>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="info-section">
+                <h5>Địa chỉ liên lạc</h5>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="tp">Tỉnh/TP <span class="text-danger">(*)</span></label>
+                        <select name="tp" id="tp" class="form-control">
+                            <option value="-1" selected>Chọn Tỉnh / TP</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="quan">Quận/ Huyện <span class="text-danger">(*)</span></label>
+                        <select name="quan" id="quan" class="form-control">
+                            <option value="-1" selected>Chọn Quận/ Huyện</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="diachi">Địa chỉ <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" name="diachi" id="diachi" placeholder="Số nhà, đường, phường/ xã"
+                        :value="student_info.address">
+                    </div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h5>Thông tin nhân thân</h5>
+                <!-- show if relations is not null -->
+                <div class="row" v-if="relations.length > 0">
+                    <div class="col-md-6" v-for="(relation, index) in relations" :key="index">
+                        <div class="form-group">
+                            <label for="tencha" v-if="relation.role == 1">Họ tên cha: <span class="text-danger">(*)</span></label>
+                            <label for="tencha" v-else>Họ tên mẹ: <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" name="tencha" id="tencha" :value="relation.name">
+                        </div>
+                        <div class="form-group">
+                            <label for="ngaysinhcha">Ngày sinh: <span class="text-danger">(*)</span></label>
+                            <input type="date" class="form-control" name="ngaysinhcha" id="ngaysinhcha" :value="relation.birthday">
+                        </div>
+                        <div class="form-group">
+                            <label for="nghenghiepcha">Nghề nghiệp: </label>
+                            <input type="text" class="form-control" name="nghenghiepcha" id="nghenghiepcha" :value="relation.job">
+                        </div>
+                        <div class="form-group">
+                            <label for="dienthoaicha">Điện thoại: <span class="text-danger">(*)</span></label>
+                            <input type="number" class="form-control" name="dienthoaicha" id="dienthoaicha" :value="relation.phone">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" v-else>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tencha">Họ tên cha: <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" name="tencha" id="tencha">
+                        </div>
+                        <div class="form-group">
+                            <label for="ngaysinhcha">Ngày sinh: <span class="text-danger">(*)</span></label>
+                            <input type="date" class="form-control" name="ngaysinhcha" id="ngaysinhcha">
+                        </div>
+                        <div class="form-group">
+                            <label for="nghenghiepcha">Nghề nghiệp: </label>
+                            <input type="text" class="form-control" name="nghenghiepcha" id="nghenghiepcha">
+                        </div>
+                        <div class="form-group">
+                            <label for="dienthoaicha">Điện thoại: <span class="text-danger">(*)</span></label>
+                            <input type="number" class="form-control" name="dienthoaicha" id="dienthoaicha">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tenme">Họ tên mẹ: <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" name="tenme" id="tenme">
+                        </div>
+                        <div class="form-group">
+                            <label for="ngaysinhme">Ngày sinh: <span class="text-danger">(*)</span></label>
+                            <input type="date" class="form-control" name="ngaysinhme" id="ngaysinhme">
+                        </div>
+                        <div class="form-group">
+                            <label for="nghenghiepme">Nghề nghiệp: </label>
+                            <input type="text" class="form-control" name="nghenghiepme" id="nghenghiepme">
+                        </div>
+                        <div class="form-group">
+                            <label for="dienthoaime">Điện thoại: <span class="text-danger">(*)</span></label>
+                            <input type="number" class="form-control" name="dienthoaime" id="dienthoaime">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-section">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+        </form>
     </div>
 </template>
+<script>
+export default {
+    data() {
+        return {
+            student_id: this.$route.params.student_id,
+            student_info: {},
+            relations: {},
+        }
+    },
+    methods: {
+        loadStudentInfo(){
+            this.$Progress.start();
+            axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (
+                this.student_info = data[0], this.$Progress.increase(40)
+            ));
+            axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
+                this.relations = data, this.$Progress.finish()
+            ));
+        },
+        submitChangeInfoStudent(){
+            Swal('Sorry!', 'Doing!', 'error');
+        }
+    },
+    created() {
+        this.loadStudentInfo();
+    },
+}
+</script>
