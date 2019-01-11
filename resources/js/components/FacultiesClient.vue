@@ -1,10 +1,10 @@
 <template>
     <div class="wrap-table">
         <div class="note-info">
-            <div class="row" v-for="(schAcc, index) in schoolAccounts" :key="index">
+            <div class="row" v-for="(schAcc, index) in schoolLeaderAccs" :key="index">
                 <p class="col-sm-4">
                     <span v-if="schAcc.role_id == 'sec'">Bí thư: </span>
-                    <span v-if="schAcc.role_id == 'de1' || schAcc.role_id == 'de2'">Phó bí thư: </span>
+                    <span v-else>Phó bí thư: </span>
                     {{ schAcc.name }}
                 </p>
                 <div class="col-sm-8 row">
@@ -76,14 +76,14 @@ export default {
     data() {
         return {
             faculties: {},
-            schoolAccounts: {},
+            schoolLeaderAccs: {},
         }
     },
     methods: {
         loadFaculties(){
             this.$Progress.start();
+            axios.get('api/getSchoolLeaderAccs').then(({data}) => (this.schoolLeaderAccs = data));
             axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
-            axios.get('api/getSchoolAccounts').then(({data}) => (this.schoolAccounts = data));
             this.$Progress.finish();
         },
     },

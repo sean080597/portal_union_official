@@ -62,6 +62,10 @@ Vue.filter('myDate', function(created){
     return moment(created).locale('vi').format('L HH:mm');
 });
 
+Vue.filter('myBirthDay', function(birthday){
+    return moment(birthday).locale('vi').format('L');
+});
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

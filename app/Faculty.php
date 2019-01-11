@@ -35,11 +35,11 @@ class Faculty extends Model
         return $this->hasOne('App\User', 'id', 'uid_secretary');
     }
 
-    public function deputy_secretary_1(){
+    public function deputySecretary1(){
         return $this->hasOne('App\User', 'id', 'uid_deputysecre1');
     }
 
-    public function deputy_secretary_2(){
+    public function deputySecretary2(){
         return $this->hasOne('App\User', 'id', 'uid_deputysecre2');
     }
 }

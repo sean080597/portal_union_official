@@ -108,7 +108,12 @@ class FacultyController extends Controller
     }
 
     //get account type in secretary, deputy_secretary
-    public function getSchoolAccounts(){
+    public function getSchoolLeaderAccs(){
         return User::whereIn('role_id', ['sec', 'de1', 'de2'])->get();
+    }
+
+    //get account type in secretary, deputy_secretary
+    public function getFacultyLeaderAccs($faculty_id){
+        return Faculty::with(['secretary', 'deputySecretary1', 'deputySecretary2'])->findOrFail($faculty_id);
     }
 }

@@ -17,6 +17,11 @@ class StudentController extends Controller
         //
     }
 
+    public function index_client($classroom_id)
+    {
+        return Student::with('user')->where('class_room_id', $classroom_id)->paginate(40);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

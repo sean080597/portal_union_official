@@ -108,8 +108,8 @@ class ClassRoomController extends Controller
         return ['message' => 'Deleted ClassRoom'];
     }
 
-    //get account type in secretary, deputy_secretary
-    public function getFacultyAccounts($faculty_id){
-        return ClassRoom::with(['secretary', 'deputySecretary1', 'deputySecretary2'])->where('faculty_id', $faculty_id)->first();
+    //get classroom leader accounts
+    public function getClassroomAccs($classroom_id){
+        return ClassRoom::with(['secretary', 'deputySecretary1', 'deputySecretary2'])->findOrFail($classroom_id);
     }
 }

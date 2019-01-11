@@ -5,6 +5,6 @@ export const routes = [
     { path: '/classrooms-admin', component: require('./components/ClassRoomsAdmin.vue').default },
     { path: '/faculties', component: require('./components/FacultiesClient.vue').default },
     { path: '/classrooms/:faculty_id', component: require('./components/ClassRoomsClient.vue').default },
-    { path: '/students', component: require('./components/StudentsClient.vue').default },
+    { path: '/students/:classroom_id', component: require('./components/StudentsClient.vue').default },
     { path: '/student-profile', component: require('./components/StudentProfileClient.vue').default },
 ];

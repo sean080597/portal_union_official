@@ -1,34 +1,48 @@
 <template>
     <div class="wrap-table">
         <div class="note-info">
-            <div class="row">
-                <p class="col-sm-4" v-if="facultyAccounts.secretary != null"><span>Bí thư: </span>{{ facultyAccounts.secretary.name }}</p>
-                <p class="col-sm-4" v-else><span>Bí thư: </span></p>
+            <div class="row" v-if="facultyLeaderAccs.secretary != null">
+                <p class="col-sm-4"><span>Bí thư: </span>{{ facultyLeaderAccs.secretary.name }}</p>
                 <div class="col-sm-8 row">
-                    <p class="col-5" v-if="facultyAccounts.secretary != null"><span>ĐT: </span>{{ facultyAccounts.secretary.phone }}</p>
-                    <p class="col-sm-4" v-else><span>ĐT: </span></p>
-                    <p class="col-7 px-0" v-if="facultyAccounts.secretary != null"><span>Email: </span>{{ facultyAccounts.secretary.email }}</p>
-                    <p class="col-sm-4" v-else><span>Email: </span></p>
+                    <p class="col-5"><span>ĐT: </span>{{ facultyLeaderAccs.secretary.phone }}</p>
+                    <p class="col-7 px-0"><span>Email: </span>{{ facultyLeaderAccs.secretary.email }}</p>
                 </div>
             </div>
-            <div class="row">
-                <p class="col-sm-4" v-if="facultyAccounts.deputy_secretary1 != null"><span>Bí thư: </span>{{ facultyAccounts.deputy_secretary1.name }}</p>
-                <p class="col-sm-4" v-else><span>Bí thư: </span></p>
+            <div class="row" v-else>
+                <p class="col-sm-4"><span>Bí thư: </span></p>
                 <div class="col-sm-8 row">
-                    <p class="col-5" v-if="facultyAccounts.deputy_secretary1 != null"><span>ĐT: </span>{{ facultyAccounts.deputy_secretary1.phone }}</p>
-                    <p class="col-sm-4" v-else><span>ĐT: </span></p>
-                    <p class="col-7 px-0" v-if="facultyAccounts.deputy_secretary1 != null"><span>Email: </span>{{ facultyAccounts.deputy_secretary1.email }}</p>
-                    <p class="col-sm-4" v-else><span>Email: </span></p>
+                    <p class="col-5"><span>ĐT: </span></p>
+                    <p class="col-7 px-0"><span>Email: </span></p>
                 </div>
             </div>
-            <div class="row">
-                <p class="col-sm-4" v-if="facultyAccounts.deputy_secretary2 != null"><span>Bí thư: </span>{{ facultyAccounts.deputy_secretary2.name }}</p>
-                <p class="col-sm-4" v-else><span>Bí thư: </span></p>
+
+            <div class="row" v-if="facultyLeaderAccs.deputy_secretary1 != null">
+                <p class="col-sm-4"><span>Phó bí thư: </span>{{ facultyLeaderAccs.deputy_secretary1.name }}</p>
                 <div class="col-sm-8 row">
-                    <p class="col-5" v-if="facultyAccounts.deputy_secretary2 != null"><span>ĐT: </span>{{ facultyAccounts.deputy_secretary2.phone }}</p>
-                    <p class="col-sm-4" v-else><span>ĐT: </span></p>
-                    <p class="col-7 px-0" v-if="facultyAccounts.deputy_secretary2 != null"><span>Email: </span>{{ facultyAccounts.deputy_secretary2.email }}</p>
-                    <p class="col-sm-4" v-else><span>Email: </span></p>
+                    <p class="col-5"><span>ĐT: </span>{{ facultyLeaderAccs.deputy_secretary1.phone }}</p>
+                    <p class="col-7 px-0"><span>Email: </span>{{ facultyLeaderAccs.deputy_secretary1.email }}</p>
+                </div>
+            </div>
+            <div class="row" v-else>
+                <p class="col-sm-4"><span>Phó bí thư: </span></p>
+                <div class="col-sm-8 row">
+                    <p class="col-5"><span>ĐT: </span></p>
+                    <p class="col-7 px-0"><span>Email: </span></p>
+                </div>
+            </div>
+
+            <div class="row" v-if="facultyLeaderAccs.deputy_secretary2 != null">
+                <p class="col-sm-4"><span>Phó bí thư: </span>{{ facultyLeaderAccs.deputy_secretary2.name }}</p>
+                <div class="col-sm-8 row">
+                    <p class="col-5"><span>ĐT: </span>{{ facultyLeaderAccs.deputy_secretary2.phone }}</p>
+                    <p class="col-7 px-0"><span>Email: </span>{{ facultyLeaderAccs.deputy_secretary2.email }}</p>
+                </div>
+            </div>
+            <div class="row" v-else>
+                <p class="col-sm-4"><span>Phó bí thư: </span></p>
+                <div class="col-sm-8 row">
+                    <p class="col-5"><span>ĐT: </span></p>
+                    <p class="col-7 px-0"><span>Email: </span></p>
                 </div>
             </div>
         </div>
@@ -82,7 +96,7 @@
                         <td v-if="classroom.secretary != null">{{ classroom.secretary.phone }}</td>
                         <td v-else></td>
                         <td class="text-center text-primary">
-                            <a href="#"><i class="far fa-eye"></i></a>
+                            <router-link :to="'/students/' + classroom.id"><i class="far fa-eye"></i></router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">hello</span>
@@ -99,13 +113,13 @@ export default {
         return {
             faculty_id: this.$route.params.faculty_id,
             classrooms: {},
-            facultyAccounts: {},
+            facultyLeaderAccs: {},
         }
     },
     methods: {
         loadClassrooms(){
             this.$Progress.start();
-            axios.get('/api/getFacultyAccounts/' + this.faculty_id).then(({data}) => (this.facultyAccounts = data));
+            axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(({data}) => (this.facultyLeaderAccs = data));
             axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (this.classrooms = data.data));
             this.$Progress.finish();
         },

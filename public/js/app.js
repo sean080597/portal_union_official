@@ -2082,12 +2082,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       faculty_id: this.$route.params.faculty_id,
       classrooms: {},
-      facultyAccounts: {}
+      facultyLeaderAccs: {}
     };
   },
   methods: {
@@ -2095,9 +2109,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('/api/getFacultyAccounts/' + this.faculty_id).then(function (_ref) {
+      axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(function (_ref) {
         var data = _ref.data;
-        return _this.facultyAccounts = data;
+        return _this.facultyLeaderAccs = data;
       });
       axios.get('/api/getClassroomsClient/' + this.faculty_id).then(function (_ref2) {
         var data = _ref2.data;
@@ -2577,7 +2591,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       faculties: {},
-      schoolAccounts: {}
+      schoolLeaderAccs: {}
     };
   },
   methods: {
@@ -2585,19 +2599,168 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('api/faculty_admin').then(function (_ref) {
+      axios.get('api/getSchoolLeaderAccs').then(function (_ref) {
         var data = _ref.data;
-        return _this.faculties = data.data;
+        return _this.schoolLeaderAccs = data;
       });
-      axios.get('api/getSchoolAccounts').then(function (_ref2) {
+      axios.get('api/faculty_admin').then(function (_ref2) {
         var data = _ref2.data;
-        return _this.schoolAccounts = data;
+        return _this.faculties = data.data;
       });
       this.$Progress.finish();
     }
   },
   created: function created() {
     this.loadFaculties();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StudentsClient.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/StudentsClient.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      classroom_id: this.$route.params.classroom_id,
+      students: {},
+      classroomLeaderAccs: {}
+    };
+  },
+  methods: {
+    loadStudents: function loadStudents() {
+      var _this = this;
+
+      this.$Progress.start();
+      axios.get('/api/getClassroomAccs/' + this.classroom_id).then(function (_ref) {
+        var data = _ref.data;
+        return _this.classroomLeaderAccs = data;
+      });
+      axios.get('/api/getStudentsClient/' + this.classroom_id).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this.students = data.data;
+      });
+      this.$Progress.finish();
+    }
+  },
+  created: function created() {
+    this.loadStudents();
   }
 });
 
@@ -41899,101 +42062,79 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wrap-table" }, [
     _c("div", { staticClass: "note-info" }, [
-      _c("div", { staticClass: "row" }, [
-        _vm.facultyAccounts.secretary != null
-          ? _c("p", { staticClass: "col-sm-4" }, [
+      _vm.facultyLeaderAccs.secretary != null
+        ? _c("div", { staticClass: "row" }, [
+            _c("p", { staticClass: "col-sm-4" }, [
               _c("span", [_vm._v("Bí thư: ")]),
-              _vm._v(_vm._s(_vm.facultyAccounts.secretary.name))
-            ])
-          : _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")])
+              _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.name))
             ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-8 row" }, [
-          _vm.facultyAccounts.secretary != null
-            ? _c("p", { staticClass: "col-5" }, [
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8 row" }, [
+              _c("p", { staticClass: "col-5" }, [
                 _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.facultyAccounts.secretary.phone))
-              ])
-            : _c("p", { staticClass: "col-sm-4" }, [
-                _c("span", [_vm._v("ĐT: ")])
+                _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.phone))
               ]),
-          _vm._v(" "),
-          _vm.facultyAccounts.secretary != null
-            ? _c("p", { staticClass: "col-7 px-0" }, [
+              _vm._v(" "),
+              _c("p", { staticClass: "col-7 px-0" }, [
                 _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.facultyAccounts.secretary.email))
+                _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.email))
               ])
-            : _c("p", { staticClass: "col-sm-4" }, [
-                _c("span", [_vm._v("Email: ")])
-              ])
-        ])
-      ]),
+            ])
+          ])
+        : _c("div", { staticClass: "row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._m(1)
+          ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _vm.facultyAccounts.deputy_secretary1 != null
-          ? _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")]),
-              _vm._v(_vm._s(_vm.facultyAccounts.deputy_secretary1.name))
-            ])
-          : _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")])
+      _vm.facultyLeaderAccs.deputy_secretary1 != null
+        ? _c("div", { staticClass: "row" }, [
+            _c("p", { staticClass: "col-sm-4" }, [
+              _c("span", [_vm._v("Phó bí thư: ")]),
+              _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.name))
             ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-8 row" }, [
-          _vm.facultyAccounts.deputy_secretary1 != null
-            ? _c("p", { staticClass: "col-5" }, [
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8 row" }, [
+              _c("p", { staticClass: "col-5" }, [
                 _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.facultyAccounts.deputy_secretary1.phone))
-              ])
-            : _c("p", { staticClass: "col-sm-4" }, [
-                _c("span", [_vm._v("ĐT: ")])
+                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.phone))
               ]),
-          _vm._v(" "),
-          _vm.facultyAccounts.deputy_secretary1 != null
-            ? _c("p", { staticClass: "col-7 px-0" }, [
+              _vm._v(" "),
+              _c("p", { staticClass: "col-7 px-0" }, [
                 _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.facultyAccounts.deputy_secretary1.email))
+                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.email))
               ])
-            : _c("p", { staticClass: "col-sm-4" }, [
-                _c("span", [_vm._v("Email: ")])
-              ])
-        ])
-      ]),
+            ])
+          ])
+        : _c("div", { staticClass: "row" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3)
+          ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _vm.facultyAccounts.deputy_secretary2 != null
-          ? _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")]),
-              _vm._v(_vm._s(_vm.facultyAccounts.deputy_secretary2.name))
-            ])
-          : _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")])
+      _vm.facultyLeaderAccs.deputy_secretary2 != null
+        ? _c("div", { staticClass: "row" }, [
+            _c("p", { staticClass: "col-sm-4" }, [
+              _c("span", [_vm._v("Phó bí thư: ")]),
+              _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.name))
             ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-8 row" }, [
-          _vm.facultyAccounts.deputy_secretary2 != null
-            ? _c("p", { staticClass: "col-5" }, [
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8 row" }, [
+              _c("p", { staticClass: "col-5" }, [
                 _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.facultyAccounts.deputy_secretary2.phone))
-              ])
-            : _c("p", { staticClass: "col-sm-4" }, [
-                _c("span", [_vm._v("ĐT: ")])
+                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.phone))
               ]),
-          _vm._v(" "),
-          _vm.facultyAccounts.deputy_secretary2 != null
-            ? _c("p", { staticClass: "col-7 px-0" }, [
+              _vm._v(" "),
+              _c("p", { staticClass: "col-7 px-0" }, [
                 _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.facultyAccounts.deputy_secretary2.email))
+                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.email))
               ])
-            : _c("p", { staticClass: "col-sm-4" }, [
-                _c("span", [_vm._v("Email: ")])
-              ])
-        ])
-      ])
+            ])
+          ])
+        : _c("div", { staticClass: "row" }, [_vm._m(4), _vm._v(" "), _vm._m(5)])
     ]),
     _vm._v(" "),
-    _vm._m(0),
+    _vm._m(6),
     _vm._v(" "),
     _c("div", { staticClass: "table-responsive" }, [
       _c(
@@ -42003,7 +42144,7 @@ var render = function() {
           attrs: { id: "table" }
         },
         [
-          _vm._m(1),
+          _vm._m(7),
           _vm._v(" "),
           _c(
             "tbody",
@@ -42025,9 +42166,20 @@ var render = function() {
                   ? _c("td", [_vm._v(_vm._s(classroom.secretary.phone))])
                   : _c("td"),
                 _vm._v(" "),
-                _vm._m(2, true),
+                _c(
+                  "td",
+                  { staticClass: "text-center text-primary" },
+                  [
+                    _c(
+                      "router-link",
+                      { attrs: { to: "/students/" + classroom.id } },
+                      [_c("i", { staticClass: "far fa-eye" })]
+                    )
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _vm._m(3, true)
+                _vm._m(8, true)
               ])
             }),
             0
@@ -42038,6 +42190,60 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "col-sm-4" }, [
+      _c("span", [_vm._v("Bí thư: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-8 row" }, [
+      _c("p", { staticClass: "col-5" }, [_c("span", [_vm._v("ĐT: ")])]),
+      _vm._v(" "),
+      _c("p", { staticClass: "col-7 px-0" }, [_c("span", [_vm._v("Email: ")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "col-sm-4" }, [
+      _c("span", [_vm._v("Phó bí thư: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-8 row" }, [
+      _c("p", { staticClass: "col-5" }, [_c("span", [_vm._v("ĐT: ")])]),
+      _vm._v(" "),
+      _c("p", { staticClass: "col-7 px-0" }, [_c("span", [_vm._v("Email: ")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "col-sm-4" }, [
+      _c("span", [_vm._v("Phó bí thư: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-8 row" }, [
+      _c("p", { staticClass: "col-5" }, [_c("span", [_vm._v("ĐT: ")])]),
+      _vm._v(" "),
+      _c("p", { staticClass: "col-7 px-0" }, [_c("span", [_vm._v("Email: ")])])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -42111,16 +42317,6 @@ var staticRenderFns = [
         _c("th", { staticClass: "width-80" }, [_vm._v("Tác vụ")]),
         _vm._v(" "),
         _c("th", { staticClass: "width-100" }, [_vm._v("Ghi chú")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center text-primary" }, [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "far fa-eye" })
       ])
     ])
   },
@@ -42954,16 +43150,12 @@ var render = function() {
     _c(
       "div",
       { staticClass: "note-info" },
-      _vm._l(_vm.schoolAccounts, function(schAcc, index) {
+      _vm._l(_vm.schoolLeaderAccs, function(schAcc, index) {
         return _c("div", { key: index, staticClass: "row" }, [
           _c("p", { staticClass: "col-sm-4" }, [
             schAcc.role_id == "sec"
               ? _c("span", [_vm._v("Bí thư: ")])
-              : _vm._e(),
-            _vm._v(" "),
-            schAcc.role_id == "de1" || schAcc.role_id == "de2"
-              ? _c("span", [_vm._v("Phó bí thư: ")])
-              : _vm._e(),
+              : _c("span", [_vm._v("Phó bí thư: ")]),
             _vm._v(
               "\n                " + _vm._s(schAcc.name) + "\n            "
             )
@@ -43190,28 +43382,272 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "wrap-table" }, [
+    _c("div", { staticClass: "note-info" }, [
+      _vm.classroomLeaderAccs.secretary != null
+        ? _c("div", { staticClass: "row" }, [
+            _c("p", { staticClass: "col-sm-4" }, [
+              _c("span", [_vm._v("Bí thư: ")]),
+              _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.name))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8 row" }, [
+              _c("p", { staticClass: "col-5" }, [
+                _c("span", [_vm._v("ĐT: ")]),
+                _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.phone))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "col-7 px-0" }, [
+                _c("span", [_vm._v("Email: ")]),
+                _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.email))
+              ])
+            ])
+          ])
+        : _c("div", { staticClass: "row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._m(1)
+          ]),
+      _vm._v(" "),
+      _vm.classroomLeaderAccs.deputy_secretary1 != null
+        ? _c("div", { staticClass: "row" }, [
+            _c("p", { staticClass: "col-sm-4" }, [
+              _c("span", [_vm._v("Phó bí thư: ")]),
+              _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary1.name))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8 row" }, [
+              _c("p", { staticClass: "col-5" }, [
+                _c("span", [_vm._v("ĐT: ")]),
+                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary1.phone))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "col-7 px-0" }, [
+                _c("span", [_vm._v("Email: ")]),
+                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary1.email))
+              ])
+            ])
+          ])
+        : _c("div", { staticClass: "row" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3)
+          ]),
+      _vm._v(" "),
+      _vm.classroomLeaderAccs.deputy_secretary2 != null
+        ? _c("div", { staticClass: "row" }, [
+            _c("p", { staticClass: "col-sm-4" }, [
+              _c("span", [_vm._v("Phó bí thư: ")]),
+              _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary2.name))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-sm-8 row" }, [
+              _c("p", { staticClass: "col-5" }, [
+                _c("span", [_vm._v("ĐT: ")]),
+                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary2.phone))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "col-7 px-0" }, [
+                _c("span", [_vm._v("Email: ")]),
+                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary2.email))
+              ])
+            ])
+          ])
+        : _c("div", { staticClass: "row" }, [_vm._m(4), _vm._v(" "), _vm._m(5)])
+    ]),
+    _vm._v(" "),
+    _vm._m(6),
+    _vm._v(" "),
+    _c("div", { staticClass: "table-responsive" }, [
+      _c(
+        "table",
+        {
+          staticClass: "table table-striped table-hover table-bordered",
+          attrs: { id: "table" }
+        },
+        [
+          _vm._m(7),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.students, function(student, index) {
+              return _c("tr", { key: index }, [
+                _c("td", [_vm._v(_vm._s(index + 1))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(student.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(student.name))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(_vm._s(_vm._f("myBirthDay")(student.birthday)))
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(student.user.email))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(student.user.phone))]),
+                _vm._v(" "),
+                _vm._m(8, true),
+                _vm._v(" "),
+                _vm._m(9, true)
+              ])
+            }),
+            0
+          )
+        ]
+      )
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("List Students Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example List of Students component.\n                "
-              )
-            ])
-          ])
+    return _c("p", { staticClass: "col-sm-4" }, [
+      _c("span", [_vm._v("Bí thư: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-8 row" }, [
+      _c("p", { staticClass: "col-5" }, [_c("span", [_vm._v("ĐT: ")])]),
+      _vm._v(" "),
+      _c("p", { staticClass: "col-7 px-0" }, [_c("span", [_vm._v("Email: ")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "col-sm-4" }, [
+      _c("span", [_vm._v("Phó bí thư: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-8 row" }, [
+      _c("p", { staticClass: "col-5" }, [_c("span", [_vm._v("ĐT: ")])]),
+      _vm._v(" "),
+      _c("p", { staticClass: "col-7 px-0" }, [_c("span", [_vm._v("Email: ")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", { staticClass: "col-sm-4" }, [
+      _c("span", [_vm._v("Phó bí thư: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-8 row" }, [
+      _c("p", { staticClass: "col-5" }, [_c("span", [_vm._v("ĐT: ")])]),
+      _vm._v(" "),
+      _c("p", { staticClass: "col-7 px-0" }, [_c("span", [_vm._v("Email: ")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-3 mb-2" }, [
+        _c("div", { staticClass: "input-group" }, [
+          _c("div", { staticClass: "input-group-prepend" }, [
+            _c(
+              "span",
+              { staticClass: "input-group-text bg-danger text-white" },
+              [_vm._v("Lọc")]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              staticClass: "form-control",
+              attrs: { name: "state", id: "maxRows" }
+            },
+            [
+              _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "20" } }, [_vm._v("20")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "30" } }, [_vm._v("30")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "40" } }, [_vm._v("40")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "0", selected: "" } }, [
+                _vm._v("Tất cả")
+              ])
+            ]
+          )
         ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-9" }, [
+        _c("div", { staticClass: "input-group" }, [
+          _c("div", { staticClass: "input-group-prepend" }, [
+            _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+              _vm._v("Tìm kiếm")
+            ])
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "text", id: "table-search" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", [_vm._v("STT")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-100" }, [_vm._v("MSSV")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-200" }, [_vm._v("Họ Tên")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-100" }, [_vm._v("Ngày sinh")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-200" }, [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-100" }, [_vm._v("Điện thoại")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-80" }, [_vm._v("Tác vụ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-100" }, [_vm._v("Ghi chú")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-center text-primary" }, [
+      _c("a", { attrs: { href: "#" } }, [
+        _c("i", { staticClass: "far fa-eye" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-center" }, [
+      _c("span", { staticClass: "badge badge-pill badge-secondary" }, [
+        _vm._v("hello")
       ])
     ])
   }
@@ -58690,6 +59126,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.filter('upText', function (text) {
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.filter('myDate', function (created) {
   return moment__WEBPACK_IMPORTED_MODULE_8___default()(created).locale('vi').format('L HH:mm');
 });
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.filter('myBirthDay', function (birthday) {
+  return moment__WEBPACK_IMPORTED_MODULE_8___default()(birthday).locale('vi').format('L');
+});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -59247,15 +59686,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _StudentsClient_vue_vue_type_template_id_39dbf5a4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StudentsClient.vue?vue&type=template&id=39dbf5a4& */ "./resources/js/components/StudentsClient.vue?vue&type=template&id=39dbf5a4&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _StudentsClient_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StudentsClient.vue?vue&type=script&lang=js& */ "./resources/js/components/StudentsClient.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _StudentsClient_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _StudentsClient_vue_vue_type_template_id_39dbf5a4___WEBPACK_IMPORTED_MODULE_0__["render"],
   _StudentsClient_vue_vue_type_template_id_39dbf5a4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -59269,6 +59710,20 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/components/StudentsClient.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/StudentsClient.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/StudentsClient.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_StudentsClient_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./StudentsClient.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StudentsClient.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_StudentsClient_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -59388,7 +59843,7 @@ var routes = [{
   path: '/classrooms/:faculty_id',
   component: __webpack_require__(/*! ./components/ClassRoomsClient.vue */ "./resources/js/components/ClassRoomsClient.vue").default
 }, {
-  path: '/students',
+  path: '/students/:classroom_id',
   component: __webpack_require__(/*! ./components/StudentsClient.vue */ "./resources/js/components/StudentsClient.vue").default
 }, {
   path: '/student-profile',
