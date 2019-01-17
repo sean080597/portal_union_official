@@ -17,6 +17,11 @@ class RoleController extends Controller
         return Role::orderBy('name', 'ASC')->get();
     }
 
+    public function indexWithoutSchoolLeaderAccs()
+    {
+        return Role::whereNotIn('id', ['sec', 'de1', 'de2'])->orderBy('name', 'ASC')->get();
+    }
+
     /**
      * Show the form for creating a new resource.
      *

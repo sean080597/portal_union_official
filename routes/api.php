@@ -40,3 +40,6 @@ Route::get('/getUserStudentInfoByUserId/{user_id}', 'UserController@getUserStude
 //get user student info by student_id
 Route::get('/getUserStudentInfoByStuId/{student_id}', 'UserController@getUserStudentInfoByStuId');
 Route::get('/getRelationsByStuId/{student_id}', 'StudentController@getRelationsByStuId');
+
+//get role
+Route::get('/indexWithoutSchoolLeaderAccs', 'RoleController@indexWithoutSchoolLeaderAccs');

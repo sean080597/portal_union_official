@@ -51,7 +51,7 @@
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.role.name }}</td>
-                        <td>{{ user.updated_at | myDate }}</td>
+                        <td>{{ user.updated_at | myDateTimeFormat }}</td>
                         <td class="text-center"><a href="#" class="text-primary" @click="editModal(user)">
                             <i class="fas fa-user-edit"></i></a>
                         </td>
@@ -79,27 +79,40 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="form-group">
-                                <input v-model="form.name" type="text" name="name" placeholder="Tên TK"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
-                                <has-error :form="form" field="name"></has-error>
+                                <input v-model="form.name" type="text" name="name" placeholder="Tên TK" class="form-control"
+                                v-validate="'required|max:50'" :class="{ 'is-invalid': errors.has('name') }">
+                                <div v-show="errors.has('name')" class="invalid-feedback">{{ errors.first('name') }}</div>
                             </div>
                             <div class="form-group">
-                                <input v-model="form.email" type="text" name="email" placeholder="Email"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
+                                <input v-model="form.email" type="text" name="email" placeholder="Email" class="form-control"
+                                v-validate="'required|email'" :class="{ 'is-invalid': errors.has('email') || form.errors.has('email')}">
+                                <div v-show="errors.has('email')" class="invalid-feedback">{{ errors.first('email') }}</div>
                                 <has-error :form="form" field="email"></has-error>
                             </div>
                             <div class="form-group">
-                                <input v-model="form.password" type="text" name="password" placeholder="Mật khẩu"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                                <has-error :form="form" field="password"></has-error>
+                                <input v-model="form.password" type="password" name="password" placeholder="Password" class="form-control"
+                                v-validate="{ required: true, min: 6 }" :class="{ 'is-invalid': errors.has('password') }" />
+                                <div v-show="errors.has('password')" class="invalid-feedback">{{ errors.first('password') }}</div>
                             </div>
                             <div class="form-group">
-                                <select name="role_id" v-model="form.role_id" id="role_id"
-                                class="form-control" :class="{'is-invalid': form.errors.has('role_id')}">
+                                <select name="role_id" v-model="form.role_id" id="role_id" class="form-control" @change="onChangeSel()"
+                                :class="{ 'is-invalid': !selected }">
                                     <option value="" disabled>=== Chọn vai trò ===</option>
                                     <option v-for="(u_type, index) in user_types" :key="index" :value="u_type.id">{{ u_type.name }}</option>
                                 </select>
-                                <has-error :form="form" field="role_id"></has-error>
+                                <div v-show="!selected" class="invalid-feedback">Hãy chọn vai trò</div>
+                            </div>
+                            <div class="form-group" v-show="isCreatedStudent">
+                                <hr><h5>Thông tin đoàn viên</h5>
+                                <input v-model="form.student_id" type="number" name="student_id" placeholder="MSSV" class="form-control"
+                                v-validate="{ required: isCreatedStudent, regex: /^([0-9]{10})$/ }"
+                                :class="{ 'is-invalid': errors.has('student_id') || form.errors.has('student_id') }">
+                                <div v-show="errors.has('student_id')" class="invalid-feedback">{{ errors.first('student_id') }}</div>
+                                <has-error :form="form" field="student_id"></has-error>
+                                <p></p>
+                                <input v-model="form.student_name" type="text" name="student_name" placeholder="Tên ĐV" class="form-control"
+                                v-validate="{ required: isCreatedStudent, max: 50 }" :class="{ 'is-invalid': errors.has('student_name') }">
+                                <div v-show="errors.has('student_name')" class="help-block invalid-feedback">{{ errors.first('student_name') }}</div>
                             </div>
                         </div>
                         <!-- Modal footer -->
@@ -128,17 +141,23 @@ export default {
                 email: '',
                 password: '',
                 role_id: '',
-            })
+                student_id: '',
+                student_name: ''
+            }),
+            isCreatedStudent: false,
+            selected: false,
+            submitted: false,
         }
     },
     methods: {
         loadUsers(){
             this.$Progress.start();
             axios.get('api/user_admin').then(({data}) => (this.users = data.data));
-            axios.get('api/role_admin').then(({data}) => (this.user_types = data));
+            axios.get('api/indexWithoutSchoolLeaderAccs').then(({data}) => (this.user_types = data));
             this.$Progress.finish();
         },
         newModal(){
+            this.selected = false;
             this.editMode = false;
             this.form.reset();
             $('#modalUserAdmin').modal('show');
@@ -152,20 +171,34 @@ export default {
         },
         createUser(){
             this.$Progress.start();
-            this.form.post('api/user_admin')
-            .then(() => {
-                //set event to reload faculties
-                Fire.$emit('ReloadUser');
-                $('#modalUserAdmin').modal('hide');
-                toast({
-                    type: 'success',
-                    title: 'Tạo TK thành công'
-                });
-            })
-            .catch(() => {
-                Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+            //check if all field is valid in vee-validate
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.form.post('api/user_admin')
+                    .then(response => {
+                        if(response.data.isSuccess){
+                            //set event to reload faculties
+                            Fire.$emit('ReloadUser');
+                            $('#modalUserAdmin').modal('hide');
+                            toast({
+                                type: 'success',
+                                title: 'Tạo TK thành công'
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        //do sth with error
+                    });
+                }
+                if(!result){
+                    //do sth with error
+                }
             });
             this.$Progress.finish();
+        },
+        onChangeSel(){
+            this.isCreatedStudent = this.form.role_id != 'adm' && this.form.role_id != 'sch';
+            this.selected = true;
         },
     },
     created(){

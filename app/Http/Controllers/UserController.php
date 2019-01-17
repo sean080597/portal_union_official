@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with('role')->latest()->paginate(40);
+        return User::with('role')->latest()->paginate(30);
     }
 
     /**
@@ -43,22 +43,24 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|string|max:50',
-            'email' => 'required|string|max:191|email|unique:users',
-            'password' => 'required|string|min:6',
-            'role_id' => 'required|string|max:50'
+            'email' => 'max:191|email|unique:users',
+            'student_id' => 'unique:students,id'
         ]);
 
-        // User::create([
-        //     'name' => $request['name'],
-        //     'email' => $request['email'],
-        //     'password' => bcrypt($request['password']),
-        //     'role_id' => $request['role_id'],
-        // ]);
+        User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => bcrypt($request['password']),
+            'role_id' => $request['role_id'],
+        ]);
 
-        // return Student::create([
-        //     'name' => 'Flight 10'
-        // ]);
+        if(!empty($request['student_id'])){
+            Student::create([
+                'id' => $request['student_id'],
+                'name' => $request['student_name']
+            ]);
+        }
+        return response()->json(['isSuccess' => true]);
     }
 
     /**

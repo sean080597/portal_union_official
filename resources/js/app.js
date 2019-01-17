@@ -5,26 +5,30 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require('./bootstrap')
 
-window.Vue = require('vue');
+window.Vue = require('vue')
 
-window.Fire = new Vue();
+window.Fire = new Vue()
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router';
-import {routes} from './routes';
-import StoreData from './store';
-import { Form, HasError, AlertError } from 'vform';
-import VueProgressBar from 'vue-progressbar';
-import Swal from 'sweetalert2';
+import VeeValidate from 'vee-validate'
+import vSelect from 'vue-select'
+import VueRouter from 'vue-router'
+import {routes} from './routes'
+import StoreData from './store'
+import { Form, HasError, AlertError } from 'vform'
+import VueProgressBar from 'vue-progressbar'
+import Swal from 'sweetalert2'
 //moment js
-import moment from 'moment';
+import moment from 'moment'
 
 //vueX & vueRouter
-Vue.use(VueRouter);
+Vue.use(VeeValidate)
+Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.component('v-select', vSelect)
 
 const store = new Vuex.Store(StoreData);
 //vue form
@@ -59,7 +63,7 @@ Vue.filter('upText', function (text) {
 });
 
 Vue.filter('myDateTimeFormat', function(created){
-    return moment(created).locale('vi').format('L LT');
+    return moment(created).locale('vi').format('L LT');//29/12/2018 10:35
 });
 
 Vue.filter('myDateFormat', function(birthday){
