@@ -63,12 +63,10 @@
                     <li>
                         <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
                         <ul class="collapse list-unstyled" id="quan-ly-admin">
-                            <li><a href="#">Đoàn viên</a></li>
+                            <li><router-link to="/students-admin">Đoàn viên</router-link></li>
                             <li><router-link to="/classrooms-admin">Lớp</router-link></li>
                             <li><router-link to="/faculties-admin">Khoa</router-link></li>
-                            @if (auth()->user()->role_id == 'adm')
                             <li><router-link to="/users-admin">Tài khoản</router-link></li>
-                            @endif
                         </ul>
                     </li>
                     <li><a href="#">Thống Kê</a></li>

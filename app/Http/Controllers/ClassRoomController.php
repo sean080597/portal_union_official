@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ClassRoom;
+use App\Student;
 use Illuminate\Http\Request;
 
 class ClassRoomController extends Controller
@@ -111,5 +112,16 @@ class ClassRoomController extends Controller
     //get classroom leader accounts
     public function getClassroomAccs($classroom_id){
         return ClassRoom::with(['secretary', 'deputySecretary1', 'deputySecretary2'])->findOrFail($classroom_id);
+    }
+
+    //get all classrooms
+    public function getAllClassrooms(){
+        return ClassRoom::orderBy('id', 'ASC')->get()->chunk(50);
+    }
+
+    //get all classrooms by student_id
+    public function getAllClassroomsByFacultyID($faculty_id){
+        $classrooms = ClassRoom::where('faculty_id', $faculty_id)->orderBy('id', 'ASC')->get()->chunk(50);
+        return $classrooms->collapse();
     }
 }

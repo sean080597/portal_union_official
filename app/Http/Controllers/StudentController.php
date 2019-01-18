@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Student;
 use Illuminate\Http\Request;
+use DB;
 
 class StudentController extends Controller
 {
@@ -14,7 +15,12 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        // return Student::with('classroom')->latest()->paginate(30);
+        return DB::table('students AS s')->select('s.*', 's.id as mssv', 'f.id as faculty_id', 'f.name as faculty_name', 'u.*')
+        ->join('users AS u', 'u.id', '=', 's.user_id')
+        ->join('class_rooms AS c', 'c.id', '=', 's.class_room_id')
+        ->join('faculties AS f', 'f.id', '=', 'c.faculty_id')
+        ->orderBy('s.created_at', 'DESC')->paginate(30);
     }
 
     public function index_client($classroom_id)

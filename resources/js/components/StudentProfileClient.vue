@@ -35,7 +35,7 @@
                     <div class="form-group col-md-6">
                         <label for="sex">Giới tính <span class="text-danger">(*)</span></label>
                         <select name="sex" id="sex" class="form-control">
-                            <option value="-1" disabled>=== Chọn giới tính ===</option>
+                            <option value="" disabled>=== Chọn giới tính ===</option>
                             <option value="1" :selected="student_info.sex">Nam</option>
                             <option value="0" :selected="!student_info.sex">Nữ</option>
                         </select>
@@ -55,16 +55,16 @@
                         <input type="number" class="form-control" id="phonenum" :value="student_info.phone">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="doan">Ngày vào đoàn: <span class="text-danger">(*)</span></label>
-                        <input type="date" class="form-control" id="doan" :value="student_info.union_date">
+                        <label for="union_date">Ngày vào đoàn: <span class="text-danger">(*)</span></label>
+                        <input type="date" class="form-control" id="union_date" :value="student_info.union_date">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="dantoc">Dân tộc:</label>
-                        <input type="text" class="form-control" id="dantoc" :value="student_info.ethnic">
+                        <label for="ethnic">Dân tộc:</label>
+                        <input type="text" class="form-control" id="ethnic" :value="student_info.ethnic">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="tongiao">Tôn giáo:</label>
-                        <input type="text" class="form-control" id="tongiao" :value="student_info.religion">
+                        <label for="religion">Tôn giáo:</label>
+                        <input type="text" class="form-control" id="religion" :value="student_info.religion">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="vanhoa">Trình độ văn hóa: <span class="text-danger">(*)</span></label>
@@ -88,8 +88,8 @@
                         </select>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="diachi">Địa chỉ <span class="text-danger">(*)</span></label>
-                        <input type="text" class="form-control" name="diachi" id="diachi" placeholder="Số nhà, đường, phường/ xã"
+                        <label for="address">Địa chỉ <span class="text-danger">(*)</span></label>
+                        <input type="text" class="form-control" name="address" id="address" placeholder="Số nhà, đường, phường/ xã"
                         :value="student_info.address">
                     </div>
                 </div>
@@ -100,41 +100,45 @@
                 <div class="row" v-if="relations.length > 0">
                     <div class="col-md-6" v-for="(relation, index) in relations" :key="index">
                         <div class="form-group">
-                            <label for="tencha" v-if="relation.role == 1">Họ tên cha: <span class="text-danger">(*)</span></label>
-                            <label for="tencha" v-else>Họ tên mẹ: <span class="text-danger">(*)</span></label>
-                            <input type="text" class="form-control" name="tencha" id="tencha" :value="relation.name">
+                            <label for="father_name" v-if="relation.role == 1">Họ tên cha: <span class="text-danger">(*)</span></label>
+                            <label for="mother_name" v-else>Họ tên mẹ: <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" :name="(relation.role == 1) ? 'father_name' : 'mother_name'"
+                            :id="(relation.role == 1) ? 'father_name' : 'mother_name'" :value="relation.name">
                         </div>
                         <div class="form-group">
-                            <label for="ngaysinhcha">Ngày sinh: <span class="text-danger">(*)</span></label>
-                            <input type="date" class="form-control" name="ngaysinhcha" id="ngaysinhcha" :value="relation.birthday">
+                            <label :for="(relation.role == 1) ? 'father_birthday' : 'mother_birthday'">Ngày sinh: <span class="text-danger">(*)</span></label>
+                            <input type="date" class="form-control" :name="(relation.role == 1) ? 'father_birthday' : 'mother_birthday'"
+                            :id="(relation.role == 1) ? 'father_birthday' : 'mother_birthday'" :value="relation.birthday">
                         </div>
                         <div class="form-group">
-                            <label for="nghenghiepcha">Nghề nghiệp: </label>
-                            <input type="text" class="form-control" name="nghenghiepcha" id="nghenghiepcha" :value="relation.job">
+                            <label :for="(relation.role == 1) ? 'father_job' : 'mother_job'">Nghề nghiệp: </label>
+                            <input type="text" class="form-control" :name="(relation.role == 1) ? 'father_job' : 'mother_job'"
+                            :id="(relation.role == 1) ? 'father_job' : 'mother_job'" :value="relation.job">
                         </div>
                         <div class="form-group">
-                            <label for="dienthoaicha">Điện thoại: <span class="text-danger">(*)</span></label>
-                            <input type="number" class="form-control" name="dienthoaicha" id="dienthoaicha" :value="relation.phone">
+                            <label :for="(relation.role == 1) ? 'father_phone' : 'mother_phone'">Điện thoại: <span class="text-danger">(*)</span></label>
+                            <input type="number" class="form-control" :name="(relation.role == 1) ? 'father_phone' : 'mother_phone'"
+                            :id="(relation.role == 1) ? 'father_phone' : 'mother_phone'" :value="relation.phone">
                         </div>
                     </div>
                 </div>
                 <div class="row" v-else>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="tencha">Họ tên cha: <span class="text-danger">(*)</span></label>
-                            <input type="text" class="form-control" name="tencha" id="tencha">
+                            <label for="father_name">Họ tên cha: <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" name="father_name" id="father_name">
                         </div>
                         <div class="form-group">
-                            <label for="ngaysinhcha">Ngày sinh: <span class="text-danger">(*)</span></label>
-                            <input type="date" class="form-control" name="ngaysinhcha" id="ngaysinhcha">
+                            <label for="father_birthday">Ngày sinh: <span class="text-danger">(*)</span></label>
+                            <input type="date" class="form-control" name="father_birthday" id="father_birthday">
                         </div>
                         <div class="form-group">
-                            <label for="nghenghiepcha">Nghề nghiệp: </label>
-                            <input type="text" class="form-control" name="nghenghiepcha" id="nghenghiepcha">
+                            <label for="father_job">Nghề nghiệp: </label>
+                            <input type="text" class="form-control" name="father_job" id="father_job">
                         </div>
                         <div class="form-group">
-                            <label for="dienthoaicha">Điện thoại: <span class="text-danger">(*)</span></label>
-                            <input type="number" class="form-control" name="dienthoaicha" id="dienthoaicha">
+                            <label for="father_phone">Điện thoại: <span class="text-danger">(*)</span></label>
+                            <input type="number" class="form-control" name="father_phone" id="father_phone">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -143,16 +147,16 @@
                             <input type="text" class="form-control" name="tenme" id="tenme">
                         </div>
                         <div class="form-group">
-                            <label for="ngaysinhme">Ngày sinh: <span class="text-danger">(*)</span></label>
-                            <input type="date" class="form-control" name="ngaysinhme" id="ngaysinhme">
+                            <label for="mother_birthday">Ngày sinh: <span class="text-danger">(*)</span></label>
+                            <input type="date" class="form-control" name="mother_birthday" id="mother_birthday">
                         </div>
                         <div class="form-group">
-                            <label for="nghenghiepme">Nghề nghiệp: </label>
-                            <input type="text" class="form-control" name="nghenghiepme" id="nghenghiepme">
+                            <label for="mother_job">Nghề nghiệp: </label>
+                            <input type="text" class="form-control" name="mother_job" id="mother_job">
                         </div>
                         <div class="form-group">
-                            <label for="dienthoaime">Điện thoại: <span class="text-danger">(*)</span></label>
-                            <input type="number" class="form-control" name="dienthoaime" id="dienthoaime">
+                            <label for="mother_phone">Điện thoại: <span class="text-danger">(*)</span></label>
+                            <input type="number" class="form-control" name="mother_phone" id="mother_phone">
                         </div>
                     </div>
                 </div>

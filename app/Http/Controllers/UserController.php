@@ -115,7 +115,7 @@ class UserController extends Controller
 
     //get user with student info by student_id
     public function getUserStudentInfoByStuId($student_id){
-        return DB::table('students AS s')->select('s.*', 's.id as mssv', 'f.name as faculty_name', 'u.*')
+        return DB::table('students AS s')->select('s.*', 's.id as mssv', 'f.id as faculty_id', 'f.name as faculty_name', 'u.*')
         ->join('users AS u', 'u.id', '=', 's.user_id')
         ->join('class_rooms AS c', 'c.id', '=', 's.class_room_id')
         ->join('faculties AS f', 'f.id', '=', 'c.faculty_id')

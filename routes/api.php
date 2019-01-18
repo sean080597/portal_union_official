@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Student;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,14 +23,18 @@ Route::apiResources(['role_admin' => 'RoleController']);
 Route::apiResources(['user_admin' => 'UserController']);
 Route::apiResources(['faculty_admin' => 'FacultyController']);
 Route::apiResources(['classroom_admin' => 'ClassRoomController']);
+Route::apiResources(['student_admin' => 'StudentController']);
 
 //Client
 //Faculty
 Route::get('/getSchoolLeaderAccs', 'FacultyController@getSchoolLeaderAccs');
+Route::get('/getAllFaculties', 'FacultyController@getAllFaculties');
 
 //ClassRoom
 Route::get('/getFacultyLeaderAccs/{faculty_id}', 'FacultyController@getFacultyLeaderAccs');
 Route::get('/getClassroomsClient/{faculty_id}', 'ClassRoomController@index_client');
+Route::get('/getAllClassrooms', 'ClassRoomController@getAllClassrooms');
+Route::get('/getAllClassroomsByFacultyID/{faculty_id}', 'ClassRoomController@getAllClassroomsByFacultyID');
 
 //Student
 Route::get('/getClassroomAccs/{classroom_id}', 'ClassRoomController@getClassroomAccs');
@@ -43,3 +48,6 @@ Route::get('/getRelationsByStuId/{student_id}', 'StudentController@getRelationsB
 
 //get role
 Route::get('/indexWithoutSchoolLeaderAccs', 'RoleController@indexWithoutSchoolLeaderAccs');
+Route::get('/allblahblah', function(){
+    return Student::where('class_room_id', '15DTH12')->latest()->get()->chunk(50);
+});

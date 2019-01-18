@@ -116,4 +116,9 @@ class FacultyController extends Controller
     public function getFacultyLeaderAccs($faculty_id){
         return Faculty::with(['secretary', 'deputySecretary1', 'deputySecretary2'])->findOrFail($faculty_id);
     }
+
+    //get all faculties
+    public function getAllFaculties(){
+        return Faculty::orderBy('name', 'ASC')->get();
+    }
 }
