@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Student;
 use Illuminate\Http\Request;
 use DB;
+use Image;
 
 class StudentController extends Controller
 {
@@ -97,5 +98,18 @@ class StudentController extends Controller
     public function getRelationsByStuId($student_id)
     {
         return Student::findOrfail($student_id)->relations;
+    }
+
+    public function updateProfile(Request $request){
+        // return $request->image;
+        if($request->image){
+            //get extension of base64 string
+            $regex = '/^[^\/]+\/([\w]+)/';
+            preg_match($regex, $request->image, $extension);
+            //generate new name
+            $name = time() . '.' . $extension[1];
+            Image::make($request->image)->save(public_path('img/').$name);
+        }
+        return response()->json(['message' => 'Success']);
     }
 }

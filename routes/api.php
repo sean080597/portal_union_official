@@ -39,6 +39,7 @@ Route::get('/getAllClassroomsByFacultyID/{faculty_id}', 'ClassRoomController@get
 //Student
 Route::get('/getClassroomAccs/{classroom_id}', 'ClassRoomController@getClassroomAccs');
 Route::get('/getStudentsClient/{classroom_id}', 'StudentController@index_client');
+Route::put('/updateProfile', 'StudentController@updateProfile');
 
 //get user student info by user_id
 Route::get('/getUserStudentInfoByUserId/{user_id}', 'UserController@getUserStudentInfoByUserId');

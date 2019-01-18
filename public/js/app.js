@@ -2803,40 +2803,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2845,7 +2811,30 @@ __webpack_require__.r(__webpack_exports__);
       faculty_id: '',
       faculties: {},
       classrooms: {},
-      relations: {}
+      relations: {},
+      form: new Form({
+        id: this.$route.params.student_id,
+        name: '',
+        birthday: '',
+        sex: '',
+        hometown: '',
+        union_date: '',
+        religion: '',
+        is_submit: '',
+        phone: '',
+        email: '',
+        address: '',
+        image: '',
+        class_room_id: '',
+        father_name: '',
+        father_birthday: '',
+        father_phone: '',
+        father_job: '',
+        mother_name: '',
+        mother_birthday: '',
+        mother_phone: '',
+        mother_job: ''
+      })
     };
   },
   methods: {
@@ -2855,7 +2844,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.start();
       axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
         var data = _ref.data;
-        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id;
+        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id;
       }).then(function () {
         axios.get('/api/getAllClassroomsByFacultyID/' + _this.faculty_id).then(function (_ref2) {
           var data = _ref2.data;
@@ -2868,11 +2857,32 @@ __webpack_require__.r(__webpack_exports__);
       });
       axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref4) {
         var data = _ref4.data;
-        return _this.relations = data, _this.$Progress.finish();
+        return _this.relations = data, _this.assignRelationsInfo(_this.form, data), _this.$Progress.finish();
       });
     },
+    assignRelationsInfo: function assignRelationsInfo(form, relations) {
+      $.each(relations, function (index, value) {
+        if (value.role == 1) {
+          form.father_name = value.name, form.father_birthday = value.birthday, form.father_phone = value.phone, form.father_job = value.job;
+        } else {
+          form.mother_name = value.name, form.mother_birthday = value.birthday, form.mother_phone = value.phone, form.mother_job = value.job;
+        }
+      });
+    },
+    updateProfile: function updateProfile(e) {
+      var _this2 = this;
+
+      var file = e.target.files[0];
+      var reader = new FileReader();
+
+      reader.onloadend = function (file) {
+        _this2.form.image = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    },
     submitChangeInfoStudent: function submitChangeInfoStudent() {
-      Swal('Sorry!', 'Doing!', 'error');
+      this.form.put('/api/updateProfile').then(function () {}).catch(function () {});
     }
   },
   created: function created() {
@@ -52767,9 +52777,25 @@ var render = function() {
             _vm._m(0),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.id,
+                  expression: "form.id"
+                }
+              ],
               staticClass: "form-control",
               attrs: { type: "text", disabled: "" },
-              domProps: { value: _vm.student_info.mssv }
+              domProps: { value: _vm.form.id },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "id", $event.target.value)
+                }
+              }
             })
           ]),
           _vm._v(" "),
@@ -52799,7 +52825,8 @@ var render = function() {
                   _vm._v(" "),
                   _c("input", {
                     staticClass: "form-control-file border",
-                    attrs: { type: "file", id: "image" }
+                    attrs: { type: "file", id: "image" },
+                    on: { change: _vm.updateProfile }
                   })
                 ]),
                 _vm._v(" "),
@@ -52807,13 +52834,30 @@ var render = function() {
                   _c("label", { attrs: { for: "name" } }, [_vm._v("Họ Tên")]),
                   _vm._v(" "),
                   _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.name,
+                        expression: "form.name"
+                      }
+                    ],
                     staticClass: "form-control",
                     attrs: {
                       type: "text",
+                      name: "name",
                       id: "name",
                       placeholder: "Nguyễn Văn A"
                     },
-                    domProps: { value: _vm.student_info.name }
+                    domProps: { value: _vm.form.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "name", $event.target.value)
+                      }
+                    }
                   })
                 ]),
                 _vm._v(" "),
@@ -52825,9 +52869,25 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.birthday,
+                            expression: "form.birthday"
+                          }
+                        ],
                         staticClass: "form-control",
                         attrs: { type: "date", id: "birthday" },
-                        domProps: { value: _vm.student_info.birthday }
+                        domProps: { value: _vm.form.birthday },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "birthday", $event.target.value)
+                          }
+                        }
                       })
                     ])
                   ]),
@@ -52841,8 +52901,35 @@ var render = function() {
                       _c(
                         "select",
                         {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.sex,
+                              expression: "form.sex"
+                            }
+                          ],
                           staticClass: "form-control",
-                          attrs: { name: "sex", id: "sex" }
+                          attrs: { name: "sex", id: "sex" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.form,
+                                "sex",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
                         },
                         [
                           _c(
@@ -52855,7 +52942,7 @@ var render = function() {
                             "option",
                             {
                               attrs: { value: "1" },
-                              domProps: { selected: _vm.student_info.sex }
+                              domProps: { selected: _vm.form.sex }
                             },
                             [_vm._v("Nam")]
                           ),
@@ -52864,7 +52951,7 @@ var render = function() {
                             "option",
                             {
                               attrs: { value: "0" },
-                              domProps: { selected: !_vm.student_info.sex }
+                              domProps: { selected: !_vm.form.sex }
                             },
                             [_vm._v("Nữ")]
                           )
@@ -52880,9 +52967,29 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.union_date,
+                            expression: "form.union_date"
+                          }
+                        ],
                         staticClass: "form-control",
                         attrs: { type: "date", id: "union_date" },
-                        domProps: { value: _vm.student_info.union_date }
+                        domProps: { value: _vm.form.union_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "union_date",
+                              $event.target.value
+                            )
+                          }
+                        }
                       })
                     ])
                   ]),
@@ -52894,9 +53001,25 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.hometown,
+                            expression: "form.hometown"
+                          }
+                        ],
                         staticClass: "form-control",
                         attrs: { type: "text", id: "hometown" },
-                        domProps: { value: _vm.student_info.hometown }
+                        domProps: { value: _vm.form.hometown },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "hometown", $event.target.value)
+                          }
+                        }
                       })
                     ])
                   ]),
@@ -52908,9 +53031,25 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.ethnic,
+                            expression: "form.ethnic"
+                          }
+                        ],
                         staticClass: "form-control",
                         attrs: { type: "text", id: "ethnic" },
-                        domProps: { value: _vm.student_info.ethnic }
+                        domProps: { value: _vm.form.ethnic },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "ethnic", $event.target.value)
+                          }
+                        }
                       })
                     ])
                   ]),
@@ -52922,9 +53061,25 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.religion,
+                            expression: "form.religion"
+                          }
+                        ],
                         staticClass: "form-control",
                         attrs: { type: "text", id: "religion" },
-                        domProps: { value: _vm.student_info.religion }
+                        domProps: { value: _vm.form.religion },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "religion", $event.target.value)
+                          }
+                        }
                       })
                     ])
                   ]),
@@ -52939,9 +53094,52 @@ var render = function() {
                         },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.is_submit,
+                                expression: "form.is_submit"
+                              }
+                            ],
                             staticClass: "form-check-input",
                             attrs: { type: "checkbox", id: "is_submit" },
-                            domProps: { checked: _vm.student_info.is_submit }
+                            domProps: {
+                              checked: _vm.form.is_submit,
+                              checked: Array.isArray(_vm.form.is_submit)
+                                ? _vm._i(_vm.form.is_submit, null) > -1
+                                : _vm.form.is_submit
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.form.is_submit,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      _vm.$set(
+                                        _vm.form,
+                                        "is_submit",
+                                        $$a.concat([$$v])
+                                      )
+                                  } else {
+                                    $$i > -1 &&
+                                      _vm.$set(
+                                        _vm.form,
+                                        "is_submit",
+                                        $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1))
+                                      )
+                                  }
+                                } else {
+                                  _vm.$set(_vm.form, "is_submit", $$c)
+                                }
+                              }
+                            }
                           }),
                           _vm._v(
                             "\n                                        Nộp sổ đoàn"
@@ -52956,9 +53154,25 @@ var render = function() {
                       _c("label", { attrs: { for: "phone" } }, [_vm._v("SĐT")]),
                       _vm._v(" "),
                       _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.phone,
+                            expression: "form.phone"
+                          }
+                        ],
                         staticClass: "form-control",
                         attrs: { type: "number", id: "phone" },
-                        domProps: { value: _vm.student_info.phone }
+                        domProps: { value: _vm.form.phone },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "phone", $event.target.value)
+                          }
+                        }
                       })
                     ])
                   ])
@@ -52968,6 +53182,14 @@ var render = function() {
                   _c("label", { attrs: { for: "email" } }, [_vm._v("Email")]),
                   _vm._v(" "),
                   _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.email,
+                        expression: "form.email"
+                      }
+                    ],
                     staticClass: "form-control",
                     attrs: {
                       type: "email",
@@ -52975,7 +53197,15 @@ var render = function() {
                       placeholder: "nguyenvana@gmail.com",
                       required: ""
                     },
-                    domProps: { value: _vm.student_info.email }
+                    domProps: { value: _vm.form.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "email", $event.target.value)
+                      }
+                    }
                   })
                 ]),
                 _vm._v(" "),
@@ -52985,9 +53215,25 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.address,
+                        expression: "form.address"
+                      }
+                    ],
                     staticClass: "form-control",
                     attrs: { name: "address", id: "address", rows: "3" },
-                    domProps: { textContent: _vm._s(_vm.student_info.address) }
+                    domProps: { value: _vm.form.address },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "address", $event.target.value)
+                      }
+                    }
                   })
                 ])
               ])
@@ -53053,8 +53299,35 @@ var render = function() {
                   _c(
                     "select",
                     {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.form.class_room_id,
+                          expression: "form.class_room_id"
+                        }
+                      ],
                       staticClass: "form-control",
-                      attrs: { name: "class-room", id: "class-room" }
+                      attrs: { name: "class-room", id: "class-room" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.form,
+                            "class_room_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
                     },
                     [
                       _c("option", { attrs: { value: "", disabled: "" } }, [
@@ -53082,161 +53355,309 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm.relations.length > 0
-              ? _c(
-                  "div",
-                  _vm._l(_vm.relations, function(relation, index) {
-                    return _c("div", { key: index, staticClass: "card" }, [
-                      relation.role == 1
-                        ? _c(
-                            "div",
-                            {
-                              staticClass: "card-header bg-secondary text-white"
-                            },
-                            [_vm._v("Thông tin Cha")]
-                          )
-                        : _c(
-                            "div",
-                            {
-                              staticClass: "card-header bg-secondary text-white"
-                            },
-                            [_vm._v("Thông tin Mẹ")]
-                          ),
+            _c("div", { staticClass: "card" }, [
+              _c(
+                "div",
+                { staticClass: "card-header bg-secondary text-white" },
+                [_vm._v("Thông tin Cha")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "father_name" } }, [
+                    _vm._v("Họ tên")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.father_name,
+                        expression: "form.father_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      id: "father_name",
+                      name: "father_name"
+                    },
+                    domProps: { value: _vm.form.father_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "father_name", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "father_birthday" } }, [
+                        _vm._v("Ngày sinh")
+                      ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "card-body" }, [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c(
-                            "label",
-                            {
-                              attrs: {
-                                for:
-                                  relation.role == 1
-                                    ? "father_name"
-                                    : "mother_name"
-                              }
-                            },
-                            [_vm._v("Họ tên")]
-                          ),
-                          _vm._v(" "),
-                          _c("input", {
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name:
-                                relation.role == 1
-                                  ? "father_name"
-                                  : "mother_name",
-                              id:
-                                relation.role == 1
-                                  ? "father_name"
-                                  : "mother_name"
-                            },
-                            domProps: { value: relation.name }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "row" }, [
-                          _c("div", { staticClass: "col-lg-6" }, [
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  attrs: {
-                                    for:
-                                      relation.role == 1
-                                        ? "father_birthday"
-                                        : "mother_birthday"
-                                  }
-                                },
-                                [_vm._v("Ngày sinh")]
-                              ),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "date",
-                                  name:
-                                    relation.role == 1
-                                      ? "father_birthday"
-                                      : "mother_birthday",
-                                  id:
-                                    relation.role == 1
-                                      ? "father_birthday"
-                                      : "mother_birthday"
-                                },
-                                domProps: { value: relation.birthday }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-lg-6" }, [
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  attrs: {
-                                    for:
-                                      relation.role == 1
-                                        ? "father_phone"
-                                        : "mother_phone"
-                                  }
-                                },
-                                [_vm._v("Điện thoại")]
-                              ),
-                              _vm._v(" "),
-                              _c("input", {
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "number",
-                                  name:
-                                    relation.role == 1
-                                      ? "father_phone"
-                                      : "mother_phone",
-                                  id:
-                                    relation.role == 1
-                                      ? "father_phone"
-                                      : "mother_phone"
-                                },
-                                domProps: { value: relation.phone }
-                              })
-                            ])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "form-group" }, [
-                          _c(
-                            "label",
-                            {
-                              attrs: {
-                                for:
-                                  relation.role == 1
-                                    ? "father_job"
-                                    : "mother_job"
-                              }
-                            },
-                            [_vm._v("Công việc")]
-                          ),
-                          _vm._v(" "),
-                          _c("input", {
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name:
-                                relation.role == 1
-                                  ? "father_job"
-                                  : "mother_job",
-                              id:
-                                relation.role == 1 ? "father_job" : "mother_job"
-                            },
-                            domProps: { value: relation.job }
-                          })
-                        ])
-                      ])
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.father_birthday,
+                            expression: "form.father_birthday"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "date",
+                          id: "father_birthday",
+                          name: "father_birthday"
+                        },
+                        domProps: { value: _vm.form.father_birthday },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "father_birthday",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
                     ])
-                  }),
-                  0
-                )
-              : _c("div", [_vm._m(1), _vm._v(" "), _vm._m(2)])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "father_phone" } }, [
+                        _vm._v("Điện thoại")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.father_phone,
+                            expression: "form.father_phone"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "number",
+                          id: "father_phone",
+                          name: "father_phone"
+                        },
+                        domProps: { value: _vm.form.father_phone },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "father_phone",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "father_job" } }, [
+                    _vm._v("Công việc")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.father_job,
+                        expression: "form.father_job"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      id: "father_job",
+                      name: "father_job"
+                    },
+                    domProps: { value: _vm.form.father_job },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "father_job", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card mb-2" }, [
+              _c(
+                "div",
+                { staticClass: "card-header bg-secondary text-white" },
+                [_vm._v("Thông tin Mẹ")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "mother_name" } }, [
+                    _vm._v("Họ tên")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.mother_name,
+                        expression: "form.mother_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      id: "mother_name",
+                      name: "mother_name"
+                    },
+                    domProps: { value: _vm.form.mother_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "mother_name", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "mother_birthday" } }, [
+                        _vm._v("Ngày sinh")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.mother_birthday,
+                            expression: "form.mother_birthday"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "date",
+                          id: "mother_birthday",
+                          name: "mother_birthday"
+                        },
+                        domProps: { value: _vm.form.mother_birthday },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "mother_birthday",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "mother_phone" } }, [
+                        _vm._v("Điện thoại")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.mother_phone,
+                            expression: "form.mother_phone"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "number",
+                          id: "mother_phone",
+                          name: "mother_phone"
+                        },
+                        domProps: { value: _vm.form.mother_phone },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "mother_phone",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "mother_job" } }, [
+                    _vm._v("Công việc")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.mother_job,
+                        expression: "form.mother_job"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      id: "mother_job",
+                      name: "mother_job"
+                    },
+                    domProps: { value: _vm.form.mother_job },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.form, "mother_job", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
           ]),
           _vm._v(" "),
           _c(
@@ -53259,122 +53680,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group-prepend" }, [
       _c("span", { staticClass: "input-group-text" }, [_vm._v("MSSV")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header bg-secondary text-white" }, [
-        _vm._v("Thông tin Cha")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "father-name" } }, [_vm._v("Họ tên")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "father-name" }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-lg-6" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "father-birthday" } }, [
-                _vm._v("Ngày sinh")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "date", id: "father-birthday" }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-lg-6" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "father-phone" } }, [
-                _vm._v("Điện thoại")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "number", id: "father-phone" }
-              })
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "father-job" } }, [_vm._v("Công việc")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "father-job" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card mb-2" }, [
-      _c("div", { staticClass: "card-header bg-secondary text-white" }, [
-        _vm._v("Thông tin Mẹ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "mother-name" } }, [_vm._v("Họ tên")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "mother-name" }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-lg-6" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "mother-birthday" } }, [
-                _vm._v("Ngày sinh")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "date", id: "mother-birthday" }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-lg-6" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "mother-phone" } }, [
-                _vm._v("Điện thoại")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "number", id: "mother-phone" }
-              })
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "mother-job" } }, [_vm._v("Công việc")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "mother-job" }
-          })
-        ])
-      ])
     ])
   }
 ]
