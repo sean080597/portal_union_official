@@ -2803,6 +2803,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2834,7 +2862,8 @@ __webpack_require__.r(__webpack_exports__);
         mother_birthday: '',
         mother_phone: '',
         mother_job: ''
-      })
+      }),
+      pathUpdateProfileImage: ''
     };
   },
   methods: {
@@ -2844,11 +2873,12 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.start();
       axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
         var data = _ref.data;
-        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id;
+        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set path image of student
+        _this.setPathUpdateProfileImage(data[0].image);
       }).then(function () {
         axios.get('/api/getAllClassroomsByFacultyID/' + _this.faculty_id).then(function (_ref2) {
           var data = _ref2.data;
-          return _this.classrooms = data, _this.$Progress.increase(20);
+          return _this.classrooms = data, _this.$Progress.finish();
         });
       });
       axios.get('/api/getAllFaculties').then(function (_ref3) {
@@ -2857,7 +2887,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref4) {
         var data = _ref4.data;
-        return _this.relations = data, _this.assignRelationsInfo(_this.form, data), _this.$Progress.finish();
+        return _this.relations = data, _this.assignRelationsInfo(_this.form, data), _this.$Progress.increase(20);
       });
     },
     assignRelationsInfo: function assignRelationsInfo(form, relations) {
@@ -2869,20 +2899,70 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    updateProfile: function updateProfile(e) {
+    updateImageProfile: function updateImageProfile(e) {
       var _this2 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
 
-      reader.onloadend = function (file) {
-        _this2.form.image = reader.result;
-      };
+      if (file != null) {
+        if (file['type'] == "image/jpeg" || file['type'] == "image/jpg" || file['type'] == "image/png") {
+          if (file['size'] < 2097153) {
+            reader.onloadend = function (file) {
+              _this2.form.image = reader.result;
+            };
 
-      reader.readAsDataURL(file);
+            reader.readAsDataURL(file);
+            $("#update-profile-img").attr("src", window.URL.createObjectURL(file));
+          } else {
+            Swal({
+              type: 'error',
+              title: 'Oops...',
+              text: 'Kích thước file không vượt quá 2MB'
+            });
+            this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
+            $("#image").val(null);
+            $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+          }
+        } else {
+          Swal({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Vui lòng chọn file ảnh'
+          });
+          this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
+          $("#image").val(null);
+          $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+        }
+      } else {
+        this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
+        $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+      }
     },
     submitChangeInfoStudent: function submitChangeInfoStudent() {
-      this.form.put('/api/updateProfile').then(function () {}).catch(function () {});
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this3.form.put('/api/updateProfile').then(function () {
+            _this3.$Progress.finish();
+          }).catch(function () {
+            _this3.$Progress.fail();
+          });
+        } else {
+          Swal('error', 'blahbla', 'error');
+
+          _this3.$Progress.fail();
+        }
+      });
+    },
+    setPathUpdateProfileImage: function setPathUpdateProfileImage(form_image) {
+      if (form_image != null && form_image != 'img_avatar1.png') {
+        this.pathUpdateProfileImage = '/theme/images_profile/' + form_image;
+      } else {
+        this.pathUpdateProfileImage = '/theme/images/img_avatar1.png';
+      }
     }
   },
   created: function created() {
@@ -52817,8 +52897,9 @@ var render = function() {
                     _c("img", {
                       staticStyle: { width: "30%" },
                       attrs: {
-                        src: "/theme/images/img_avatar1.png",
-                        alt: "anh"
+                        src: _vm.pathUpdateProfileImage,
+                        alt: "anh",
+                        id: "update-profile-img"
                       }
                     })
                   ]),
@@ -52826,7 +52907,7 @@ var render = function() {
                   _c("input", {
                     staticClass: "form-control-file border",
                     attrs: { type: "file", id: "image" },
-                    on: { change: _vm.updateProfile }
+                    on: { change: _vm.updateImageProfile }
                   })
                 ]),
                 _vm._v(" "),
@@ -52840,9 +52921,16 @@ var render = function() {
                         rawName: "v-model",
                         value: _vm.form.name,
                         expression: "form.name"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|max:50",
+                        expression: "'required|max:50'"
                       }
                     ],
                     staticClass: "form-control",
+                    class: { "is-invalid": _vm.errors.has("name") },
                     attrs: {
                       type: "text",
                       name: "name",
@@ -52858,7 +52946,23 @@ var render = function() {
                         _vm.$set(_vm.form, "name", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("name"),
+                          expression: "errors.has('name')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("name")))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
@@ -53160,10 +53264,26 @@ var render = function() {
                             rawName: "v-model",
                             value: _vm.form.phone,
                             expression: "form.phone"
+                          },
+                          {
+                            name: "validate",
+                            rawName: "v-validate",
+                            value: "numeric|min:10",
+                            expression: "'numeric|min:10'"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { type: "number", id: "phone" },
+                        class: { "is-invalid": _vm.errors.has("phone") },
+                        attrs: {
+                          type: "text",
+                          id: "phone",
+                          name: "phone",
+                          maxlength: "10",
+                          onkeypress:
+                            "return event.keyCode>47 && event.keyCode<58 ? true : false",
+                          onkeydown:
+                            "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                        },
                         domProps: { value: _vm.form.phone },
                         on: {
                           input: function($event) {
@@ -53173,41 +53293,92 @@ var render = function() {
                             _vm.$set(_vm.form, "phone", $event.target.value)
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.errors.has("phone"),
+                              expression: "errors.has('phone')"
+                            }
+                          ],
+                          staticClass: "invalid-feedback"
+                        },
+                        [_vm._v(_vm._s(_vm.errors.first("phone")))]
+                      )
                     ])
                   ])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "email" } }, [_vm._v("Email")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.email,
-                        expression: "form.email"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      type: "email",
-                      id: "email",
-                      placeholder: "nguyenvana@gmail.com",
-                      required: ""
-                    },
-                    domProps: { value: _vm.form.email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { attrs: { for: "email" } }, [_vm._v("Email")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.form.email,
+                          expression: "form.email"
+                        },
+                        {
+                          name: "validate",
+                          rawName: "v-validate",
+                          value: "required|email",
+                          expression: "'required|email'"
                         }
-                        _vm.$set(_vm.form, "email", $event.target.value)
+                      ],
+                      staticClass: "form-control",
+                      class: {
+                        "is-invalid":
+                          _vm.errors.has("email") ||
+                          _vm.form.errors.has("email")
+                      },
+                      attrs: {
+                        type: "text",
+                        name: "email",
+                        placeholder: "nguyenvana@gmail.com"
+                      },
+                      domProps: { value: _vm.form.email },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.form, "email", $event.target.value)
+                        }
                       }
-                    }
-                  })
-                ]),
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.errors.has("email"),
+                            expression: "errors.has('email')"
+                          }
+                        ],
+                        staticClass: "invalid-feedback"
+                      },
+                      [_vm._v(_vm._s(_vm.errors.first("email")))]
+                    ),
+                    _vm._v(" "),
+                    _c("has-error", {
+                      attrs: { form: _vm.form, field: "email" }
+                    })
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "address" } }, [
@@ -53221,9 +53392,19 @@ var render = function() {
                         rawName: "v-model",
                         value: _vm.form.address,
                         expression: "form.address"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|min:10|max:100",
+                        expression: "'required|min:10|max:100'"
                       }
                     ],
                     staticClass: "form-control",
+                    class: {
+                      textarea: true,
+                      "is-invalid": _vm.errors.has("address")
+                    },
                     attrs: { name: "address", id: "address", rows: "3" },
                     domProps: { value: _vm.form.address },
                     on: {
@@ -53234,7 +53415,23 @@ var render = function() {
                         _vm.$set(_vm.form, "address", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("address"),
+                          expression: "errors.has('address')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("address")))]
+                  )
                 ])
               ])
             ])
@@ -53375,9 +53572,16 @@ var render = function() {
                         rawName: "v-model",
                         value: _vm.form.father_name,
                         expression: "form.father_name"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "alpha_spaces",
+                        expression: "'alpha_spaces'"
                       }
                     ],
                     staticClass: "form-control",
+                    class: { "is-invalid": _vm.errors.has("father_name") },
                     attrs: {
                       type: "text",
                       id: "father_name",
@@ -53392,7 +53596,23 @@ var render = function() {
                         _vm.$set(_vm.form, "father_name", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("father_name"),
+                          expression: "errors.has('father_name')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("father_name")))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
@@ -53447,13 +53667,25 @@ var render = function() {
                             rawName: "v-model",
                             value: _vm.form.father_phone,
                             expression: "form.father_phone"
+                          },
+                          {
+                            name: "validate",
+                            rawName: "v-validate",
+                            value: "numeric|min:10",
+                            expression: "'numeric|min:10'"
                           }
                         ],
                         staticClass: "form-control",
+                        class: { "is-invalid": _vm.errors.has("father_phone") },
                         attrs: {
-                          type: "number",
+                          type: "text",
                           id: "father_phone",
-                          name: "father_phone"
+                          name: "father_phone",
+                          maxlength: "10",
+                          onkeypress:
+                            "return event.keyCode>47 && event.keyCode<58 ? true : false",
+                          onkeydown:
+                            "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
                         },
                         domProps: { value: _vm.form.father_phone },
                         on: {
@@ -53468,7 +53700,23 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.errors.has("father_phone"),
+                              expression: "errors.has('father_phone')"
+                            }
+                          ],
+                          staticClass: "invalid-feedback"
+                        },
+                        [_vm._v(_vm._s(_vm.errors.first("father_phone")))]
+                      )
                     ])
                   ])
                 ]),
@@ -53485,9 +53733,16 @@ var render = function() {
                         rawName: "v-model",
                         value: _vm.form.father_job,
                         expression: "form.father_job"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "alpha_spaces",
+                        expression: "'alpha_spaces'"
                       }
                     ],
                     staticClass: "form-control",
+                    class: { "is-invalid": _vm.errors.has("father_job") },
                     attrs: {
                       type: "text",
                       id: "father_job",
@@ -53502,7 +53757,23 @@ var render = function() {
                         _vm.$set(_vm.form, "father_job", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("father_job"),
+                          expression: "errors.has('father_job')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("father_job")))]
+                  )
                 ])
               ])
             ]),
@@ -53527,9 +53798,16 @@ var render = function() {
                         rawName: "v-model",
                         value: _vm.form.mother_name,
                         expression: "form.mother_name"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "alpha_spaces",
+                        expression: "'alpha_spaces'"
                       }
                     ],
                     staticClass: "form-control",
+                    class: { "is-invalid": _vm.errors.has("mother_name") },
                     attrs: {
                       type: "text",
                       id: "mother_name",
@@ -53544,7 +53822,23 @@ var render = function() {
                         _vm.$set(_vm.form, "mother_name", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("mother_name"),
+                          expression: "errors.has('mother_name')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("mother_name")))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
@@ -53599,13 +53893,25 @@ var render = function() {
                             rawName: "v-model",
                             value: _vm.form.mother_phone,
                             expression: "form.mother_phone"
+                          },
+                          {
+                            name: "validate",
+                            rawName: "v-validate",
+                            value: "numeric|min:10",
+                            expression: "'numeric|min:10'"
                           }
                         ],
                         staticClass: "form-control",
+                        class: { "is-invalid": _vm.errors.has("mother_phone") },
                         attrs: {
-                          type: "number",
+                          type: "text",
                           id: "mother_phone",
-                          name: "mother_phone"
+                          name: "mother_phone",
+                          maxlength: "10",
+                          onkeypress:
+                            "return event.keyCode>47 && event.keyCode<58 ? true : false",
+                          onkeydown:
+                            "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
                         },
                         domProps: { value: _vm.form.mother_phone },
                         on: {
@@ -53620,7 +53926,23 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.errors.has("mother_phone"),
+                              expression: "errors.has('mother_phone')"
+                            }
+                          ],
+                          staticClass: "invalid-feedback"
+                        },
+                        [_vm._v(_vm._s(_vm.errors.first("mother_phone")))]
+                      )
                     ])
                   ])
                 ]),
@@ -53637,9 +53959,16 @@ var render = function() {
                         rawName: "v-model",
                         value: _vm.form.mother_job,
                         expression: "form.mother_job"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "alpha_spaces",
+                        expression: "'alpha_spaces'"
                       }
                     ],
                     staticClass: "form-control",
+                    class: { "is-invalid": _vm.errors.has("mother_job") },
                     attrs: {
                       type: "text",
                       id: "mother_job",
@@ -53654,7 +53983,23 @@ var render = function() {
                         _vm.$set(_vm.form, "mother_job", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("mother_job"),
+                          expression: "errors.has('mother_job')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("mother_job")))]
+                  )
                 ])
               ])
             ])

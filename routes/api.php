@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use App\Student;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes

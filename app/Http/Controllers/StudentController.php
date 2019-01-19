@@ -101,15 +101,23 @@ class StudentController extends Controller
     }
 
     public function updateProfile(Request $request){
-        // return $request->image;
-        if($request->image){
+        $student = Student::findOrfail($request->id);
+        $this->validate($request, [
+            'email' => 'max:191|unique:users,email,'.$student->user->email.',email',
+        ]);
+
+        if($request->image != $student->image){
             //get extension of base64 string
             $regex = '/^[^\/]+\/([\w]+)/';
             preg_match($regex, $request->image, $extension);
             //generate new name
-            $name = time() . '.' . $extension[1];
-            Image::make($request->image)->save(public_path('img/').$name);
+            $name = time() . mt_rand(1000, 99999) . '.' . $extension[1];
+            Image::make($request->image)->save(public_path('theme/images_profile/').$name);
+            //assign image name
+            $request->merge(['image' => $name]);
         }
+        $student->update($request->all());
+        $student->user->update($request->all());
         return response()->json(['message' => 'Success']);
     }
 }

@@ -15,14 +15,15 @@
                             <div class="form-group">
                                 <label for="image">Hình Ảnh</label>
                                 <div class="wrap-avatar mb-1">
-                                    <img :src="'/theme/images/img_avatar1.png'" alt="anh" style="width:30%">
+                                    <img :src="pathUpdateProfileImage" alt="anh" style="width:30%" id="update-profile-img">
                                 </div>
-                                <input type="file" id="image" class="form-control-file border" @change="updateProfile">
+                                <input type="file" id="image" class="form-control-file border" @change="updateImageProfile">
                             </div>
                             <div class="form-group">
                                 <label for="name">Họ Tên</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Nguyễn Văn A"
-                                v-model="form.name">
+                                v-model="form.name" v-validate="'required|max:50'" :class="{ 'is-invalid': errors.has('name') }">
+                                <div v-show="errors.has('name')" class="invalid-feedback">{{ errors.first('name') }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
@@ -76,18 +77,27 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="phone">SĐT</label>
-                                        <input type="number" class="form-control" id="phone" v-model="form.phone">
+                                        <input type="text" class="form-control" id="phone" name="phone"
+                                        v-model="form.phone" maxlength="10"
+                                        onkeypress="return event.keyCode>47 && event.keyCode<58 ? true : false"
+                                        onkeydown="return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                                        v-validate="'numeric|min:10'"  :class="{ 'is-invalid': errors.has('phone')}">
+                                        <div v-show="errors.has('phone')" class="invalid-feedback">{{ errors.first('phone') }}</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="nguyenvana@gmail.com" required
-                                v-model="form.email">
+                                <input v-model="form.email" type="text" name="email" placeholder="nguyenvana@gmail.com" class="form-control"
+                                v-validate="'required|email'" :class="{ 'is-invalid': errors.has('email') || form.errors.has('email')}">
+                                <div v-show="errors.has('email')" class="invalid-feedback">{{ errors.first('email') }}</div>
+                                <has-error :form="form" field="email"></has-error>
                             </div>
                             <div class="form-group">
                                 <label for="address">Địa chỉ</label>
-                                <textarea name="address" id="address" rows="3" class="form-control" v-model="form.address"></textarea>
+                                <textarea name="address" id="address" rows="3" class="form-control" v-model="form.address"
+                                v-validate="'required|min:10|max:100'" :class="{'textarea': true, 'is-invalid': errors.has('address') }"></textarea>
+                                <div v-show="errors.has('address')" class="invalid-feedback">{{ errors.first('address') }}</div>
                             </div>
                         </div>
                     </div>
@@ -121,7 +131,9 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="father_name">Họ tên</label>
-                                <input type="text" class="form-control" id="father_name" name="father_name" v-model="form.father_name">
+                                <input type="text" class="form-control" id="father_name" name="father_name" v-model="form.father_name"
+                                v-validate="'alpha_spaces'" :class="{ 'is-invalid': errors.has('father_name')}">
+                                <div v-show="errors.has('father_name')" class="invalid-feedback">{{ errors.first('father_name') }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
@@ -133,13 +145,20 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="father_phone">Điện thoại</label>
-                                        <input type="number" class="form-control" id="father_phone" name="father_phone" v-model="form.father_phone">
+                                        <input type="text" class="form-control" id="father_phone" name="father_phone"
+                                        v-model="form.father_phone" maxlength="10"
+                                        onkeypress="return event.keyCode>47 && event.keyCode<58 ? true : false"
+                                        onkeydown="return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                                        v-validate="'numeric|min:10'"  :class="{ 'is-invalid': errors.has('father_phone')}">
+                                        <div v-show="errors.has('father_phone')" class="invalid-feedback">{{ errors.first('father_phone') }}</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="father_job">Công việc</label>
-                                <input type="text" class="form-control" id="father_job" name="father_job" v-model="form.father_job">
+                                <input type="text" class="form-control" id="father_job" name="father_job" v-model="form.father_job"
+                                v-validate="'alpha_spaces'" :class="{ 'is-invalid': errors.has('father_job')}">
+                                <div v-show="errors.has('father_job')" class="invalid-feedback">{{ errors.first('father_job') }}</div>
                             </div>
                         </div>
                     </div>
@@ -148,7 +167,9 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="mother_name">Họ tên</label>
-                                <input type="text" class="form-control" id="mother_name" name="mother_name" v-model="form.mother_name">
+                                <input type="text" class="form-control" id="mother_name" name="mother_name" v-model="form.mother_name"
+                                v-validate="'alpha_spaces'" :class="{ 'is-invalid': errors.has('mother_name')}">
+                                <div v-show="errors.has('mother_name')" class="invalid-feedback">{{ errors.first('mother_name') }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
@@ -160,13 +181,20 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="mother_phone">Điện thoại</label>
-                                        <input type="number" class="form-control" id="mother_phone" name="mother_phone" v-model="form.mother_phone">
+                                        <input type="text" class="form-control" id="mother_phone" name="mother_phone"
+                                        v-model="form.mother_phone" maxlength="10"
+                                        onkeypress="return event.keyCode>47 && event.keyCode<58 ? true : false"
+                                        onkeydown="return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                                        v-validate="'numeric|min:10'"  :class="{ 'is-invalid': errors.has('mother_phone')}">
+                                        <div v-show="errors.has('mother_phone')" class="invalid-feedback">{{ errors.first('mother_phone') }}</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="mother_job">Công việc</label>
-                                <input type="text" class="form-control" id="mother_job" name="mother_job" v-model="form.mother_job">
+                                <input type="text" class="form-control" id="mother_job" name="mother_job" v-model="form.mother_job"
+                                v-validate="'alpha_spaces'" :class="{ 'is-invalid': errors.has('mother_job')}">
+                                <div v-show="errors.has('mother_job')" class="invalid-feedback">{{ errors.first('mother_job') }}</div>
                             </div>
                         </div>
                     </div>
@@ -209,7 +237,8 @@ export default {
                 mother_birthday: '',
                 mother_phone: '',
                 mother_job: '',
-            })
+            }),
+            pathUpdateProfileImage: '',
         }
     },
     methods: {
@@ -228,10 +257,13 @@ export default {
                 this.form.phone = data[0].phone,
                 this.form.email = data[0].email,
                 this.form.address = data[0].address,
-                this.form.class_room_id = data[0].class_room_id
+                this.form.class_room_id = data[0].class_room_id,
+                this.form.image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
+                //set path image of student
+                this.setPathUpdateProfileImage(data[0].image)
             )).then(() => {
                 axios.get('/api/getAllClassroomsByFacultyID/' + this.faculty_id).then(({data}) => (
-                    this.classrooms = data, this.$Progress.increase(20)
+                    this.classrooms = data, this.$Progress.finish()
                 ));
             });
             axios.get('/api/getAllFaculties').then(({data}) => (
@@ -240,7 +272,7 @@ export default {
             axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
                 this.relations = data,
                 this.assignRelationsInfo(this.form, data),
-                this.$Progress.finish()
+                this.$Progress.increase(20)
             ));
         },
         assignRelationsInfo(form, relations){
@@ -258,23 +290,66 @@ export default {
                 }
             })
         },
-        updateProfile(e){
+        updateImageProfile(e){
             let file = e.target.files[0];
             let reader = new FileReader();
-            reader.onloadend = (file) => {
-                this.form.image = reader.result;
+            if(file != null){
+                if (file['type'] == "image/jpeg" || file['type'] == "image/jpg" || file['type'] == "image/png"){
+                    if(file['size'] < 2097153){
+                        reader.onloadend = (file) => {
+                            this.form.image = reader.result;
+                        }
+                        reader.readAsDataURL(file);
+                        $("#update-profile-img").attr("src", window.URL.createObjectURL(file));
+                    }else{
+                        Swal({
+                            type: 'error',
+                            title: 'Oops...',
+                            text: 'Kích thước file không vượt quá 2MB'
+                        });
+                        this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
+                        $("#image").val(null);
+                        $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+                    }
+                }else{
+                    Swal({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: 'Vui lòng chọn file ảnh'
+                    });
+                    this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
+                    $("#image").val(null);
+                    $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+                }
+            }else{
+                this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
+                $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
             }
-            reader.readAsDataURL(file);
         },
         submitChangeInfoStudent(){
-            this.form.put('/api/updateProfile')
-            .then(()=>{
-
-            })
-            .catch(()=>{
-
+            this.$Progress.start();
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.form.put('/api/updateProfile')
+                    .then(()=>{
+                        this .$Progress.finish();
+                    })
+                    .catch(()=>{
+                        this .$Progress.fail();
+                    });
+                }else{
+                    Swal('error', 'blahbla', 'error');
+                    this.$Progress.fail();
+                }
             });
         },
+        setPathUpdateProfileImage(form_image){
+            if(form_image != null && form_image != 'img_avatar1.png'){
+                this.pathUpdateProfileImage = '/theme/images_profile/' + form_image;
+            }else{
+                this.pathUpdateProfileImage = '/theme/images/img_avatar1.png';
+            }
+        }
     },
     created() {
         this.loadStudentInfo();
