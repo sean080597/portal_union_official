@@ -116,7 +116,7 @@ class ClassRoomController extends Controller
 
     //get all classrooms
     public function getAllClassrooms(){
-        return ClassRoom::orderBy('id', 'ASC')->get()->chunk(50);
+        return ClassRoom::orderBy('id', 'ASC')->get()->chunk(50)->collapse();
     }
 
     //get all classrooms by student_id

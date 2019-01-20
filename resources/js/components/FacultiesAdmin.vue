@@ -162,11 +162,7 @@ export default {
                         //set event to reload faculties
                         Fire.$emit('ReloadFaculty');
                         if (result.value) {
-                            Swal(
-                            'Đã xóa!',
-                            'Đã xóa khoa thành công.',
-                            'success'
-                            )
+                            Swal('Đã xóa!', 'Đã xóa khoa thành công.', 'success');
                         }
                     })
                     .catch(() => {

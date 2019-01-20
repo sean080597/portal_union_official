@@ -108,7 +108,8 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="faculty_id">Đoàn khoa</label>
-                                <select name="faculty_id" id="faculty_id" class="form-control">
+                                <select name="faculty_id" id="faculty_id" v-model="faculty_id" class="form-control"
+                                @change="filtedClassrooms">
                                     <option value="" disabled>=== Chọn Khoa / Viện ===</option>
                                     <option v-for="(faculty, index) in faculties" :key="index" :value="faculty.id"
                                     :selected="faculty.id == student_info.faculty_id"
@@ -116,12 +117,14 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="class-room">Chi đoàn</label>
-                                <select v-model="form.class_room_id" name="class-room" id="class-room" class="form-control">
+                                <label for="class_room">Chi đoàn</label>
+                                <select v-model="form.class_room_id" name="class_room" id="class_room" class="form-control"
+                                v-validate="'required'" :class="{'is-invalid': form.class_room_id == ''}">
                                     <option value="" disabled>=== Chọn Lớp ===</option>
                                     <option v-for="(classroom, index) in classrooms" :key="index" :value="classroom.id"
                                     :selected="classroom.id == student_info.class_room_id">{{ classroom.id }}</option>
                                 </select>
+                                <div v-show="errors.has('class_room')" class="invalid-feedback">{{ errors.first('class_room') }}</div>
                             </div>
                         </div>
                     </div>
@@ -214,6 +217,7 @@ export default {
             faculty_id: '',
             faculties: {},
             classrooms: {},
+            all_classrooms: {},
             relations: {},
             form: new Form({
                 id: this.$route.params.student_id,
@@ -239,6 +243,7 @@ export default {
                 mother_job: '',
             }),
             pathUpdateProfileImage: '',
+            isFirstLoading: true,
         }
     },
     methods: {
@@ -261,14 +266,13 @@ export default {
                 this.form.image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
                 //set path image of student
                 this.setPathUpdateProfileImage(data[0].image)
-            )).then(() => {
-                axios.get('/api/getAllClassroomsByFacultyID/' + this.faculty_id).then(({data}) => (
-                    this.classrooms = data, this.$Progress.finish()
-                ));
-            });
+            ));
             axios.get('/api/getAllFaculties').then(({data}) => (
                 this.faculties = data, this.$Progress.increase(20)
             ));
+            axios.get('/api/getAllClassrooms').then(({data}) => (
+                this.all_classrooms = data, this.$Progress.increase(20)
+            )).then(() => { this.filtedClassrooms() });
             axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
                 this.relations = data,
                 this.assignRelationsInfo(this.form, data),
@@ -332,13 +336,15 @@ export default {
                 if (result) {
                     this.form.put('/api/updateProfile')
                     .then(()=>{
-                        this .$Progress.finish();
+                        // Swal('Success', 'Đã sửa thông tin thành công!', 'success');
+                        toast({type: 'success', title: 'Đã sửa thông tin thành công!'});
+                        this.$Progress.finish();
                     })
                     .catch(()=>{
-                        this .$Progress.fail();
+                        this.$Progress.fail();
                     });
                 }else{
-                    Swal('error', 'blahbla', 'error');
+                    // Swal('error', 'Chưa điền đầy đủ thông tin!', 'error');
                     this.$Progress.fail();
                 }
             });
@@ -349,6 +355,15 @@ export default {
             }else{
                 this.pathUpdateProfileImage = '/theme/images/img_avatar1.png';
             }
+        },
+        filtedClassrooms(){
+            if(!this.isFirstLoading){
+                //reset select option
+                this.form.class_room_id = '';
+            }else{
+                this.isFirstLoading = false;
+            }
+            this.classrooms = this.all_classrooms.filter(el => el.faculty_id == this.faculty_id);
         }
     },
     created() {

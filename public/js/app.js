@@ -2831,6 +2831,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2839,6 +2842,7 @@ __webpack_require__.r(__webpack_exports__);
       faculty_id: '',
       faculties: {},
       classrooms: {},
+      all_classrooms: {},
       relations: {},
       form: new Form({
         id: this.$route.params.student_id,
@@ -2863,7 +2867,8 @@ __webpack_require__.r(__webpack_exports__);
         mother_phone: '',
         mother_job: ''
       }),
-      pathUpdateProfileImage: ''
+      pathUpdateProfileImage: '',
+      isFirstLoading: true
     };
   },
   methods: {
@@ -2875,15 +2880,16 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref.data;
         return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set path image of student
         _this.setPathUpdateProfileImage(data[0].image);
-      }).then(function () {
-        axios.get('/api/getAllClassroomsByFacultyID/' + _this.faculty_id).then(function (_ref2) {
-          var data = _ref2.data;
-          return _this.classrooms = data, _this.$Progress.finish();
-        });
       });
-      axios.get('/api/getAllFaculties').then(function (_ref3) {
-        var data = _ref3.data;
+      axios.get('/api/getAllFaculties').then(function (_ref2) {
+        var data = _ref2.data;
         return _this.faculties = data, _this.$Progress.increase(20);
+      });
+      axios.get('/api/getAllClassrooms').then(function (_ref3) {
+        var data = _ref3.data;
+        return _this.all_classrooms = data, _this.$Progress.increase(20);
+      }).then(function () {
+        _this.filtedClassrooms();
       });
       axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref4) {
         var data = _ref4.data;
@@ -2946,13 +2952,18 @@ __webpack_require__.r(__webpack_exports__);
       this.$validator.validateAll().then(function (result) {
         if (result) {
           _this3.form.put('/api/updateProfile').then(function () {
+            // Swal('Success', 'Đã sửa thông tin thành công!', 'success');
+            toast({
+              type: 'success',
+              title: 'Đã sửa thông tin thành công!'
+            });
+
             _this3.$Progress.finish();
           }).catch(function () {
             _this3.$Progress.fail();
           });
         } else {
-          Swal('error', 'blahbla', 'error');
-
+          // Swal('error', 'Chưa điền đầy đủ thông tin!', 'error');
           _this3.$Progress.fail();
         }
       });
@@ -2963,6 +2974,20 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.pathUpdateProfileImage = '/theme/images/img_avatar1.png';
       }
+    },
+    filtedClassrooms: function filtedClassrooms() {
+      var _this4 = this;
+
+      if (!this.isFirstLoading) {
+        //reset select option
+        this.form.class_room_id = '';
+      } else {
+        this.isFirstLoading = false;
+      }
+
+      this.classrooms = this.all_classrooms.filter(function (el) {
+        return el.faculty_id == _this4.faculty_id;
+      });
     }
   },
   created: function created() {
@@ -53454,8 +53479,34 @@ var render = function() {
                   _c(
                     "select",
                     {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.faculty_id,
+                          expression: "faculty_id"
+                        }
+                      ],
                       staticClass: "form-control",
-                      attrs: { name: "faculty_id", id: "faculty_id" }
+                      attrs: { name: "faculty_id", id: "faculty_id" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.faculty_id = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          _vm.filtedClassrooms
+                        ]
+                      }
                     },
                     [
                       _c("option", { attrs: { value: "", disabled: "" } }, [
@@ -53489,7 +53540,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "class-room" } }, [
+                  _c("label", { attrs: { for: "class_room" } }, [
                     _vm._v("Chi đoàn")
                   ]),
                   _vm._v(" "),
@@ -53502,10 +53553,17 @@ var render = function() {
                           rawName: "v-model",
                           value: _vm.form.class_room_id,
                           expression: "form.class_room_id"
+                        },
+                        {
+                          name: "validate",
+                          rawName: "v-validate",
+                          value: "required",
+                          expression: "'required'"
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { name: "class-room", id: "class-room" },
+                      class: { "is-invalid": _vm.form.class_room_id == "" },
+                      attrs: { name: "class_room", id: "class_room" },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -53547,6 +53605,22 @@ var render = function() {
                       })
                     ],
                     2
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("class_room"),
+                          expression: "errors.has('class_room')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("class_room")))]
                   )
                 ])
               ])

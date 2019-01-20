@@ -116,8 +116,26 @@ class StudentController extends Controller
             //assign image name
             $request->merge(['image' => $name]);
         }
+        //update student
         $student->update($request->all());
         $student->user->update($request->all());
+        foreach ($student->relations as $key => $value) {
+            if($value->role == 1){
+                $value->update([
+                    'name' => $request->father_name,
+                    'birthday' => $request->father_birthday,
+                    'phone' => $request->father_phone,
+                    'job' => $request->father_job,
+                ]);
+            }else{
+                $value->update([
+                    'name' => $request->mother_name,
+                    'birthday' => $request->mother_birthday,
+                    'phone' => $request->mother_phone,
+                    'job' => $request->mother_job,
+                ]);
+            }
+        }
         return response()->json(['message' => 'Success']);
     }
 }
