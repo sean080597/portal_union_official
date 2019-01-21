@@ -109,10 +109,6 @@
                                 :class="{ 'is-invalid': errors.has('student_id') || form.errors.has('student_id') }">
                                 <div v-show="errors.has('student_id')" class="invalid-feedback">{{ errors.first('student_id') }}</div>
                                 <has-error :form="form" field="student_id"></has-error>
-                                <p></p>
-                                <input v-model="form.student_name" type="text" name="student_name" placeholder="Tên ĐV" class="form-control"
-                                v-validate="{ required: isCreatedStudent, max: 50 }" :class="{ 'is-invalid': errors.has('student_name') }">
-                                <div v-show="errors.has('student_name')" class="help-block invalid-feedback">{{ errors.first('student_name') }}</div>
                             </div>
                         </div>
                         <!-- Modal footer -->
@@ -142,7 +138,6 @@ export default {
                 password: '',
                 role_id: '',
                 student_id: '',
-                student_name: ''
             }),
             isCreatedStudent: false,
             selected: false,
@@ -153,6 +148,9 @@ export default {
         loadUsers(){
             this.$Progress.start();
             axios.get('api/user_admin').then(({data}) => (this.users = data.data));
+            this.$Progress.set(80);
+        },
+        loadUserTypes(){
             axios.get('api/indexWithoutSchoolLeaderAccs').then(({data}) => (this.user_types = data));
             this.$Progress.finish();
         },
@@ -200,9 +198,36 @@ export default {
             this.isCreatedStudent = this.form.role_id != 'adm' && this.form.role_id != 'sch';
             this.selected = true;
         },
+        deleteUser(user_id){
+            Swal({
+                title: 'Bạn có chắc chắn muốn xóa?',
+                text: "Bạn sẽ không thể hoàn lại dữ liệu này!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa!'
+            }).then((result) => {
+                if(result.value){
+                    //send request to server
+                    this.form.delete('api/user_admin/' + user_id)
+                    .then(() => {
+                        //set event to reload faculties
+                        Fire.$emit('ReloadUser');
+                        if (result.value) {
+                            Swal('Đã xóa!', 'Đã xóa user thành công.', 'success');
+                        }
+                    })
+                    .catch(() => {
+                        Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+                    });
+                }
+            })
+        }
     },
     created(){
         this.loadUsers();
+        this.loadUserTypes();
         Fire.$on('ReloadUser', ()=>{
             this.loadUsers();
         });

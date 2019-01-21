@@ -33,7 +33,6 @@ Route::get('/getAllFaculties', 'FacultyController@getAllFaculties');
 Route::get('/getFacultyLeaderAccs/{faculty_id}', 'FacultyController@getFacultyLeaderAccs');
 Route::get('/getClassroomsClient/{faculty_id}', 'ClassRoomController@index_client');
 Route::get('/getAllClassrooms', 'ClassRoomController@getAllClassrooms');
-Route::get('/getAllClassroomsByFacultyID/{faculty_id}', 'ClassRoomController@getAllClassroomsByFacultyID');
 
 //Student
 Route::get('/getClassroomAccs/{classroom_id}', 'ClassRoomController@getClassroomAccs');

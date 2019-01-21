@@ -57,7 +57,7 @@ class UserController extends Controller
         if(!empty($request['student_id'])){
             Student::create([
                 'id' => $request['student_id'],
-                'name' => $request['student_name']
+                'name' => $request['name']
             ]);
         }
         return response()->json(['isSuccess' => true]);
@@ -103,9 +103,19 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($user_id)
     {
-        //
+        $u = User::findOrfail($user_id);
+        if(!empty($u->student)){
+            $re = $u->student->relations;
+            if($re->count() > 0){
+                $re->detach();
+            }
+        }
+        $u->delete();
+        return ['message' => 'Deleted successfully'];
+        // return User::destroy($user_id);
+        // return ['message' => 'Deleted Faculty'];
     }
 
     //get user with student info by user_id

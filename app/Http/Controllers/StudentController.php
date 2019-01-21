@@ -106,7 +106,8 @@ class StudentController extends Controller
             'email' => 'max:191|unique:users,email,'.$student->user->email.',email',
         ]);
 
-        if($request->image != $student->image){
+        $current_image = $student->image;
+        if($request->image != $current_image){
             //get extension of base64 string
             $regex = '/^[^\/]+\/([\w]+)/';
             preg_match($regex, $request->image, $extension);
@@ -115,6 +116,11 @@ class StudentController extends Controller
             Image::make($request->image)->save(public_path('theme/images_profile/').$name);
             //assign image name
             $request->merge(['image' => $name]);
+            //delete old image
+            $pathOldImage = public_path('theme/images_profile/').$current_image;
+            if(file_exists($pathOldImage)){
+                @unlink($pathOldImage);
+            }
         }
         //update student
         $student->update($request->all());

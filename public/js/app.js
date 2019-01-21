@@ -3593,10 +3593,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3609,8 +3605,7 @@ __webpack_require__.r(__webpack_exports__);
         email: '',
         password: '',
         role_id: '',
-        student_id: '',
-        student_name: ''
+        student_id: ''
       }),
       isCreatedStudent: false,
       selected: false,
@@ -3626,9 +3621,14 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref.data;
         return _this.users = data.data;
       });
+      this.$Progress.set(80);
+    },
+    loadUserTypes: function loadUserTypes() {
+      var _this2 = this;
+
       axios.get('api/indexWithoutSchoolLeaderAccs').then(function (_ref2) {
         var data = _ref2.data;
-        return _this.user_types = data;
+        return _this2.user_types = data;
       });
       this.$Progress.finish();
     },
@@ -3646,13 +3646,13 @@ __webpack_require__.r(__webpack_exports__);
       this.form.id = user.id;
     },
     createUser: function createUser() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$Progress.start(); //check if all field is valid in vee-validate
 
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this2.form.post('api/user_admin').then(function (response) {
+          _this3.form.post('api/user_admin').then(function (response) {
             if (response.data.isSuccess) {
               //set event to reload faculties
               Fire.$emit('ReloadUser');
@@ -3674,14 +3674,42 @@ __webpack_require__.r(__webpack_exports__);
     onChangeSel: function onChangeSel() {
       this.isCreatedStudent = this.form.role_id != 'adm' && this.form.role_id != 'sch';
       this.selected = true;
+    },
+    deleteUser: function deleteUser(user_id) {
+      var _this4 = this;
+
+      Swal({
+        title: 'Bạn có chắc chắn muốn xóa?',
+        text: "Bạn sẽ không thể hoàn lại dữ liệu này!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Xóa!'
+      }).then(function (result) {
+        if (result.value) {
+          //send request to server
+          _this4.form.delete('api/user_admin/' + user_id).then(function () {
+            //set event to reload faculties
+            Fire.$emit('ReloadUser');
+
+            if (result.value) {
+              Swal('Đã xóa!', 'Đã xóa user thành công.', 'success');
+            }
+          }).catch(function () {
+            Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+          });
+        }
+      });
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this5 = this;
 
     this.loadUsers();
+    this.loadUserTypes();
     Fire.$on('ReloadUser', function () {
-      _this3.loadUsers();
+      _this5.loadUsers();
     });
   }
 });
@@ -55781,68 +55809,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("has-error", {
                           attrs: { form: _vm.form, field: "student_id" }
-                        }),
-                        _vm._v(" "),
-                        _c("p"),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.student_name,
-                              expression: "form.student_name"
-                            },
-                            {
-                              name: "validate",
-                              rawName: "v-validate",
-                              value: {
-                                required: _vm.isCreatedStudent,
-                                max: 50
-                              },
-                              expression:
-                                "{ required: isCreatedStudent, max: 50 }"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          class: {
-                            "is-invalid": _vm.errors.has("student_name")
-                          },
-                          attrs: {
-                            type: "text",
-                            name: "student_name",
-                            placeholder: "Tên ĐV"
-                          },
-                          domProps: { value: _vm.form.student_name },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.form,
-                                "student_name",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: _vm.errors.has("student_name"),
-                                expression: "errors.has('student_name')"
-                              }
-                            ],
-                            staticClass: "help-block invalid-feedback"
-                          },
-                          [_vm._v(_vm._s(_vm.errors.first("student_name")))]
-                        )
+                        })
                       ],
                       1
                     )

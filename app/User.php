@@ -36,4 +36,8 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Student');
     }
+
+    public function relations(){
+        return $this->student->relations();
+    }
 }
