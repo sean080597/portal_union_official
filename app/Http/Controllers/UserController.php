@@ -92,9 +92,20 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrfail($id);
+        //unique faculty_id --> no space
+        $this->validate($request, [
+            'email' => 'max:191|email|unique:users,email,'.$user->email.',email',
+            'name' => 'max:50',
+            'password' => 'sometimes'
+        ]);
+        if(!empty($request->password)){
+            $request->merge(['password' => bcrypt($request['password'])]);
+        }
+        $user->update($request->all());
+        return ['message' => 'Updated Faculty'];
     }
 
     /**

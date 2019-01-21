@@ -91,7 +91,7 @@
                             </div>
                             <div class="form-group">
                                 <input v-model="form.password" type="password" name="password" placeholder="Password" class="form-control"
-                                v-validate="{ required: true, min: 6 }" :class="{ 'is-invalid': errors.has('password') }" />
+                                v-validate="{ required: !editMode, min: 6 }" :class="{ 'is-invalid': errors.has('password') }" />
                                 <div v-show="errors.has('password')" class="invalid-feedback">{{ errors.first('password') }}</div>
                             </div>
                             <div class="form-group">
@@ -102,7 +102,7 @@
                                 </select>
                                 <div v-show="!selected" class="invalid-feedback">Hãy chọn vai trò</div>
                             </div>
-                            <div class="form-group" v-show="isCreatedStudent">
+                            <div class="form-group" v-show="isCreatedStudent && !editMode">
                                 <hr><h5>Thông tin đoàn viên</h5>
                                 <input v-model="form.student_id" type="number" name="student_id" placeholder="MSSV" class="form-control"
                                 v-validate="{ required: isCreatedStudent, regex: /^([0-9]{10})$/ }"
@@ -166,6 +166,7 @@ export default {
             $('#modalUserAdmin').modal('show');
             this.form.fill(user);
             this.form.id = user.id;
+            this.selected = true;
         },
         createUser(){
             this.$Progress.start();
@@ -175,7 +176,7 @@ export default {
                     this.form.post('api/user_admin')
                     .then(response => {
                         if(response.data.isSuccess){
-                            //set event to reload faculties
+                            //set event to reload users
                             Fire.$emit('ReloadUser');
                             $('#modalUserAdmin').modal('hide');
                             toast({
@@ -212,7 +213,7 @@ export default {
                     //send request to server
                     this.form.delete('api/user_admin/' + user_id)
                     .then(() => {
-                        //set event to reload faculties
+                        //set event to reload users
                         Fire.$emit('ReloadUser');
                         if (result.value) {
                             Swal('Đã xóa!', 'Đã xóa user thành công.', 'success');
@@ -223,6 +224,23 @@ export default {
                     });
                 }
             })
+        },
+        updateUser(){
+            this.$Progress.start();
+            this.form.put('api/user_admin/' + this.form.id)
+            .then(() => {
+                $('#modalUserAdmin').modal('hide');
+                toast({
+                    type: 'success',
+                    title: 'Sửa user thành công'
+                });
+                //set event to reload users
+                Fire.$emit('ReloadUser');
+                this.$Progress.finish();
+            })
+            .catch(() => {
+                this.$Progress.fail();
+            });
         }
     },
     created(){

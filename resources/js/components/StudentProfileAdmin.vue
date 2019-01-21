@@ -15,7 +15,7 @@
                             <div class="form-group">
                                 <label for="image">Hình Ảnh</label>
                                 <div class="wrap-avatar mb-1">
-                                    <img :src="pathUpdateProfileImage" alt="anh" style="width:30%" id="update-profile-img">
+                                    <img :src="getProfileImage()" alt="profile image" style="width:30%" id="update-profile-img">
                                 </div>
                                 <input type="file" id="image" class="form-control-file border" @change="updateImageProfile">
                             </div>
@@ -242,7 +242,7 @@ export default {
                 mother_phone: '',
                 mother_job: '',
             }),
-            pathUpdateProfileImage: '',
+            oldProfileImage: '',
             isFirstLoading: true,
         }
     },
@@ -264,8 +264,8 @@ export default {
                 this.form.address = data[0].address,
                 this.form.class_room_id = data[0].class_room_id,
                 this.form.image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
-                //set path image of student
-                this.setPathUpdateProfileImage(data[0].image)
+                //set old image
+                this.oldProfileImage = (data[0].image != null) ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png'
             ));
             axios.get('/api/getAllFaculties').then(({data}) => (
                 this.faculties = data, this.$Progress.increase(20)
@@ -311,9 +311,8 @@ export default {
                             title: 'Oops...',
                             text: 'Kích thước file không vượt quá 2MB'
                         });
-                        this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
                         $("#image").val(null);
-                        $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+                        $("#update-profile-img").attr("src", this.oldProfileImage);
                     }
                 }else{
                     Swal({
@@ -321,13 +320,11 @@ export default {
                         title: 'Oops...',
                         text: 'Vui lòng chọn file ảnh'
                     });
-                    this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
                     $("#image").val(null);
-                    $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+                    $("#update-profile-img").attr("src", this.oldProfileImage);
                 }
             }else{
-                this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
-                $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+                $("#update-profile-img").attr("src", this.oldProfileImage);
             }
         },
         submitChangeInfoStudent(){
@@ -336,7 +333,6 @@ export default {
                 if (result) {
                     this.form.put('/api/updateProfile')
                     .then(()=>{
-                        // Swal('Success', 'Đã sửa thông tin thành công!', 'success');
                         toast({type: 'success', title: 'Đã sửa thông tin thành công!'});
                         this.$Progress.finish();
                     })
@@ -349,11 +345,11 @@ export default {
                 }
             });
         },
-        setPathUpdateProfileImage(form_image){
-            if(form_image != null && form_image != 'img_avatar1.png'){
-                this.pathUpdateProfileImage = '/theme/images_profile/' + form_image;
+        getProfileImage(){
+            if(this.form.image == 'img_avatar1.png'){
+                return "/theme/images/img_avatar1.png";
             }else{
-                this.pathUpdateProfileImage = '/theme/images/img_avatar1.png';
+                return (this.form.image.length > 200) ? this.form.image : '/theme/images_profile/' + this.form.image;
             }
         },
         filtedClassrooms(){

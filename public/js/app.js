@@ -2867,7 +2867,7 @@ __webpack_require__.r(__webpack_exports__);
         mother_phone: '',
         mother_job: ''
       }),
-      pathUpdateProfileImage: '',
+      oldProfileImage: '',
       isFirstLoading: true
     };
   },
@@ -2878,8 +2878,8 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.start();
       axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
         var data = _ref.data;
-        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set path image of student
-        _this.setPathUpdateProfileImage(data[0].image);
+        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set old image
+        _this.oldProfileImage = data[0].image != null ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png';
       });
       axios.get('/api/getAllFaculties').then(function (_ref2) {
         var data = _ref2.data;
@@ -2926,9 +2926,8 @@ __webpack_require__.r(__webpack_exports__);
               title: 'Oops...',
               text: 'Kích thước file không vượt quá 2MB'
             });
-            this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
             $("#image").val(null);
-            $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+            $("#update-profile-img").attr("src", this.oldProfileImage);
           }
         } else {
           Swal({
@@ -2936,13 +2935,11 @@ __webpack_require__.r(__webpack_exports__);
             title: 'Oops...',
             text: 'Vui lòng chọn file ảnh'
           });
-          this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
           $("#image").val(null);
-          $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+          $("#update-profile-img").attr("src", this.oldProfileImage);
         }
       } else {
-        this.form.image = this.pathUpdateProfileImage.split("/").slice(-1)[0];
-        $("#update-profile-img").attr("src", this.pathUpdateProfileImage);
+        $("#update-profile-img").attr("src", this.oldProfileImage);
       }
     },
     submitChangeInfoStudent: function submitChangeInfoStudent() {
@@ -2952,7 +2949,6 @@ __webpack_require__.r(__webpack_exports__);
       this.$validator.validateAll().then(function (result) {
         if (result) {
           _this3.form.put('/api/updateProfile').then(function () {
-            // Swal('Success', 'Đã sửa thông tin thành công!', 'success');
             toast({
               type: 'success',
               title: 'Đã sửa thông tin thành công!'
@@ -2968,11 +2964,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    setPathUpdateProfileImage: function setPathUpdateProfileImage(form_image) {
-      if (form_image != null && form_image != 'img_avatar1.png') {
-        this.pathUpdateProfileImage = '/theme/images_profile/' + form_image;
+    getProfileImage: function getProfileImage() {
+      if (this.form.image == 'img_avatar1.png') {
+        return "/theme/images/img_avatar1.png";
       } else {
-        this.pathUpdateProfileImage = '/theme/images/img_avatar1.png';
+        return this.form.image.length > 200 ? this.form.image : '/theme/images_profile/' + this.form.image;
       }
     },
     filtedClassrooms: function filtedClassrooms() {
@@ -3644,6 +3640,7 @@ __webpack_require__.r(__webpack_exports__);
       $('#modalUserAdmin').modal('show');
       this.form.fill(user);
       this.form.id = user.id;
+      this.selected = true;
     },
     createUser: function createUser() {
       var _this3 = this;
@@ -3654,7 +3651,7 @@ __webpack_require__.r(__webpack_exports__);
         if (result) {
           _this3.form.post('api/user_admin').then(function (response) {
             if (response.data.isSuccess) {
-              //set event to reload faculties
+              //set event to reload users
               Fire.$emit('ReloadUser');
               $('#modalUserAdmin').modal('hide');
               toast({
@@ -3690,7 +3687,7 @@ __webpack_require__.r(__webpack_exports__);
         if (result.value) {
           //send request to server
           _this4.form.delete('api/user_admin/' + user_id).then(function () {
-            //set event to reload faculties
+            //set event to reload users
             Fire.$emit('ReloadUser');
 
             if (result.value) {
@@ -3701,15 +3698,33 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       });
+    },
+    updateUser: function updateUser() {
+      var _this5 = this;
+
+      this.$Progress.start();
+      this.form.put('api/user_admin/' + this.form.id).then(function () {
+        $('#modalUserAdmin').modal('hide');
+        toast({
+          type: 'success',
+          title: 'Sửa user thành công'
+        }); //set event to reload users
+
+        Fire.$emit('ReloadUser');
+
+        _this5.$Progress.finish();
+      }).catch(function () {
+        _this5.$Progress.fail();
+      });
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this6 = this;
 
     this.loadUsers();
     this.loadUserTypes();
     Fire.$on('ReloadUser', function () {
-      _this5.loadUsers();
+      _this6.loadUsers();
     });
   }
 });
@@ -52950,8 +52965,8 @@ var render = function() {
                     _c("img", {
                       staticStyle: { width: "30%" },
                       attrs: {
-                        src: _vm.pathUpdateProfileImage,
-                        alt: "anh",
+                        src: _vm.getProfileImage(),
+                        alt: "profile image",
                         id: "update-profile-img"
                       }
                     })
@@ -55617,8 +55632,8 @@ var render = function() {
                           {
                             name: "validate",
                             rawName: "v-validate",
-                            value: { required: true, min: 6 },
-                            expression: "{ required: true, min: 6 }"
+                            value: { required: !_vm.editMode, min: 6 },
+                            expression: "{ required: !editMode, min: 6 }"
                           }
                         ],
                         staticClass: "form-control",
@@ -55736,8 +55751,8 @@ var render = function() {
                           {
                             name: "show",
                             rawName: "v-show",
-                            value: _vm.isCreatedStudent,
-                            expression: "isCreatedStudent"
+                            value: _vm.isCreatedStudent && !_vm.editMode,
+                            expression: "isCreatedStudent && !editMode"
                           }
                         ],
                         staticClass: "form-group"

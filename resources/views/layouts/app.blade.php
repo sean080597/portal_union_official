@@ -59,7 +59,8 @@
                     <li class="active">
                         <router-link to="/">Trang Chủ</>
                     </li>
-                    @if (auth()->user()->role_id == 'adm')
+                    {{-- @if (auth()->user()->role_id == 'adm') --}}
+                    @can('isAdmin')
                     <li>
                         <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
                         <ul class="collapse list-unstyled" id="quan-ly-admin">
@@ -70,7 +71,7 @@
                         </ul>
                     </li>
                     <li><a href="#">Thống Kê</a></li>
-                    @endif
+                    @endcan
                     <li>
                         <a href="#thong-tin-dv" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Thông tin đoàn viên</a>
                         <ul class="collapse list-unstyled" id="thong-tin-dv">
@@ -106,7 +107,7 @@
                     <!-- Breadcrum ------------->
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                        @yield('show_tab')
+                        {{-- @yield('show_tab') --}}
                     </ul>
                     <!-- End Breadcrum --------->
                 </section>
