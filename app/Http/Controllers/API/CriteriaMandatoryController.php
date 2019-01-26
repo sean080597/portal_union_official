@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\CriteriaMandatory;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class CriteriaMandatoryController extends Controller
 {
@@ -13,16 +13,6 @@ class CriteriaMandatoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -41,21 +31,10 @@ class CriteriaMandatoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\CriteriaMandatory  $criteriaMandatory
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(CriteriaMandatory $criteriaMandatory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\CriteriaMandatory  $criteriaMandatory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(CriteriaMandatory $criteriaMandatory)
+    public function show($id)
     {
         //
     }
@@ -64,10 +43,10 @@ class CriteriaMandatoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CriteriaMandatory  $criteriaMandatory
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CriteriaMandatory $criteriaMandatory)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +54,10 @@ class CriteriaMandatoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CriteriaMandatory  $criteriaMandatory
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CriteriaMandatory $criteriaMandatory)
+    public function destroy($id)
     {
         //
     }

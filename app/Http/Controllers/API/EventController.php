@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\StudentEvent;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class StudentEventController extends Controller
+class EventController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,16 +13,6 @@ class StudentEventController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -41,21 +31,10 @@ class StudentEventController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\StudentEvent  $studentEvent
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(StudentEvent $studentEvent)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\StudentEvent  $studentEvent
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(StudentEvent $studentEvent)
+    public function show($id)
     {
         //
     }
@@ -64,10 +43,10 @@ class StudentEventController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StudentEvent  $studentEvent
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StudentEvent $studentEvent)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +54,10 @@ class StudentEventController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\StudentEvent  $studentEvent
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StudentEvent $studentEvent)
+    public function destroy($id)
     {
         //
     }

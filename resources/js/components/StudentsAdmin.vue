@@ -1,5 +1,6 @@
 <template>
-    <div class="wrap-table">
+<div>
+    <div class="wrap-table" v-if="$gate.isAdmin()">
         <div class="row">
             <div class="col-md-3 mb-2">
                 <div class="input-group">
@@ -60,6 +61,11 @@
             </table>
         </div>
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -71,8 +77,10 @@ export default {
     methods: {
         loadStudents(){
             this.$Progress.start();
-            axios.get('api/student_admin').then(({data}) => (this.students = data.data));
-            // axios.get('api/indexWithoutSchoolLeaderAccs').then(({data}) => (this.user_types = data));
+            if(this.$gate.isAdmin){
+                axios.get('api/student_admin').then(({data}) => (this.students = data.data));
+                // axios.get('api/indexWithoutSchoolLeaderAccs').then(({data}) => (this.user_types = data));
+            }
             this.$Progress.finish();
         }
     },

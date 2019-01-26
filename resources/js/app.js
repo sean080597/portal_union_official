@@ -23,6 +23,9 @@ import VueProgressBar from 'vue-progressbar'
 import Swal from 'sweetalert2'
 //moment js
 import moment from 'moment'
+//gate js
+import Gate from './Gate'
+Vue.prototype.$gate = new Gate(window.user)
 
 //vueX & vueRouter
 Vue.use(VeeValidate)
@@ -32,9 +35,9 @@ Vue.component('v-select', vSelect)
 
 const store = new Vuex.Store(StoreData);
 //vue form
+window.Form = Form;
 Vue.component(HasError.name, HasError);
 Vue.component(AlertError.name, AlertError);
-window.Form = Form;
 //vue progressbar
 Vue.use(VueProgressBar, {
     color: '#0063ae',
@@ -85,7 +88,23 @@ Vue.filter('myTimeDateFormat', function(updated_time){
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue').default
+);
+
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('not-found', require('./components/NotFound.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -1,16 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Faculty;
 use App\User;
+use Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class FacultyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api');
+        $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -19,17 +22,13 @@ class FacultyController extends Controller
      */
     public function index()
     {
+        // $this->authorize('isAdmin');
         return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(10);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        // if (Gate::allows('isAccFaculty')) {
+        //     return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(10);
+        // }else{
+        //     abort(403);
+        // }
     }
 
     /**
@@ -56,21 +55,10 @@ class FacultyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Faculty  $faculty
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Faculty $faculty)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Faculty $faculty)
+    public function show($id)
     {
         //
     }
@@ -79,7 +67,7 @@ class FacultyController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Faculty  $faculty
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $idToUpdate)
@@ -98,7 +86,7 @@ class FacultyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Faculty  $faculty
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($faculty_id)

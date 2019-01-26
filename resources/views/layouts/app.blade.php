@@ -53,13 +53,16 @@
                     <div class="wrap-avatar">
                         <img src="{{ asset('theme/images/img_avatar1.png') }}" alt="avatar">
                     </div>
-                    <h4>Họ Tên</h4>
+                    <h4>{{ auth()->user()->name }}</h4>
+                    <p>{{ auth()->user()->role_id }}</p>
                 </section>
                 <ul class="list-unstyled components" id="test">
                     <li class="active">
-                        <router-link to="/">Trang Chủ</>
+                        <router-link to="/">Trang Chủ</router-link>
                     </li>
-                    {{-- @if (auth()->user()->role_id == 'adm') --}}
+                    <li>
+                        <router-link to="/developer">Developer</router-link>
+                    </li>
                     @can('isAdmin')
                     <li>
                         <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
@@ -127,6 +130,13 @@
             </div><!-- End content -->
         </section>
     </section>
+
+    @auth
+    <script>
+        window.user = @json(auth()->user())
+    </script>
+    @endauth
+
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous" defer></script>

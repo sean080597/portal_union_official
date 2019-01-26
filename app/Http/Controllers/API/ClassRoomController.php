@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\ClassRoom;
 use App\Student;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ClassRoomController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('api');
+        $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -25,16 +26,6 @@ class ClassRoomController extends Controller
     public function index_client($faculty_id)
     {
         return ClassRoom::with('secretary')->where('faculty_id', $faculty_id)->orderBy('id', 'ASC')->paginate(30);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -59,21 +50,10 @@ class ClassRoomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ClassRoom  $classRoom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(ClassRoom $classRoom)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ClassRoom  $classRoom
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ClassRoom $classRoom)
+    public function show($id)
     {
         //
     }
@@ -82,7 +62,7 @@ class ClassRoomController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ClassRoom  $classRoom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $idToUpdate)
@@ -100,7 +80,7 @@ class ClassRoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ClassRoom  $classRoom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($classroom_id)

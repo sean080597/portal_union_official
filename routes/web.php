@@ -1,8 +1,4 @@
 <?php
-use App\Faculty;
-use App\ClassRoom;
-use App\Student;
-use App\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,10 +11,7 @@ use App\User;
 */
 
 Auth::routes();
-
-Route::group(['middleware' => ['auth']], function () {
-  //handle hashbang in VueJS
-  Route::get('{path}', function() {
-    return view('layouts.app');
-  })->where('path', '.*');
+Route::get('/user-info', function(){
+  dd(auth()->user());
 });
+Route::get('{path}', "HomeController@index")->where( 'path', '([A-z\d-\/_.]+)?' );

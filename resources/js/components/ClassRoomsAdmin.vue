@@ -1,5 +1,6 @@
 <template>
-    <div class="wrap-table">
+<div>
+    <div class="wrap-table" v-if="$gate.isAdmin()">
         <div class="row">
             <div class="col-md-3 mb-2">
                 <div class="input-group">
@@ -99,6 +100,11 @@
         </div>
         <!-- End Modal -->
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -117,8 +123,10 @@ export default {
     methods: {
         loadClassrooms(){
             this.$Progress.start();
-            axios.get('api/classroom_admin').then(({data}) => (this.classrooms = data.data));
-            axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
+            if(this.$gate.isAdmin){
+                axios.get('api/classroom_admin').then(({data}) => (this.classrooms = data.data));
+                axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
+            }
             this.$Progress.finish();
         },
         newModal(){

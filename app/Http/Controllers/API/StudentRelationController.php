@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\StudentRelation;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class StudentRelationController extends Controller
 {
@@ -13,16 +13,6 @@ class StudentRelationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -41,21 +31,10 @@ class StudentRelationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\StudentRelation  $studentRelation
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(StudentRelation $studentRelation)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\StudentRelation  $studentRelation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(StudentRelation $studentRelation)
+    public function show($id)
     {
         //
     }
@@ -64,10 +43,10 @@ class StudentRelationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StudentRelation  $studentRelation
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StudentRelation $studentRelation)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +54,10 @@ class StudentRelationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\StudentRelation  $studentRelation
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StudentRelation $studentRelation)
+    public function destroy($id)
     {
         //
     }

@@ -1,5 +1,6 @@
 export const routes = [
     { path: '/', component: require('./components/Dashboard.vue').default },
+    { path: '/developer', component: require('./components/Developer.vue').default },
     { path: '/users-admin', component: require('./components/UsersAdmin.vue').default },
     { path: '/faculties-admin', component: require('./components/FacultiesAdmin.vue').default },
     { path: '/classrooms-admin', component: require('./components/ClassRoomsAdmin.vue').default },
