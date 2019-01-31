@@ -123,7 +123,7 @@ export default {
     methods: {
         loadClassrooms(){
             this.$Progress.start();
-            if(this.$gate.isAdmin){
+            if(this.$gate.isAdmin()){
                 axios.get('api/classroom_admin').then(({data}) => (this.classrooms = data.data));
                 axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
             }

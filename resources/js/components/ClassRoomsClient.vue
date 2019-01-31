@@ -1,5 +1,6 @@
 <template>
-    <div class="wrap-table">
+<div>
+    <div class="wrap-table" v-if="$gate.isClassroomPagePassed()">
         <div class="note-info">
             <div class="row" v-if="facultyLeaderAccs.secretary != null">
                 <p class="col-sm-4"><span>Bí thư: </span>{{ facultyLeaderAccs.secretary.name }}</p>
@@ -106,6 +107,11 @@
             </table>
         </div>
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -119,12 +125,16 @@ export default {
     methods: {
         loadClassrooms(){
             this.$Progress.start();
-            axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(({data}) => (
-                this.facultyLeaderAccs = data, this.$Progress.increase(30)
-            ));
-            axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (
-                this.classrooms = data.data, this.$Progress.finish()
-            ));
+            if(this.$gate.isClassroomPagePassed()){
+                axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(({data}) => (
+                    this.facultyLeaderAccs = data, this.$Progress.increase(30)
+                ));
+                axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (
+                    this.classrooms = data.data, this.$Progress.finish()
+                ));
+            }else{
+                this.$Progress.fail();
+            }
         },
     },
     created() {

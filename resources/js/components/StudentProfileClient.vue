@@ -1,7 +1,8 @@
 <template>
-    <div class="row">
+<div>
+    <div class="row" v-if="checkToShow">
         <div class="col-lg-3 d-flex flex-column align-items-center">
-            <img class="img-fluid mb-3" :src="'/theme/images/img_avatar1.png'" alt="Chania" width="120">
+            <img class="img-fluid mb-3" :src="getProfileImage()" alt="Chania" width="120">
             <div class="note-success">
                 <p>Cập nhật gần nhất: <br>{{ student_info.updated_at | myTimeDateFormat }}</p>
             </div>
@@ -166,6 +167,11 @@
             </div>
         </form>
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -174,21 +180,35 @@ export default {
             student_id: this.$route.params.student_id,
             student_info: {},
             relations: {},
+            profile_image: '',
+            checkToShow: false,
         }
     },
     methods: {
         loadStudentInfo(){
             this.$Progress.start();
             axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (
-                this.student_info = data[0], this.$Progress.increase(40)
+                this.student_info = data[0],
+                this.profile_image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
+                this.$Progress.increase(40),
+                this.checkToShow = this.$gate.isStudentProfilePagePassed(data[0].class_room_id)
             ));
-            axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
-                this.relations = data, this.$Progress.finish()
-            ));
+            if(this.checkToShow){
+                axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
+                    this.relations = data, this.$Progress.finish()
+                ));
+            }
+        },
+        getProfileImage(){
+            if(this.profile_image == 'img_avatar1.png'){
+                return "/theme/images/img_avatar1.png";
+            }else{
+                return '/theme/images_profile/' + this.profile_image;
+            }
         },
         submitChangeInfoStudent(){
             Swal('Sorry!', 'Doing!', 'error');
-        }
+        },
     },
     created() {
         this.loadStudentInfo();

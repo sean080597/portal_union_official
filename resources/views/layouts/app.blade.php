@@ -51,19 +51,19 @@
             <nav id="sidebar">
                 <section class="sidebar-header d-flex flex-column align-items-center">
                     <div class="wrap-avatar">
-                        <img src="{{ asset('theme/images/img_avatar1.png') }}" alt="avatar">
+                        <img src="{{ !empty(auth()->user()->image) ? asset('theme/images_profile/'.auth()->user()->image) : asset('theme/images/img_avatar1.png') }}"
+                        alt="avatar">
                     </div>
                     <h4>{{ auth()->user()->name }}</h4>
-                    <p>{{ auth()->user()->role_id }}</p>
                 </section>
                 <ul class="list-unstyled components" id="test">
                     <li class="active">
                         <router-link to="/">Trang Chủ</router-link>
                     </li>
+                    @can('isAdmin')
                     <li>
                         <router-link to="/developer">Developer</router-link>
                     </li>
-                    @can('isAdmin')
                     <li>
                         <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
                         <ul class="collapse list-unstyled" id="quan-ly-admin">
@@ -78,10 +78,18 @@
                     <li>
                         <a href="#thong-tin-dv" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Thông tin đoàn viên</a>
                         <ul class="collapse list-unstyled" id="thong-tin-dv">
-                            <li><router-link to="/student-profile">Thông tin cá nhân</></li>
-                            <li><router-link to="/students">Thông tin lớp</></li>
-                            <li><router-link to="/classrooms">Thông tin khoa</router-link></li>
+                            @cannot('isAdminOrAccSchool')
+                                <li><router-link to="/student-profile/{{ auth()->user()->student->id }}">Thông tin cá nhân</router-link></li>
+                                @cannot('isAccStudent')
+                                <li><router-link to="/students/{{ auth()->user()->student->class_room_id }}">Thông tin lớp</router-link></li>
+                                @endcannot
+                                @can('isAccFaculty')
+                                <li><router-link to="/classrooms/{{ auth()->user()->getFaculty->id }}">Thông tin khoa</router-link></li>
+                                @endcan
+                            @endcannot
+                            @can('isAdminOrAccSchool')
                             <li><router-link to="/faculties">Thông tin trường</router-link></li>
+                            @endcan
                         </ul>
                     </li>
                     <li>
@@ -119,7 +127,7 @@
 
 <!---------------------------------------------------------------------------------------------------------->
                     {{-- @yield('content') --}}
-                    <router-view></router-view>
+                    <router-view :key="$route.fullPath"></router-view>
                     <vue-progress-bar></vue-progress-bar>
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
@@ -133,7 +141,10 @@
 
     @auth
     <script>
-        window.user = @json(auth()->user())
+        window.user = @json(auth()->user());
+        window.stud = @json(auth()->user()->student);
+        window.facu = @json(auth()->user()->getFaculty);
+        // console.log(@json(auth()->user()->getFaculty));
     </script>
     @endauth
 

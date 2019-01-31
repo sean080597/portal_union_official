@@ -25,7 +25,7 @@ import Swal from 'sweetalert2'
 import moment from 'moment'
 //gate js
 import Gate from './Gate'
-Vue.prototype.$gate = new Gate(window.user)
+Vue.prototype.$gate = new Gate(window.user, window.stud, window.facu)
 
 //vueX & vueRouter
 Vue.use(VeeValidate)

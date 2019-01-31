@@ -1,5 +1,6 @@
 <template>
-    <div class="wrap-table">
+<div>
+    <div class="wrap-table" v-if="$gate.isAdminOrAccSchool()">
         <div class="note-info">
             <div class="row" v-for="(schAcc, index) in schoolLeaderAccs" :key="index">
                 <p class="col-sm-4">
@@ -70,6 +71,11 @@
             </table>
         </div>
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -82,12 +88,16 @@ export default {
     methods: {
         loadFaculties(){
             this.$Progress.start();
-            axios.get('api/getSchoolLeaderAccs').then(({data}) => (
-                this.schoolLeaderAccs = data, this.$Progress.increase(30)
-            ));
-            axios.get('api/faculty_admin').then(({data}) => (
-                this.faculties = data.data, this.$Progress.finish()
-            ));
+            if(this.$gate.isAdminOrAccSchool()){
+                axios.get('api/getSchoolLeaderAccs').then(({data}) => (
+                    this.schoolLeaderAccs = data, this.$Progress.increase(30)
+                ));
+                axios.get('api/faculty_admin').then(({data}) => (
+                    this.faculties = data.data, this.$Progress.finish()
+                ));
+            }else{
+                this.$Progress.fail();
+            }
         },
     },
     created() {

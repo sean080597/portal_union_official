@@ -6,6 +6,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DB;
 
 class User extends Authenticatable
 {
@@ -41,4 +42,12 @@ class User extends Authenticatable
     public function relations(){
         return $this->student->relations();
     }
+
+    public function getFaculty(){
+        if(!empty($this->student)){
+            return $this->student->faculty();
+        }
+        return $this->student();
+    }
+
 }

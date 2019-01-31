@@ -125,13 +125,13 @@ export default {
                 id: '',
                 name: '',
                 note: '',
-            })
+            }),
         }
     },
     methods: {
         loadFaculties(){
             this.$Progress.start();
-            if(this.$gate.isAdmin){
+            if(this.$gate.isAdmin()){
                 axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
             }
             this.$Progress.finish();

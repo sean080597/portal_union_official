@@ -28,10 +28,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
 
-        Gate::define('isShit', function(){
-            return true;
-        });
-
         Gate::define('isAdmin', function($user){
             return $user->role_id === 'adm';
         });
@@ -44,8 +40,16 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role_id === 'fac';
         });
 
+        Gate::define('isAccClass', function($user){
+            return $user->role_id === 'cla';
+        });
+
         Gate::define('isAccStudent', function($user){
             return $user->role_id === 'stu';
+        });
+
+        Gate::define('isAdminOrAccSchool', function($user){
+            return $user->role_id === 'adm' || $user->role_id === 'sch';
         });
     }
 }

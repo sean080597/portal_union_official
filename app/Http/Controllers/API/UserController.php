@@ -105,8 +105,6 @@ class UserController extends Controller
         }
         $u->delete();
         return ['message' => 'Deleted successfully'];
-        // return User::destroy($user_id);
-        // return ['message' => 'Deleted Faculty'];
     }
 
     //get user with student info by user_id

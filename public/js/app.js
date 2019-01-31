@@ -1890,7 +1890,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
 
-      if (this.$gate.isAdmin) {
+      if (this.$gate.isAdmin()) {
         axios.get('api/classroom_admin').then(function (_ref) {
           var data = _ref.data;
           return _this.classrooms = data.data;
@@ -2106,6 +2106,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2119,14 +2125,19 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(function (_ref) {
-        var data = _ref.data;
-        return _this.facultyLeaderAccs = data, _this.$Progress.increase(30);
-      });
-      axios.get('/api/getClassroomsClient/' + this.faculty_id).then(function (_ref2) {
-        var data = _ref2.data;
-        return _this.classrooms = data.data, _this.$Progress.finish();
-      });
+
+      if (this.$gate.isClassroomPagePassed()) {
+        axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(function (_ref) {
+          var data = _ref.data;
+          return _this.facultyLeaderAccs = data, _this.$Progress.increase(30);
+        });
+        axios.get('/api/getClassroomsClient/' + this.faculty_id).then(function (_ref2) {
+          var data = _ref2.data;
+          return _this.classrooms = data.data, _this.$Progress.finish();
+        });
+      } else {
+        this.$Progress.fail();
+      }
     }
   },
   created: function created() {
@@ -2459,7 +2470,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
 
-      if (this.$gate.isAdmin) {
+      if (this.$gate.isAdmin()) {
         axios.get('api/faculty_admin').then(function (_ref) {
           var data = _ref.data;
           return _this.faculties = data.data;
@@ -2635,6 +2646,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2647,14 +2664,19 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('api/getSchoolLeaderAccs').then(function (_ref) {
-        var data = _ref.data;
-        return _this.schoolLeaderAccs = data, _this.$Progress.increase(30);
-      });
-      axios.get('api/faculty_admin').then(function (_ref2) {
-        var data = _ref2.data;
-        return _this.faculties = data.data, _this.$Progress.finish();
-      });
+
+      if (this.$gate.isAdminOrAccSchool()) {
+        axios.get('api/getSchoolLeaderAccs').then(function (_ref) {
+          var data = _ref.data;
+          return _this.schoolLeaderAccs = data, _this.$Progress.increase(30);
+        });
+        axios.get('api/faculty_admin').then(function (_ref2) {
+          var data = _ref2.data;
+          return _this.faculties = data.data, _this.$Progress.finish();
+        });
+      } else {
+        this.$Progress.fail();
+      }
     }
   },
   created: function created() {
@@ -2911,6 +2933,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2953,25 +2981,30 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
-        var data = _ref.data;
-        return _this.student_info = data[0], _this.$Progress.increase(20), _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set old image
-        _this.oldProfileImage = data[0].image != null ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png';
-      });
-      axios.get('/api/getAllFaculties').then(function (_ref2) {
-        var data = _ref2.data;
-        return _this.faculties = data, _this.$Progress.increase(20);
-      });
-      axios.get('/api/getAllClassrooms').then(function (_ref3) {
-        var data = _ref3.data;
-        return _this.all_classrooms = data, _this.$Progress.increase(20);
-      }).then(function () {
-        _this.filtedClassrooms();
-      });
-      axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref4) {
-        var data = _ref4.data;
-        return _this.relations = data, _this.assignRelationsInfo(_this.form, data), _this.$Progress.increase(20);
-      });
+
+      if (this.$gate.isAdmin()) {
+        axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
+          var data = _ref.data;
+          return _this.student_info = data[0], _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set old image
+          _this.oldProfileImage = data[0].image != null ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png', _this.$Progress.increase(20);
+        });
+        axios.get('/api/getAllFaculties').then(function (_ref2) {
+          var data = _ref2.data;
+          return _this.faculties = data, _this.$Progress.increase(20);
+        });
+        axios.get('/api/getAllClassrooms').then(function (_ref3) {
+          var data = _ref3.data;
+          return _this.all_classrooms = data, _this.$Progress.increase(20);
+        }).then(function () {
+          _this.filtedClassrooms();
+        });
+        axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref4) {
+          var data = _ref4.data;
+          return _this.relations = data, _this.assignRelationsInfo(_this.form, data), _this.$Progress.finish();
+        });
+      } else {
+        this.$Progress.fail();
+      }
     },
     assignRelationsInfo: function assignRelationsInfo(form, relations) {
       $.each(relations, function (index, value) {
@@ -3248,12 +3281,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       student_id: this.$route.params.student_id,
       student_info: {},
-      relations: {}
+      relations: {},
+      profile_image: '',
+      checkToShow: false
     };
   },
   methods: {
@@ -3263,12 +3304,22 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.start();
       axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
         var data = _ref.data;
-        return _this.student_info = data[0], _this.$Progress.increase(40);
+        return _this.student_info = data[0], _this.profile_image = data[0].image != null ? data[0].image : 'img_avatar1.png', _this.$Progress.increase(40), _this.checkToShow = _this.$gate.isStudentProfilePagePassed(data[0].class_room_id);
       });
-      axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref2) {
-        var data = _ref2.data;
-        return _this.relations = data, _this.$Progress.finish();
-      });
+
+      if (this.checkToShow) {
+        axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref2) {
+          var data = _ref2.data;
+          return _this.relations = data, _this.$Progress.finish();
+        });
+      }
+    },
+    getProfileImage: function getProfileImage() {
+      if (this.profile_image == 'img_avatar1.png') {
+        return "/theme/images/img_avatar1.png";
+      } else {
+        return '/theme/images_profile/' + this.profile_image;
+      }
     },
     submitChangeInfoStudent: function submitChangeInfoStudent() {
       Swal('Sorry!', 'Doing!', 'error');
@@ -3371,7 +3422,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
 
-      if (this.$gate.isAdmin) {
+      if (this.$gate.isAdmin()) {
         axios.get('api/student_admin').then(function (_ref) {
           var data = _ref.data;
           return _this.students = data.data;
@@ -3510,6 +3561,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3523,14 +3580,19 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('/api/getClassroomAccs/' + this.classroom_id).then(function (_ref) {
-        var data = _ref.data;
-        return _this.classroomLeaderAccs = data, _this.$Progress.increase(30);
-      });
-      axios.get('/api/getStudentsClient/' + this.classroom_id).then(function (_ref2) {
-        var data = _ref2.data;
-        return _this.students = data.data, _this.$Progress.finish();
-      });
+
+      if (this.$gate.isStudentsPagePassed()) {
+        axios.get('/api/getClassroomAccs/' + this.classroom_id).then(function (_ref) {
+          var data = _ref.data;
+          return _this.classroomLeaderAccs = data, _this.$Progress.increase(30);
+        });
+        axios.get('/api/getStudentsClient/' + this.classroom_id).then(function (_ref2) {
+          var data = _ref2.data;
+          return _this.students = data.data, _this.$Progress.finish();
+        });
+      } else {
+        this.$Progress.fail();
+      }
     }
   },
   created: function created() {
@@ -3706,7 +3768,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
 
-      if (this.$gate.isAdmin) {
+      if (this.$gate.isAdmin()) {
         axios.get('api/user_admin').then(function (_ref) {
           var data = _ref.data;
           return _this.users = data.data;
@@ -53281,133 +53343,149 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wrap-table" }, [
-    _c("div", { staticClass: "note-info" }, [
-      _vm.facultyLeaderAccs.secretary != null
-        ? _c("div", { staticClass: "row" }, [
-            _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")]),
-              _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.name))
-            ]),
+  return _c("div", [
+    _vm.$gate.isClassroomPagePassed()
+      ? _c("div", { staticClass: "wrap-table" }, [
+          _c("div", { staticClass: "note-info" }, [
+            _vm.facultyLeaderAccs.secretary != null
+              ? _c("div", { staticClass: "row" }, [
+                  _c("p", { staticClass: "col-sm-4" }, [
+                    _c("span", [_vm._v("Bí thư: ")]),
+                    _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8 row" }, [
+                    _c("p", { staticClass: "col-5" }, [
+                      _c("span", [_vm._v("ĐT: ")]),
+                      _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.phone))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "col-7 px-0" }, [
+                      _c("span", [_vm._v("Email: ")]),
+                      _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.email))
+                    ])
+                  ])
+                ])
+              : _c("div", { staticClass: "row" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-sm-8 row" }, [
-              _c("p", { staticClass: "col-5" }, [
-                _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.phone))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "col-7 px-0" }, [
-                _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.facultyLeaderAccs.secretary.email))
-              ])
-            ])
-          ])
-        : _c("div", { staticClass: "row" }, [
-            _vm._m(0),
+            _vm.facultyLeaderAccs.deputy_secretary1 != null
+              ? _c("div", { staticClass: "row" }, [
+                  _c("p", { staticClass: "col-sm-4" }, [
+                    _c("span", [_vm._v("Phó bí thư: ")]),
+                    _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8 row" }, [
+                    _c("p", { staticClass: "col-5" }, [
+                      _c("span", [_vm._v("ĐT: ")]),
+                      _vm._v(
+                        _vm._s(_vm.facultyLeaderAccs.deputy_secretary1.phone)
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "col-7 px-0" }, [
+                      _c("span", [_vm._v("Email: ")]),
+                      _vm._v(
+                        _vm._s(_vm.facultyLeaderAccs.deputy_secretary1.email)
+                      )
+                    ])
+                  ])
+                ])
+              : _c("div", { staticClass: "row" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ]),
             _vm._v(" "),
-            _vm._m(1)
+            _vm.facultyLeaderAccs.deputy_secretary2 != null
+              ? _c("div", { staticClass: "row" }, [
+                  _c("p", { staticClass: "col-sm-4" }, [
+                    _c("span", [_vm._v("Phó bí thư: ")]),
+                    _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8 row" }, [
+                    _c("p", { staticClass: "col-5" }, [
+                      _c("span", [_vm._v("ĐT: ")]),
+                      _vm._v(
+                        _vm._s(_vm.facultyLeaderAccs.deputy_secretary2.phone)
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "col-7 px-0" }, [
+                      _c("span", [_vm._v("Email: ")]),
+                      _vm._v(
+                        _vm._s(_vm.facultyLeaderAccs.deputy_secretary2.email)
+                      )
+                    ])
+                  ])
+                ])
+              : _c("div", { staticClass: "row" }, [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _vm._m(5)
+                ])
           ]),
-      _vm._v(" "),
-      _vm.facultyLeaderAccs.deputy_secretary1 != null
-        ? _c("div", { staticClass: "row" }, [
-            _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Phó bí thư: ")]),
-              _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.name))
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-8 row" }, [
-              _c("p", { staticClass: "col-5" }, [
-                _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.phone))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "col-7 px-0" }, [
-                _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary1.email))
-              ])
-            ])
-          ])
-        : _c("div", { staticClass: "row" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _vm._m(3)
-          ]),
-      _vm._v(" "),
-      _vm.facultyLeaderAccs.deputy_secretary2 != null
-        ? _c("div", { staticClass: "row" }, [
-            _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Phó bí thư: ")]),
-              _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.name))
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-8 row" }, [
-              _c("p", { staticClass: "col-5" }, [
-                _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.phone))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "col-7 px-0" }, [
-                _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.facultyLeaderAccs.deputy_secretary2.email))
-              ])
-            ])
-          ])
-        : _c("div", { staticClass: "row" }, [_vm._m(4), _vm._v(" "), _vm._m(5)])
-    ]),
-    _vm._v(" "),
-    _vm._m(6),
-    _vm._v(" "),
-    _c("div", { staticClass: "table-responsive" }, [
-      _c(
-        "table",
-        {
-          staticClass: "table table-striped table-hover table-bordered",
-          attrs: { id: "table" }
-        },
-        [
-          _vm._m(7),
           _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.classrooms, function(classroom, index) {
-              return _c("tr", { key: index }, [
-                _c("td", [_vm._v(_vm._s(index + 1))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(classroom.id))]),
-                _vm._v(" "),
-                classroom.secretary != null
-                  ? _c("td", [_vm._v(_vm._s(classroom.secretary.name))])
-                  : _c("td"),
-                _vm._v(" "),
-                classroom.secretary != null
-                  ? _c("td", [_vm._v(_vm._s(classroom.secretary.email))])
-                  : _c("td"),
-                _vm._v(" "),
-                classroom.secretary != null
-                  ? _c("td", [_vm._v(_vm._s(classroom.secretary.phone))])
-                  : _c("td"),
+          _vm._m(6),
+          _vm._v(" "),
+          _c("div", { staticClass: "table-responsive" }, [
+            _c(
+              "table",
+              {
+                staticClass: "table table-striped table-hover table-bordered",
+                attrs: { id: "table" }
+              },
+              [
+                _vm._m(7),
                 _vm._v(" "),
                 _c(
-                  "td",
-                  { staticClass: "text-center text-primary" },
-                  [
-                    _c(
-                      "router-link",
-                      { attrs: { to: "/students/" + classroom.id } },
-                      [_c("i", { staticClass: "far fa-eye" })]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _vm._m(8, true)
-              ])
-            }),
-            0
-          )
-        ]
-      )
-    ])
+                  "tbody",
+                  _vm._l(_vm.classrooms, function(classroom, index) {
+                    return _c("tr", { key: index }, [
+                      _c("td", [_vm._v(_vm._s(index + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(classroom.id))]),
+                      _vm._v(" "),
+                      classroom.secretary != null
+                        ? _c("td", [_vm._v(_vm._s(classroom.secretary.name))])
+                        : _c("td"),
+                      _vm._v(" "),
+                      classroom.secretary != null
+                        ? _c("td", [_vm._v(_vm._s(classroom.secretary.email))])
+                        : _c("td"),
+                      _vm._v(" "),
+                      classroom.secretary != null
+                        ? _c("td", [_vm._v(_vm._s(classroom.secretary.phone))])
+                        : _c("td"),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "text-center text-primary" },
+                        [
+                          _c(
+                            "router-link",
+                            { attrs: { to: "/students/" + classroom.id } },
+                            [_c("i", { staticClass: "far fa-eye" })]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm._m(8, true)
+                    ])
+                  }),
+                  0
+                )
+              ]
+            )
+          ])
+        ])
+      : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
 }
 var staticRenderFns = [
@@ -54433,90 +54511,96 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wrap-table" }, [
-    _c(
-      "div",
-      { staticClass: "note-info" },
-      _vm._l(_vm.schoolLeaderAccs, function(schAcc, index) {
-        return _c("div", { key: index, staticClass: "row" }, [
-          _c("p", { staticClass: "col-sm-4" }, [
-            schAcc.role_id == "sec"
-              ? _c("span", [_vm._v("Bí thư: ")])
-              : _c("span", [_vm._v("Phó bí thư: ")]),
-            _vm._v(
-              "\n                " + _vm._s(schAcc.name) + "\n            "
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-8 row" }, [
-            _c("p", { staticClass: "col-5" }, [
-              _c("span", [_vm._v("ĐT: ")]),
-              _vm._v(_vm._s(schAcc.phone))
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "col-7 px-0" }, [
-              _c("span", [_vm._v("Email: ")]),
-              _vm._v(_vm._s(schAcc.email))
-            ])
-          ])
-        ])
-      }),
-      0
-    ),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "table-responsive" }, [
-      _c(
-        "table",
-        {
-          staticClass: "table table-striped table-hover table-bordered",
-          attrs: { id: "table" }
-        },
-        [
-          _vm._m(1),
-          _vm._v(" "),
+  return _c("div", [
+    _vm.$gate.isAdminOrAccSchool()
+      ? _c("div", { staticClass: "wrap-table" }, [
           _c(
-            "tbody",
-            _vm._l(_vm.faculties, function(faculty, index) {
-              return _c("tr", { key: index }, [
-                _c("td", [_vm._v(_vm._s(index + 1))]),
+            "div",
+            { staticClass: "note-info" },
+            _vm._l(_vm.schoolLeaderAccs, function(schAcc, index) {
+              return _c("div", { key: index, staticClass: "row" }, [
+                _c("p", { staticClass: "col-sm-4" }, [
+                  schAcc.role_id == "sec"
+                    ? _c("span", [_vm._v("Bí thư: ")])
+                    : _c("span", [_vm._v("Phó bí thư: ")]),
+                  _vm._v(
+                    "\r\n                    " +
+                      _vm._s(schAcc.name) +
+                      "\r\n                "
+                  )
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(faculty.name))]),
-                _vm._v(" "),
-                faculty.secretary != null
-                  ? _c("td", [_vm._v(_vm._s(faculty.secretary.name))])
-                  : _c("td"),
-                _vm._v(" "),
-                faculty.secretary != null
-                  ? _c("td", [_vm._v(_vm._s(faculty.secretary.email))])
-                  : _c("td"),
-                _vm._v(" "),
-                faculty.secretary != null
-                  ? _c("td", [_vm._v(_vm._s(faculty.secretary.phone))])
-                  : _c("td"),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  { staticClass: "text-center text-primary" },
-                  [
-                    _c(
-                      "router-link",
-                      { attrs: { to: "/classrooms/" + faculty.id } },
-                      [_c("i", { staticClass: "far fa-eye" })]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _vm._m(2, true)
+                _c("div", { staticClass: "col-sm-8 row" }, [
+                  _c("p", { staticClass: "col-5" }, [
+                    _c("span", [_vm._v("ĐT: ")]),
+                    _vm._v(_vm._s(schAcc.phone))
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "col-7 px-0" }, [
+                    _c("span", [_vm._v("Email: ")]),
+                    _vm._v(_vm._s(schAcc.email))
+                  ])
+                ])
               ])
             }),
             0
-          )
-        ]
-      )
-    ])
+          ),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "table-responsive" }, [
+            _c(
+              "table",
+              {
+                staticClass: "table table-striped table-hover table-bordered",
+                attrs: { id: "table" }
+              },
+              [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.faculties, function(faculty, index) {
+                    return _c("tr", { key: index }, [
+                      _c("td", [_vm._v(_vm._s(index + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(faculty.name))]),
+                      _vm._v(" "),
+                      faculty.secretary != null
+                        ? _c("td", [_vm._v(_vm._s(faculty.secretary.name))])
+                        : _c("td"),
+                      _vm._v(" "),
+                      faculty.secretary != null
+                        ? _c("td", [_vm._v(_vm._s(faculty.secretary.email))])
+                        : _c("td"),
+                      _vm._v(" "),
+                      faculty.secretary != null
+                        ? _c("td", [_vm._v(_vm._s(faculty.secretary.phone))])
+                        : _c("td"),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "text-center text-primary" },
+                        [
+                          _c(
+                            "router-link",
+                            { attrs: { to: "/classrooms/" + faculty.id } },
+                            [_c("i", { staticClass: "far fa-eye" })]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm._m(2, true)
+                    ])
+                  }),
+                  0
+                )
+              ]
+            )
+          ])
+        ])
+      : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
 }
 var staticRenderFns = [
@@ -56370,1231 +56454,1294 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c(
-      "form",
-      {
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            return _vm.submitChangeInfoStudent($event)
-          }
-        }
-      },
-      [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "input-group mb-3 col-12" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.id,
-                  expression: "form.id"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", disabled: "" },
-              domProps: { value: _vm.form.id },
+  return _c("div", [
+    _vm.$gate.isAdmin()
+      ? _c("div", { staticClass: "container" }, [
+          _c(
+            "form",
+            {
               on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "id", $event.target.value)
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.submitChangeInfoStudent($event)
                 }
               }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _c("div", { staticClass: "card" }, [
-              _c(
-                "div",
-                { staticClass: "card-header bg-secondary text-white" },
-                [_vm._v("Thông tin cá nhân")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "image" } }, [
-                    _vm._v("Hình Ảnh")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "wrap-avatar mb-1" }, [
-                    _c("img", {
-                      staticStyle: { width: "30%" },
-                      attrs: {
-                        src: _vm.getProfileImage(),
-                        alt: "profile image",
-                        id: "update-profile-img"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "form-control-file border",
-                    attrs: { type: "file", id: "image" },
-                    on: { change: _vm.updateImageProfile }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "name" } }, [_vm._v("Họ Tên")]),
+            },
+            [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "input-group mb-3 col-12" }, [
+                  _vm._m(0),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.form.name,
-                        expression: "form.name"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|max:50",
-                        expression: "'required|max:50'"
+                        value: _vm.form.id,
+                        expression: "form.id"
                       }
                     ],
                     staticClass: "form-control",
-                    class: { "is-invalid": _vm.errors.has("name") },
-                    attrs: {
-                      type: "text",
-                      name: "name",
-                      id: "name",
-                      placeholder: "Nguyễn Văn A"
-                    },
-                    domProps: { value: _vm.form.name },
+                    attrs: { type: "text", disabled: "" },
+                    domProps: { value: _vm.form.id },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.form, "name", $event.target.value)
+                        _vm.$set(_vm.form, "id", $event.target.value)
                       }
                     }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("name"),
-                          expression: "errors.has('name')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("name")))]
-                  )
+                  })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "birthday" } }, [
-                        _vm._v("Ngày sinh")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.birthday,
-                            expression: "form.birthday"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "date", id: "birthday" },
-                        domProps: { value: _vm.form.birthday },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "card" }, [
+                    _c(
+                      "div",
+                      { staticClass: "card-header bg-secondary text-white" },
+                      [_vm._v("Thông tin cá nhân")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "image" } }, [
+                          _vm._v("Hình Ảnh")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "wrap-avatar mb-1" }, [
+                          _c("img", {
+                            staticStyle: { width: "30%" },
+                            attrs: {
+                              src: _vm.getProfileImage(),
+                              alt: "profile image",
+                              id: "update-profile-img"
                             }
-                            _vm.$set(_vm.form, "birthday", $event.target.value)
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "sex" } }, [
-                        _vm._v("Giới tính")
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          staticClass: "form-control-file border",
+                          attrs: { type: "file", id: "image" },
+                          on: { change: _vm.updateImageProfile }
+                        })
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "select",
-                        {
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "name" } }, [
+                          _vm._v("Họ Tên")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
                           directives: [
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.form.sex,
-                              expression: "form.sex"
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            },
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "required|max:50",
+                              expression: "'required|max:50'"
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { name: "sex", id: "sex" },
+                          class: { "is-invalid": _vm.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            id: "name",
+                            placeholder: "Nguyễn Văn A"
+                          },
+                          domProps: { value: _vm.form.name },
                           on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.form,
-                                "sex",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
                             }
                           }
-                        },
-                        [
-                          _c(
-                            "option",
-                            { attrs: { value: "-1", disabled: "" } },
-                            [_vm._v("=== Chọn giới tính ===")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "option",
-                            {
-                              attrs: { value: "1" },
-                              domProps: { selected: _vm.form.sex }
-                            },
-                            [_vm._v("Nam")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "option",
-                            {
-                              attrs: { value: "0" },
-                              domProps: { selected: !_vm.form.sex }
-                            },
-                            [_vm._v("Nữ")]
-                          )
-                        ]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "union_date" } }, [
-                        _vm._v("Ngày vào đoàn")
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("name"),
+                                expression: "errors.has('name')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("name")))]
+                        )
                       ]),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.union_date,
-                            expression: "form.union_date"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "date", id: "union_date" },
-                        domProps: { value: _vm.form.union_date },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.form,
-                              "union_date",
-                              $event.target.value
+                      _c("div", { staticClass: "row" }, [
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "birthday" } }, [
+                              _vm._v("Ngày sinh")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.birthday,
+                                  expression: "form.birthday"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "date", id: "birthday" },
+                              domProps: { value: _vm.form.birthday },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "birthday",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "sex" } }, [
+                              _vm._v("Giới tính")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.sex,
+                                    expression: "form.sex"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { name: "sex", id: "sex" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.form,
+                                      "sex",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "option",
+                                  { attrs: { value: "-1", disabled: "" } },
+                                  [_vm._v("=== Chọn giới tính ===")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "option",
+                                  {
+                                    attrs: { value: "1" },
+                                    domProps: { selected: _vm.form.sex }
+                                  },
+                                  [_vm._v("Nam")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "option",
+                                  {
+                                    attrs: { value: "0" },
+                                    domProps: { selected: !_vm.form.sex }
+                                  },
+                                  [_vm._v("Nữ")]
+                                )
+                              ]
                             )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "hometown" } }, [
-                        _vm._v("Quê quán")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "union_date" } }, [
+                              _vm._v("Ngày vào đoàn")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.union_date,
+                                  expression: "form.union_date"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "date", id: "union_date" },
+                              domProps: { value: _vm.form.union_date },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "union_date",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "hometown" } }, [
+                              _vm._v("Quê quán")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.hometown,
+                                  expression: "form.hometown"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "text", id: "hometown" },
+                              domProps: { value: _vm.form.hometown },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "hometown",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "ethnic" } }, [
+                              _vm._v("Dân tộc")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.ethnic,
+                                  expression: "form.ethnic"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "text", id: "ethnic" },
+                              domProps: { value: _vm.form.ethnic },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "ethnic",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "religion" } }, [
+                              _vm._v("Tôn giáo")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.religion,
+                                  expression: "form.religion"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "text", id: "religion" },
+                              domProps: { value: _vm.form.religion },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "religion",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6 mb-2" }, [
+                          _c("div", { staticClass: "form-check-inline" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "form-check-label",
+                                attrs: { for: "is_submit" }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.is_submit,
+                                      expression: "form.is_submit"
+                                    }
+                                  ],
+                                  staticClass: "form-check-input",
+                                  attrs: { type: "checkbox", id: "is_submit" },
+                                  domProps: {
+                                    checked: _vm.form.is_submit,
+                                    checked: Array.isArray(_vm.form.is_submit)
+                                      ? _vm._i(_vm.form.is_submit, null) > -1
+                                      : _vm.form.is_submit
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.form.is_submit,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            _vm.$set(
+                                              _vm.form,
+                                              "is_submit",
+                                              $$a.concat([$$v])
+                                            )
+                                        } else {
+                                          $$i > -1 &&
+                                            _vm.$set(
+                                              _vm.form,
+                                              "is_submit",
+                                              $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1))
+                                            )
+                                        }
+                                      } else {
+                                        _vm.$set(_vm.form, "is_submit", $$c)
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(
+                                  "\r\n                                            Nộp sổ đoàn"
+                                )
+                              ]
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "phone" } }, [
+                              _vm._v("SĐT")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.phone,
+                                  expression: "form.phone"
+                                },
+                                {
+                                  name: "validate",
+                                  rawName: "v-validate",
+                                  value: "numeric|min:10",
+                                  expression: "'numeric|min:10'"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              class: { "is-invalid": _vm.errors.has("phone") },
+                              attrs: {
+                                type: "text",
+                                id: "phone",
+                                name: "phone",
+                                maxlength: "10",
+                                onkeypress:
+                                  "return event.keyCode>47 && event.keyCode<58 ? true : false",
+                                onkeydown:
+                                  "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                              },
+                              domProps: { value: _vm.form.phone },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "phone",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.errors.has("phone"),
+                                    expression: "errors.has('phone')"
+                                  }
+                                ],
+                                staticClass: "invalid-feedback"
+                              },
+                              [_vm._v(_vm._s(_vm.errors.first("phone")))]
+                            )
+                          ])
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.hometown,
-                            expression: "form.hometown"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "hometown" },
-                        domProps: { value: _vm.form.hometown },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.form, "hometown", $event.target.value)
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "ethnic" } }, [
-                        _vm._v("Dân tộc")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.ethnic,
-                            expression: "form.ethnic"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "ethnic" },
-                        domProps: { value: _vm.form.ethnic },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.form, "ethnic", $event.target.value)
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "religion" } }, [
-                        _vm._v("Tôn giáo")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.religion,
-                            expression: "form.religion"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "religion" },
-                        domProps: { value: _vm.form.religion },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.form, "religion", $event.target.value)
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6 mb-2" }, [
-                    _c("div", { staticClass: "form-check-inline" }, [
                       _c(
-                        "label",
-                        {
-                          staticClass: "form-check-label",
-                          attrs: { for: "is_submit" }
-                        },
+                        "div",
+                        { staticClass: "form-group" },
                         [
+                          _c("label", { attrs: { for: "email" } }, [
+                            _vm._v("Email")
+                          ]),
+                          _vm._v(" "),
                           _c("input", {
                             directives: [
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.form.is_submit,
-                                expression: "form.is_submit"
+                                value: _vm.form.email,
+                                expression: "form.email"
+                              },
+                              {
+                                name: "validate",
+                                rawName: "v-validate",
+                                value: "required|email",
+                                expression: "'required|email'"
                               }
                             ],
-                            staticClass: "form-check-input",
-                            attrs: { type: "checkbox", id: "is_submit" },
-                            domProps: {
-                              checked: _vm.form.is_submit,
-                              checked: Array.isArray(_vm.form.is_submit)
-                                ? _vm._i(_vm.form.is_submit, null) > -1
-                                : _vm.form.is_submit
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid":
+                                _vm.errors.has("email") ||
+                                _vm.form.errors.has("email")
                             },
+                            attrs: {
+                              type: "text",
+                              name: "email",
+                              placeholder: "nguyenvana@gmail.com"
+                            },
+                            domProps: { value: _vm.form.email },
                             on: {
-                              change: function($event) {
-                                var $$a = _vm.form.is_submit,
-                                  $$el = $event.target,
-                                  $$c = $$el.checked ? true : false
-                                if (Array.isArray($$a)) {
-                                  var $$v = null,
-                                    $$i = _vm._i($$a, $$v)
-                                  if ($$el.checked) {
-                                    $$i < 0 &&
-                                      _vm.$set(
-                                        _vm.form,
-                                        "is_submit",
-                                        $$a.concat([$$v])
-                                      )
-                                  } else {
-                                    $$i > -1 &&
-                                      _vm.$set(
-                                        _vm.form,
-                                        "is_submit",
-                                        $$a
-                                          .slice(0, $$i)
-                                          .concat($$a.slice($$i + 1))
-                                      )
-                                  }
-                                } else {
-                                  _vm.$set(_vm.form, "is_submit", $$c)
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
                                 }
+                                _vm.$set(_vm.form, "email", $event.target.value)
                               }
                             }
                           }),
-                          _vm._v(
-                            "\n                                        Nộp sổ đoàn"
-                          )
-                        ]
-                      )
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.errors.has("email"),
+                                  expression: "errors.has('email')"
+                                }
+                              ],
+                              staticClass: "invalid-feedback"
+                            },
+                            [_vm._v(_vm._s(_vm.errors.first("email")))]
+                          ),
+                          _vm._v(" "),
+                          _c("has-error", {
+                            attrs: { form: _vm.form, field: "email" }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "address" } }, [
+                          _vm._v("Địa chỉ")
+                        ]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.address,
+                              expression: "form.address"
+                            },
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "required|min:10|max:100",
+                              expression: "'required|min:10|max:100'"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            textarea: true,
+                            "is-invalid": _vm.errors.has("address")
+                          },
+                          attrs: { name: "address", id: "address", rows: "3" },
+                          domProps: { value: _vm.form.address },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "address", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("address"),
+                                expression: "errors.has('address')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("address")))]
+                        )
+                      ])
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "card" }, [
+                    _c(
+                      "div",
+                      { staticClass: "card-header bg-secondary text-white" },
+                      [_vm._v("Thông tin khác")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "faculty_id" } }, [
+                          _vm._v("Đoàn khoa")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.faculty_id,
+                                expression: "faculty_id"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { name: "faculty_id", id: "faculty_id" },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.faculty_id = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                },
+                                _vm.filtedClassrooms
+                              ]
+                            }
+                          },
+                          [
+                            _c(
+                              "option",
+                              { attrs: { value: "", disabled: "" } },
+                              [_vm._v("=== Chọn Khoa / Viện ===")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.faculties, function(faculty, index) {
+                              return _c(
+                                "option",
+                                {
+                                  key: index,
+                                  domProps: {
+                                    value: faculty.id,
+                                    selected:
+                                      faculty.id == _vm.student_info.faculty_id
+                                  }
+                                },
+                                [
+                                  _vm._v(_vm._s(faculty.name) + " "),
+                                  faculty.note !== null
+                                    ? _c("span", [
+                                        _vm._v("/ " + _vm._s(faculty.note))
+                                      ])
+                                    : _vm._e()
+                                ]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "class_room" } }, [
+                          _vm._v("Chi đoàn")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.class_room_id,
+                                expression: "form.class_room_id"
+                              },
+                              {
+                                name: "validate",
+                                rawName: "v-validate",
+                                value: "required",
+                                expression: "'required'"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.class_room_id == ""
+                            },
+                            attrs: { name: "class_room", id: "class_room" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.form,
+                                  "class_room_id",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c(
+                              "option",
+                              { attrs: { value: "", disabled: "" } },
+                              [_vm._v("=== Chọn Lớp ===")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.classrooms, function(classroom, index) {
+                              return _c(
+                                "option",
+                                {
+                                  key: index,
+                                  domProps: {
+                                    value: classroom.id,
+                                    selected:
+                                      classroom.id ==
+                                      _vm.student_info.class_room_id
+                                  }
+                                },
+                                [_vm._v(_vm._s(classroom.id))]
+                              )
+                            })
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("class_room"),
+                                expression: "errors.has('class_room')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("class_room")))]
+                        )
+                      ])
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "phone" } }, [_vm._v("SĐT")]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.phone,
-                            expression: "form.phone"
-                          },
-                          {
-                            name: "validate",
-                            rawName: "v-validate",
-                            value: "numeric|min:10",
-                            expression: "'numeric|min:10'"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        class: { "is-invalid": _vm.errors.has("phone") },
-                        attrs: {
-                          type: "text",
-                          id: "phone",
-                          name: "phone",
-                          maxlength: "10",
-                          onkeypress:
-                            "return event.keyCode>47 && event.keyCode<58 ? true : false",
-                          onkeydown:
-                            "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
-                        },
-                        domProps: { value: _vm.form.phone },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.form, "phone", $event.target.value)
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
+                  _c("div", { staticClass: "card" }, [
+                    _c(
+                      "div",
+                      { staticClass: "card-header bg-secondary text-white" },
+                      [_vm._v("Thông tin Cha")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "father_name" } }, [
+                          _vm._v("Họ tên")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
                           directives: [
                             {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.errors.has("phone"),
-                              expression: "errors.has('phone')"
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.father_name,
+                              expression: "form.father_name"
+                            },
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "alpha_spaces",
+                              expression: "'alpha_spaces'"
                             }
                           ],
-                          staticClass: "invalid-feedback"
-                        },
-                        [_vm._v(_vm._s(_vm.errors.first("phone")))]
-                      )
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.errors.has("father_name")
+                          },
+                          attrs: {
+                            type: "text",
+                            id: "father_name",
+                            name: "father_name"
+                          },
+                          domProps: { value: _vm.form.father_name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "father_name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("father_name"),
+                                expression: "errors.has('father_name')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("father_name")))]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row" }, [
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "father_birthday" } }, [
+                              _vm._v("Ngày sinh")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.father_birthday,
+                                  expression: "form.father_birthday"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "date",
+                                id: "father_birthday",
+                                name: "father_birthday"
+                              },
+                              domProps: { value: _vm.form.father_birthday },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "father_birthday",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "father_phone" } }, [
+                              _vm._v("Điện thoại")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.father_phone,
+                                  expression: "form.father_phone"
+                                },
+                                {
+                                  name: "validate",
+                                  rawName: "v-validate",
+                                  value: "numeric|min:10",
+                                  expression: "'numeric|min:10'"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              class: {
+                                "is-invalid": _vm.errors.has("father_phone")
+                              },
+                              attrs: {
+                                type: "text",
+                                id: "father_phone",
+                                name: "father_phone",
+                                maxlength: "10",
+                                onkeypress:
+                                  "return event.keyCode>47 && event.keyCode<58 ? true : false",
+                                onkeydown:
+                                  "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                              },
+                              domProps: { value: _vm.form.father_phone },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "father_phone",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.errors.has("father_phone"),
+                                    expression: "errors.has('father_phone')"
+                                  }
+                                ],
+                                staticClass: "invalid-feedback"
+                              },
+                              [_vm._v(_vm._s(_vm.errors.first("father_phone")))]
+                            )
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "father_job" } }, [
+                          _vm._v("Công việc")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.father_job,
+                              expression: "form.father_job"
+                            },
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "alpha_spaces",
+                              expression: "'alpha_spaces'"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.errors.has("father_job") },
+                          attrs: {
+                            type: "text",
+                            id: "father_job",
+                            name: "father_job"
+                          },
+                          domProps: { value: _vm.form.father_job },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "father_job",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("father_job"),
+                                expression: "errors.has('father_job')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("father_job")))]
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card mb-2" }, [
+                    _c(
+                      "div",
+                      { staticClass: "card-header bg-secondary text-white" },
+                      [_vm._v("Thông tin Mẹ")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "mother_name" } }, [
+                          _vm._v("Họ tên")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.mother_name,
+                              expression: "form.mother_name"
+                            },
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "alpha_spaces",
+                              expression: "'alpha_spaces'"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.errors.has("mother_name")
+                          },
+                          attrs: {
+                            type: "text",
+                            id: "mother_name",
+                            name: "mother_name"
+                          },
+                          domProps: { value: _vm.form.mother_name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "mother_name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("mother_name"),
+                                expression: "errors.has('mother_name')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("mother_name")))]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row" }, [
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "mother_birthday" } }, [
+                              _vm._v("Ngày sinh")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.mother_birthday,
+                                  expression: "form.mother_birthday"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "date",
+                                id: "mother_birthday",
+                                name: "mother_birthday"
+                              },
+                              domProps: { value: _vm.form.mother_birthday },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "mother_birthday",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-lg-6" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "mother_phone" } }, [
+                              _vm._v("Điện thoại")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.mother_phone,
+                                  expression: "form.mother_phone"
+                                },
+                                {
+                                  name: "validate",
+                                  rawName: "v-validate",
+                                  value: "numeric|min:10",
+                                  expression: "'numeric|min:10'"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              class: {
+                                "is-invalid": _vm.errors.has("mother_phone")
+                              },
+                              attrs: {
+                                type: "text",
+                                id: "mother_phone",
+                                name: "mother_phone",
+                                maxlength: "10",
+                                onkeypress:
+                                  "return event.keyCode>47 && event.keyCode<58 ? true : false",
+                                onkeydown:
+                                  "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
+                              },
+                              domProps: { value: _vm.form.mother_phone },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "mother_phone",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.errors.has("mother_phone"),
+                                    expression: "errors.has('mother_phone')"
+                                  }
+                                ],
+                                staticClass: "invalid-feedback"
+                              },
+                              [_vm._v(_vm._s(_vm.errors.first("mother_phone")))]
+                            )
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "mother_job" } }, [
+                          _vm._v("Công việc")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.mother_job,
+                              expression: "form.mother_job"
+                            },
+                            {
+                              name: "validate",
+                              rawName: "v-validate",
+                              value: "alpha_spaces",
+                              expression: "'alpha_spaces'"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.errors.has("mother_job") },
+                          attrs: {
+                            type: "text",
+                            id: "mother_job",
+                            name: "mother_job"
+                          },
+                          domProps: { value: _vm.form.mother_job },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "mother_job",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.errors.has("mother_job"),
+                                expression: "errors.has('mother_job')"
+                              }
+                            ],
+                            staticClass: "invalid-feedback"
+                          },
+                          [_vm._v(_vm._s(_vm.errors.first("mother_job")))]
+                        )
+                      ])
                     ])
                   ])
                 ]),
                 _vm._v(" "),
                 _c(
-                  "div",
-                  { staticClass: "form-group" },
-                  [
-                    _c("label", { attrs: { for: "email" } }, [_vm._v("Email")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.email,
-                          expression: "form.email"
-                        },
-                        {
-                          name: "validate",
-                          rawName: "v-validate",
-                          value: "required|email",
-                          expression: "'required|email'"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: {
-                        "is-invalid":
-                          _vm.errors.has("email") ||
-                          _vm.form.errors.has("email")
-                      },
-                      attrs: {
-                        type: "text",
-                        name: "email",
-                        placeholder: "nguyenvana@gmail.com"
-                      },
-                      domProps: { value: _vm.form.email },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.form, "email", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.errors.has("email"),
-                            expression: "errors.has('email')"
-                          }
-                        ],
-                        staticClass: "invalid-feedback"
-                      },
-                      [_vm._v(_vm._s(_vm.errors.first("email")))]
-                    ),
-                    _vm._v(" "),
-                    _c("has-error", {
-                      attrs: { form: _vm.form, field: "email" }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "address" } }, [
-                    _vm._v("Địa chỉ")
-                  ]),
-                  _vm._v(" "),
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.address,
-                        expression: "form.address"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|min:10|max:100",
-                        expression: "'required|min:10|max:100'"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: {
-                      textarea: true,
-                      "is-invalid": _vm.errors.has("address")
-                    },
-                    attrs: { name: "address", id: "address", rows: "3" },
-                    domProps: { value: _vm.form.address },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.form, "address", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("address"),
-                          expression: "errors.has('address')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("address")))]
-                  )
-                ])
+                  "button",
+                  {
+                    staticClass: "btn btn-success mx-auto mt-3",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v("Lưu thông tin")]
+                )
               ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _c("div", { staticClass: "card" }, [
-              _c(
-                "div",
-                { staticClass: "card-header bg-secondary text-white" },
-                [_vm._v("Thông tin khác")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "faculty_id" } }, [
-                    _vm._v("Đoàn khoa")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.faculty_id,
-                          expression: "faculty_id"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { name: "faculty_id", id: "faculty_id" },
-                      on: {
-                        change: [
-                          function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.faculty_id = $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          },
-                          _vm.filtedClassrooms
-                        ]
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { value: "", disabled: "" } }, [
-                        _vm._v("=== Chọn Khoa / Viện ===")
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(_vm.faculties, function(faculty, index) {
-                        return _c(
-                          "option",
-                          {
-                            key: index,
-                            domProps: {
-                              value: faculty.id,
-                              selected:
-                                faculty.id == _vm.student_info.faculty_id
-                            }
-                          },
-                          [
-                            _vm._v(_vm._s(faculty.name) + " "),
-                            faculty.note !== null
-                              ? _c("span", [
-                                  _vm._v("/ " + _vm._s(faculty.note))
-                                ])
-                              : _vm._e()
-                          ]
-                        )
-                      })
-                    ],
-                    2
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "class_room" } }, [
-                    _vm._v("Chi đoàn")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.class_room_id,
-                          expression: "form.class_room_id"
-                        },
-                        {
-                          name: "validate",
-                          rawName: "v-validate",
-                          value: "required",
-                          expression: "'required'"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: { "is-invalid": _vm.form.class_room_id == "" },
-                      attrs: { name: "class_room", id: "class_room" },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.form,
-                            "class_room_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { value: "", disabled: "" } }, [
-                        _vm._v("=== Chọn Lớp ===")
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(_vm.classrooms, function(classroom, index) {
-                        return _c(
-                          "option",
-                          {
-                            key: index,
-                            domProps: {
-                              value: classroom.id,
-                              selected:
-                                classroom.id == _vm.student_info.class_room_id
-                            }
-                          },
-                          [_vm._v(_vm._s(classroom.id))]
-                        )
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("class_room"),
-                          expression: "errors.has('class_room')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("class_room")))]
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card" }, [
-              _c(
-                "div",
-                { staticClass: "card-header bg-secondary text-white" },
-                [_vm._v("Thông tin Cha")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "father_name" } }, [
-                    _vm._v("Họ tên")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.father_name,
-                        expression: "form.father_name"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "alpha_spaces",
-                        expression: "'alpha_spaces'"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: { "is-invalid": _vm.errors.has("father_name") },
-                    attrs: {
-                      type: "text",
-                      id: "father_name",
-                      name: "father_name"
-                    },
-                    domProps: { value: _vm.form.father_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.form, "father_name", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("father_name"),
-                          expression: "errors.has('father_name')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("father_name")))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "father_birthday" } }, [
-                        _vm._v("Ngày sinh")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.father_birthday,
-                            expression: "form.father_birthday"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "date",
-                          id: "father_birthday",
-                          name: "father_birthday"
-                        },
-                        domProps: { value: _vm.form.father_birthday },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.form,
-                              "father_birthday",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "father_phone" } }, [
-                        _vm._v("Điện thoại")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.father_phone,
-                            expression: "form.father_phone"
-                          },
-                          {
-                            name: "validate",
-                            rawName: "v-validate",
-                            value: "numeric|min:10",
-                            expression: "'numeric|min:10'"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        class: { "is-invalid": _vm.errors.has("father_phone") },
-                        attrs: {
-                          type: "text",
-                          id: "father_phone",
-                          name: "father_phone",
-                          maxlength: "10",
-                          onkeypress:
-                            "return event.keyCode>47 && event.keyCode<58 ? true : false",
-                          onkeydown:
-                            "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
-                        },
-                        domProps: { value: _vm.form.father_phone },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.form,
-                              "father_phone",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.errors.has("father_phone"),
-                              expression: "errors.has('father_phone')"
-                            }
-                          ],
-                          staticClass: "invalid-feedback"
-                        },
-                        [_vm._v(_vm._s(_vm.errors.first("father_phone")))]
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "father_job" } }, [
-                    _vm._v("Công việc")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.father_job,
-                        expression: "form.father_job"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "alpha_spaces",
-                        expression: "'alpha_spaces'"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: { "is-invalid": _vm.errors.has("father_job") },
-                    attrs: {
-                      type: "text",
-                      id: "father_job",
-                      name: "father_job"
-                    },
-                    domProps: { value: _vm.form.father_job },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.form, "father_job", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("father_job"),
-                          expression: "errors.has('father_job')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("father_job")))]
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card mb-2" }, [
-              _c(
-                "div",
-                { staticClass: "card-header bg-secondary text-white" },
-                [_vm._v("Thông tin Mẹ")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "mother_name" } }, [
-                    _vm._v("Họ tên")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.mother_name,
-                        expression: "form.mother_name"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "alpha_spaces",
-                        expression: "'alpha_spaces'"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: { "is-invalid": _vm.errors.has("mother_name") },
-                    attrs: {
-                      type: "text",
-                      id: "mother_name",
-                      name: "mother_name"
-                    },
-                    domProps: { value: _vm.form.mother_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.form, "mother_name", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("mother_name"),
-                          expression: "errors.has('mother_name')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("mother_name")))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "mother_birthday" } }, [
-                        _vm._v("Ngày sinh")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.mother_birthday,
-                            expression: "form.mother_birthday"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "date",
-                          id: "mother_birthday",
-                          name: "mother_birthday"
-                        },
-                        domProps: { value: _vm.form.mother_birthday },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.form,
-                              "mother_birthday",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "mother_phone" } }, [
-                        _vm._v("Điện thoại")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.mother_phone,
-                            expression: "form.mother_phone"
-                          },
-                          {
-                            name: "validate",
-                            rawName: "v-validate",
-                            value: "numeric|min:10",
-                            expression: "'numeric|min:10'"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        class: { "is-invalid": _vm.errors.has("mother_phone") },
-                        attrs: {
-                          type: "text",
-                          id: "mother_phone",
-                          name: "mother_phone",
-                          maxlength: "10",
-                          onkeypress:
-                            "return event.keyCode>47 && event.keyCode<58 ? true : false",
-                          onkeydown:
-                            "return event.keyCode == 69 || event.keyCode == 189 ? false : true"
-                        },
-                        domProps: { value: _vm.form.mother_phone },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.form,
-                              "mother_phone",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.errors.has("mother_phone"),
-                              expression: "errors.has('mother_phone')"
-                            }
-                          ],
-                          staticClass: "invalid-feedback"
-                        },
-                        [_vm._v(_vm._s(_vm.errors.first("mother_phone")))]
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "mother_job" } }, [
-                    _vm._v("Công việc")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.mother_job,
-                        expression: "form.mother_job"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "alpha_spaces",
-                        expression: "'alpha_spaces'"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: { "is-invalid": _vm.errors.has("mother_job") },
-                    attrs: {
-                      type: "text",
-                      id: "mother_job",
-                      name: "mother_job"
-                    },
-                    domProps: { value: _vm.form.mother_job },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.form, "mother_job", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("mother_job"),
-                          expression: "errors.has('mother_job')"
-                        }
-                      ],
-                      staticClass: "invalid-feedback"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("mother_job")))]
-                  )
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-success mx-auto mt-3",
-              attrs: { type: "submit" }
-            },
-            [_vm._v("Lưu thông tin")]
+            ]
           )
         ])
-      ]
-    )
+      : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
 }
 var staticRenderFns = [
@@ -57628,359 +57775,399 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c(
-      "div",
-      { staticClass: "col-lg-3 d-flex flex-column align-items-center" },
-      [
-        _c("img", {
-          staticClass: "img-fluid mb-3",
-          attrs: {
-            src: "/theme/images/img_avatar1.png",
-            alt: "Chania",
-            width: "120"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "note-success" }, [
-          _c("p", [
-            _vm._v("Cập nhật gần nhất: "),
-            _c("br"),
-            _vm._v(
-              _vm._s(_vm._f("myTimeDateFormat")(_vm.student_info.updated_at))
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _vm._m(1)
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "form",
-      {
-        staticClass: "col-lg-9 d-flex flex-column align-items-center",
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            return _vm.submitChangeInfoStudent($event)
-          }
-        }
-      },
-      [
-        _c("div", { staticClass: "row info-section" }, [
-          _c("div", { staticClass: "col-md-6" }, [
-            _vm._v("Mã số sinh viên: "),
-            _c("span", { staticClass: "font-weight-bold" }, [
-              _vm._v(_vm._s(_vm.student_info.mssv))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _vm._v("Họ và tên: "),
-            _c("span", { staticClass: "font-weight-bold" }, [
-              _vm._v(_vm._s(_vm.student_info.name))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _vm._v("Lớp: "),
-            _c("span", { staticClass: "font-weight-bold" }, [
-              _vm._v(_vm._s(_vm.student_info.class_room_id))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _vm._v("Ngày sinh: "),
-            _c("span", [
-              _vm._v(_vm._s(_vm._f("myDateFormat")(_vm.student_info.birthday)))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _vm._v("Khoa: "),
-            _c("span", { staticClass: "font-weight-bold" }, [
-              _vm._v(_vm._s(_vm.student_info.faculty_name))
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(2),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _vm._v("Chuyên ngành: "),
-            _c("span", { staticClass: "font-weight-bold" }, [
-              _vm._v(_vm._s(_vm.student_info.faculty_name))
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "info-section" }, [
-          _c("h5", [_vm._v("Thông tin sinh viên")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "form-group col-md-6" }, [
-              _vm._m(3),
+  return _c("div", [
+    _vm.checkToShow
+      ? _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            { staticClass: "col-lg-3 d-flex flex-column align-items-center" },
+            [
+              _c("img", {
+                staticClass: "img-fluid mb-3",
+                attrs: {
+                  src: _vm.getProfileImage(),
+                  alt: "Chania",
+                  width: "120"
+                }
+              }),
               _vm._v(" "),
-              _c(
-                "select",
-                {
-                  staticClass: "form-control",
-                  attrs: { name: "sex", id: "sex" }
-                },
-                [
-                  _c("option", { attrs: { value: "", disabled: "" } }, [
-                    _vm._v("=== Chọn giới tính ===")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "option",
-                    {
-                      attrs: { value: "1" },
-                      domProps: { selected: _vm.student_info.sex }
-                    },
-                    [_vm._v("Nam")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "option",
-                    {
-                      attrs: { value: "0" },
-                      domProps: { selected: !_vm.student_info.sex }
-                    },
-                    [_vm._v("Nữ")]
+              _c("div", { staticClass: "note-success" }, [
+                _c("p", [
+                  _vm._v("Cập nhật gần nhất: "),
+                  _c("br"),
+                  _vm._v(
+                    _vm._s(
+                      _vm._f("myTimeDateFormat")(_vm.student_info.updated_at)
+                    )
                   )
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(4),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-6" }, [
-              _vm._m(5),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "email", id: "email" },
-                domProps: { value: _vm.student_info.email }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-6" }, [
-              _vm._m(6),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "number", id: "phonenum" },
-                domProps: { value: _vm.student_info.phone }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-6" }, [
-              _vm._m(7),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "date", id: "union_date" },
-                domProps: { value: _vm.student_info.union_date }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-6" }, [
-              _c("label", { attrs: { for: "ethnic" } }, [_vm._v("Dân tộc:")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "text", id: "ethnic" },
-                domProps: { value: _vm.student_info.ethnic }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-6" }, [
-              _c("label", { attrs: { for: "religion" } }, [
-                _vm._v("Tôn giáo:")
+                ])
               ]),
               _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "text", id: "religion" },
-                domProps: { value: _vm.student_info.religion }
-              })
-            ]),
-            _vm._v(" "),
-            _vm._m(8)
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "info-section" }, [
-          _c("h5", [_vm._v("Địa chỉ liên lạc")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _vm._m(9),
-            _vm._v(" "),
-            _vm._m(10),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-12" }, [
-              _vm._m(11),
+              _vm._m(0),
               _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  name: "address",
-                  id: "address",
-                  placeholder: "Số nhà, đường, phường/ xã"
-                },
-                domProps: { value: _vm.student_info.address }
-              })
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "info-section" }, [
-          _c("h5", [_vm._v("Thông tin nhân thân")]),
+              _vm._m(1)
+            ]
+          ),
           _vm._v(" "),
-          _vm.relations.length > 0
-            ? _c(
-                "div",
-                { staticClass: "row" },
-                _vm._l(_vm.relations, function(relation, index) {
-                  return _c("div", { key: index, staticClass: "col-md-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      relation.role == 1
-                        ? _c("label", { attrs: { for: "father_name" } }, [
-                            _vm._v("Họ tên cha: "),
-                            _c("span", { staticClass: "text-danger" }, [
-                              _vm._v("(*)")
-                            ])
-                          ])
-                        : _c("label", { attrs: { for: "mother_name" } }, [
-                            _vm._v("Họ tên mẹ: "),
-                            _c("span", { staticClass: "text-danger" }, [
-                              _vm._v("(*)")
-                            ])
-                          ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name:
-                            relation.role == 1 ? "father_name" : "mother_name",
-                          id: relation.role == 1 ? "father_name" : "mother_name"
-                        },
-                        domProps: { value: relation.name }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "label",
-                        {
-                          attrs: {
-                            for:
-                              relation.role == 1
-                                ? "father_birthday"
-                                : "mother_birthday"
-                          }
-                        },
-                        [
-                          _vm._v("Ngày sinh: "),
-                          _c("span", { staticClass: "text-danger" }, [
-                            _vm._v("(*)")
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "date",
-                          name:
-                            relation.role == 1
-                              ? "father_birthday"
-                              : "mother_birthday",
-                          id:
-                            relation.role == 1
-                              ? "father_birthday"
-                              : "mother_birthday"
-                        },
-                        domProps: { value: relation.birthday }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "label",
-                        {
-                          attrs: {
-                            for:
-                              relation.role == 1 ? "father_job" : "mother_job"
-                          }
-                        },
-                        [_vm._v("Nghề nghiệp: ")]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name:
-                            relation.role == 1 ? "father_job" : "mother_job",
-                          id: relation.role == 1 ? "father_job" : "mother_job"
-                        },
-                        domProps: { value: relation.job }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "label",
-                        {
-                          attrs: {
-                            for:
-                              relation.role == 1
-                                ? "father_phone"
-                                : "mother_phone"
-                          }
-                        },
-                        [
-                          _vm._v("Điện thoại: "),
-                          _c("span", { staticClass: "text-danger" }, [
-                            _vm._v("(*)")
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "number",
-                          name:
-                            relation.role == 1
-                              ? "father_phone"
-                              : "mother_phone",
-                          id:
-                            relation.role == 1 ? "father_phone" : "mother_phone"
-                        },
-                        domProps: { value: relation.phone }
-                      })
-                    ])
+          _c(
+            "form",
+            {
+              staticClass: "col-lg-9 d-flex flex-column align-items-center",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.submitChangeInfoStudent($event)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "row info-section" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _vm._v("Mã số sinh viên: "),
+                  _c("span", { staticClass: "font-weight-bold" }, [
+                    _vm._v(_vm._s(_vm.student_info.mssv))
                   ])
-                }),
-                0
-              )
-            : _c("div", { staticClass: "row" }, [
-                _vm._m(12),
+                ]),
                 _vm._v(" "),
-                _vm._m(13)
-              ])
-        ]),
-        _vm._v(" "),
-        _vm._m(14)
-      ]
-    )
+                _c("div", { staticClass: "col-md-6" }, [
+                  _vm._v("Họ và tên: "),
+                  _c("span", { staticClass: "font-weight-bold" }, [
+                    _vm._v(_vm._s(_vm.student_info.name))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _vm._v("Lớp: "),
+                  _c("span", { staticClass: "font-weight-bold" }, [
+                    _vm._v(_vm._s(_vm.student_info.class_room_id))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _vm._v("Ngày sinh: "),
+                  _c("span", [
+                    _vm._v(
+                      _vm._s(_vm._f("myDateFormat")(_vm.student_info.birthday))
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _vm._v("Khoa: "),
+                  _c("span", { staticClass: "font-weight-bold" }, [
+                    _vm._v(_vm._s(_vm.student_info.faculty_name))
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(2),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _vm._v("Chuyên ngành: "),
+                  _c("span", { staticClass: "font-weight-bold" }, [
+                    _vm._v(_vm._s(_vm.student_info.faculty_name))
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "info-section" }, [
+                _c("h5", [_vm._v("Thông tin sinh viên")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "form-group col-md-6" }, [
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        staticClass: "form-control",
+                        attrs: { name: "sex", id: "sex" }
+                      },
+                      [
+                        _c("option", { attrs: { value: "", disabled: "" } }, [
+                          _vm._v("=== Chọn giới tính ===")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "option",
+                          {
+                            attrs: { value: "1" },
+                            domProps: { selected: _vm.student_info.sex }
+                          },
+                          [_vm._v("Nam")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "option",
+                          {
+                            attrs: { value: "0" },
+                            domProps: { selected: !_vm.student_info.sex }
+                          },
+                          [_vm._v("Nữ")]
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-6" }, [
+                    _vm._m(5),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "email", id: "email" },
+                      domProps: { value: _vm.student_info.email }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-6" }, [
+                    _vm._m(6),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "number", id: "phonenum" },
+                      domProps: { value: _vm.student_info.phone }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-6" }, [
+                    _vm._m(7),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "date", id: "union_date" },
+                      domProps: { value: _vm.student_info.union_date }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-6" }, [
+                    _c("label", { attrs: { for: "ethnic" } }, [
+                      _vm._v("Dân tộc:")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "text", id: "ethnic" },
+                      domProps: { value: _vm.student_info.ethnic }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-6" }, [
+                    _c("label", { attrs: { for: "religion" } }, [
+                      _vm._v("Tôn giáo:")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "text", id: "religion" },
+                      domProps: { value: _vm.student_info.religion }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(8)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "info-section" }, [
+                _c("h5", [_vm._v("Địa chỉ liên lạc")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _vm._m(9),
+                  _vm._v(" "),
+                  _vm._m(10),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-12" }, [
+                    _vm._m(11),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "address",
+                        id: "address",
+                        placeholder: "Số nhà, đường, phường/ xã"
+                      },
+                      domProps: { value: _vm.student_info.address }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "info-section" }, [
+                _c("h5", [_vm._v("Thông tin nhân thân")]),
+                _vm._v(" "),
+                _vm.relations.length > 0
+                  ? _c(
+                      "div",
+                      { staticClass: "row" },
+                      _vm._l(_vm.relations, function(relation, index) {
+                        return _c(
+                          "div",
+                          { key: index, staticClass: "col-md-6" },
+                          [
+                            _c("div", { staticClass: "form-group" }, [
+                              relation.role == 1
+                                ? _c(
+                                    "label",
+                                    { attrs: { for: "father_name" } },
+                                    [
+                                      _vm._v("Họ tên cha: "),
+                                      _c(
+                                        "span",
+                                        { staticClass: "text-danger" },
+                                        [_vm._v("(*)")]
+                                      )
+                                    ]
+                                  )
+                                : _c(
+                                    "label",
+                                    { attrs: { for: "mother_name" } },
+                                    [
+                                      _vm._v("Họ tên mẹ: "),
+                                      _c(
+                                        "span",
+                                        { staticClass: "text-danger" },
+                                        [_vm._v("(*)")]
+                                      )
+                                    ]
+                                  ),
+                              _vm._v(" "),
+                              _c("input", {
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  name:
+                                    relation.role == 1
+                                      ? "father_name"
+                                      : "mother_name",
+                                  id:
+                                    relation.role == 1
+                                      ? "father_name"
+                                      : "mother_name"
+                                },
+                                domProps: { value: relation.name }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                {
+                                  attrs: {
+                                    for:
+                                      relation.role == 1
+                                        ? "father_birthday"
+                                        : "mother_birthday"
+                                  }
+                                },
+                                [
+                                  _vm._v("Ngày sinh: "),
+                                  _c("span", { staticClass: "text-danger" }, [
+                                    _vm._v("(*)")
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "date",
+                                  name:
+                                    relation.role == 1
+                                      ? "father_birthday"
+                                      : "mother_birthday",
+                                  id:
+                                    relation.role == 1
+                                      ? "father_birthday"
+                                      : "mother_birthday"
+                                },
+                                domProps: { value: relation.birthday }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                {
+                                  attrs: {
+                                    for:
+                                      relation.role == 1
+                                        ? "father_job"
+                                        : "mother_job"
+                                  }
+                                },
+                                [_vm._v("Nghề nghiệp: ")]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  name:
+                                    relation.role == 1
+                                      ? "father_job"
+                                      : "mother_job",
+                                  id:
+                                    relation.role == 1
+                                      ? "father_job"
+                                      : "mother_job"
+                                },
+                                domProps: { value: relation.job }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                {
+                                  attrs: {
+                                    for:
+                                      relation.role == 1
+                                        ? "father_phone"
+                                        : "mother_phone"
+                                  }
+                                },
+                                [
+                                  _vm._v("Điện thoại: "),
+                                  _c("span", { staticClass: "text-danger" }, [
+                                    _vm._v("(*)")
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "number",
+                                  name:
+                                    relation.role == 1
+                                      ? "father_phone"
+                                      : "mother_phone",
+                                  id:
+                                    relation.role == 1
+                                      ? "father_phone"
+                                      : "mother_phone"
+                                },
+                                domProps: { value: relation.phone }
+                              })
+                            ])
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  : _c("div", { staticClass: "row" }, [
+                      _vm._m(12),
+                      _vm._v(" "),
+                      _vm._m(13)
+                    ])
+              ]),
+              _vm._v(" "),
+              _vm._m(14)
+            ]
+          )
+        ])
+      : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
 }
 var staticRenderFns = [
@@ -58516,131 +58703,151 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wrap-table" }, [
-    _c("div", { staticClass: "note-info" }, [
-      _vm.classroomLeaderAccs.secretary != null
-        ? _c("div", { staticClass: "row" }, [
-            _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Bí thư: ")]),
-              _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.name))
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-8 row" }, [
-              _c("p", { staticClass: "col-5" }, [
-                _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.phone))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "col-7 px-0" }, [
-                _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.email))
-              ])
-            ])
-          ])
-        : _c("div", { staticClass: "row" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _vm._m(1)
-          ]),
-      _vm._v(" "),
-      _vm.classroomLeaderAccs.deputy_secretary1 != null
-        ? _c("div", { staticClass: "row" }, [
-            _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Phó bí thư: ")]),
-              _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary1.name))
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-8 row" }, [
-              _c("p", { staticClass: "col-5" }, [
-                _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary1.phone))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "col-7 px-0" }, [
-                _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary1.email))
-              ])
-            ])
-          ])
-        : _c("div", { staticClass: "row" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _vm._m(3)
-          ]),
-      _vm._v(" "),
-      _vm.classroomLeaderAccs.deputy_secretary2 != null
-        ? _c("div", { staticClass: "row" }, [
-            _c("p", { staticClass: "col-sm-4" }, [
-              _c("span", [_vm._v("Phó bí thư: ")]),
-              _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary2.name))
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-8 row" }, [
-              _c("p", { staticClass: "col-5" }, [
-                _c("span", [_vm._v("ĐT: ")]),
-                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary2.phone))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "col-7 px-0" }, [
-                _c("span", [_vm._v("Email: ")]),
-                _vm._v(_vm._s(_vm.classroomLeaderAccs.deputy_secretary2.email))
-              ])
-            ])
-          ])
-        : _c("div", { staticClass: "row" }, [_vm._m(4), _vm._v(" "), _vm._m(5)])
-    ]),
-    _vm._v(" "),
-    _vm._m(6),
-    _vm._v(" "),
-    _c("div", { staticClass: "table-responsive" }, [
-      _c(
-        "table",
-        {
-          staticClass: "table table-striped table-hover table-bordered",
-          attrs: { id: "table" }
-        },
-        [
-          _vm._m(7),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.students, function(student, index) {
-              return _c("tr", { key: index }, [
-                _c("td", [_vm._v(_vm._s(index + 1))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.id))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.name))]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(_vm._s(_vm._f("myDateFormat")(student.birthday)))
+  return _c("div", [
+    _vm.$gate.isStudentsPagePassed()
+      ? _c("div", { staticClass: "wrap-table" }, [
+          _c("div", { staticClass: "note-info" }, [
+            _vm.classroomLeaderAccs.secretary != null
+              ? _c("div", { staticClass: "row" }, [
+                  _c("p", { staticClass: "col-sm-4" }, [
+                    _c("span", [_vm._v("Bí thư: ")]),
+                    _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8 row" }, [
+                    _c("p", { staticClass: "col-5" }, [
+                      _c("span", [_vm._v("ĐT: ")]),
+                      _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.phone))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "col-7 px-0" }, [
+                      _c("span", [_vm._v("Email: ")]),
+                      _vm._v(_vm._s(_vm.classroomLeaderAccs.secretary.email))
+                    ])
+                  ])
+                ])
+              : _c("div", { staticClass: "row" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _vm._m(1)
                 ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.user.email))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.user.phone))]),
+            _vm._v(" "),
+            _vm.classroomLeaderAccs.deputy_secretary1 != null
+              ? _c("div", { staticClass: "row" }, [
+                  _c("p", { staticClass: "col-sm-4" }, [
+                    _c("span", [_vm._v("Phó bí thư: ")]),
+                    _vm._v(
+                      _vm._s(_vm.classroomLeaderAccs.deputy_secretary1.name)
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8 row" }, [
+                    _c("p", { staticClass: "col-5" }, [
+                      _c("span", [_vm._v("ĐT: ")]),
+                      _vm._v(
+                        _vm._s(_vm.classroomLeaderAccs.deputy_secretary1.phone)
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "col-7 px-0" }, [
+                      _c("span", [_vm._v("Email: ")]),
+                      _vm._v(
+                        _vm._s(_vm.classroomLeaderAccs.deputy_secretary1.email)
+                      )
+                    ])
+                  ])
+                ])
+              : _c("div", { staticClass: "row" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ]),
+            _vm._v(" "),
+            _vm.classroomLeaderAccs.deputy_secretary2 != null
+              ? _c("div", { staticClass: "row" }, [
+                  _c("p", { staticClass: "col-sm-4" }, [
+                    _c("span", [_vm._v("Phó bí thư: ")]),
+                    _vm._v(
+                      _vm._s(_vm.classroomLeaderAccs.deputy_secretary2.name)
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-8 row" }, [
+                    _c("p", { staticClass: "col-5" }, [
+                      _c("span", [_vm._v("ĐT: ")]),
+                      _vm._v(
+                        _vm._s(_vm.classroomLeaderAccs.deputy_secretary2.phone)
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "col-7 px-0" }, [
+                      _c("span", [_vm._v("Email: ")]),
+                      _vm._v(
+                        _vm._s(_vm.classroomLeaderAccs.deputy_secretary2.email)
+                      )
+                    ])
+                  ])
+                ])
+              : _c("div", { staticClass: "row" }, [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _vm._m(5)
+                ])
+          ]),
+          _vm._v(" "),
+          _vm._m(6),
+          _vm._v(" "),
+          _c("div", { staticClass: "table-responsive" }, [
+            _c(
+              "table",
+              {
+                staticClass: "table table-striped table-hover table-bordered",
+                attrs: { id: "table" }
+              },
+              [
+                _vm._m(7),
                 _vm._v(" "),
                 _c(
-                  "td",
-                  { staticClass: "text-center text-primary" },
-                  [
-                    _c(
-                      "router-link",
-                      { attrs: { to: "/student-profile/" + student.id } },
-                      [_c("i", { staticClass: "far fa-eye" })]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _vm._m(8, true)
-              ])
-            }),
-            0
-          )
-        ]
-      )
-    ])
+                  "tbody",
+                  _vm._l(_vm.students, function(student, index) {
+                    return _c("tr", { key: index }, [
+                      _c("td", [_vm._v(_vm._s(index + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(student.id))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(student.name))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(_vm._s(_vm._f("myDateFormat")(student.birthday)))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(student.user.email))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(student.user.phone))]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "text-center text-primary" },
+                        [
+                          _c(
+                            "router-link",
+                            { attrs: { to: "/student-profile/" + student.id } },
+                            [_c("i", { staticClass: "far fa-eye" })]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm._m(8, true)
+                    ])
+                  }),
+                  0
+                )
+              ]
+            )
+          ])
+        ])
+      : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
 }
 var staticRenderFns = [
@@ -75452,10 +75659,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Gate =
 /*#__PURE__*/
 function () {
-  function Gate(user) {
+  function Gate(user, student, faculty) {
     _classCallCheck(this, Gate);
 
     this.user = user;
+    this.student = student;
+    this.faculty = faculty;
   }
 
   _createClass(Gate, [{
@@ -75474,9 +75683,87 @@ function () {
       return this.user.role_id === 'fac';
     }
   }, {
+    key: "isAccClass",
+    value: function isAccClass() {
+      return this.user.role_id === 'cla';
+    }
+  }, {
     key: "isAccStudent",
     value: function isAccStudent() {
       return this.user.role_id === 'stu';
+    }
+  }, {
+    key: "isAdminOrAccSchool",
+    value: function isAdminOrAccSchool() {
+      return this.user.role_id === 'adm' || this.user.role_id === 'sch';
+    }
+  }, {
+    key: "isClassroomPagePassed",
+    value: function isClassroomPagePassed() {
+      if (this.user.role_id === 'adm' || this.user.role_id === 'sch') {
+        return true;
+      }
+
+      if (this.user.role_id === 'fac') {
+        var curUrl = window.location.pathname;
+        var faculty_id = curUrl.match(/([^\/]*)\/*$/)[1].toUpperCase();
+        return faculty_id.includes(this.faculty.id);
+      }
+
+      return false;
+    }
+  }, {
+    key: "isStudentsPagePassed",
+    value: function isStudentsPagePassed() {
+      if (this.user.role_id === 'adm' || this.user.role_id === 'sch') {
+        return true;
+      }
+
+      if (this.user.role_id === 'fac') {
+        var curUrl = window.location.pathname;
+        var faculty_id = curUrl.match(/([^\/]*)\/*$/)[1].toUpperCase();
+        return faculty_id.includes(this.faculty.id);
+      }
+
+      if (this.user.role_id === 'cla') {
+        var _curUrl = window.location.pathname;
+
+        var classroom_id = _curUrl.match(/([^\/]*)\/*$/)[1].toUpperCase();
+
+        return classroom_id.includes(this.student.class_room_id);
+      }
+
+      return false;
+    }
+  }, {
+    key: "isStudentProfilePagePassed",
+    value: function isStudentProfilePagePassed(cla_id) {
+      if (this.user.role_id === 'adm' || this.user.role_id === 'sch') {
+        return true;
+      }
+
+      if (this.user.role_id === 'fac') {
+        return cla_id.includes(this.faculty.id);
+      }
+
+      if (this.user.role_id === 'cla') {
+        return cla_id.includes(this.student.class_room_id);
+      }
+
+      if (this.user.role_id === 'stu') {
+        var curUrl = window.location.pathname;
+        var student_id = curUrl.match(/([^\/]*)\/*$/)[1];
+        return student_id.includes(this.student.id);
+      }
+
+      return false;
+    }
+  }, {
+    key: "showRoleId",
+    value: function showRoleId() {
+      var curUrl = window.location.pathname;
+      var faculty_id = curUrl.match(/([^\/]*)\/*$/)[1].toUpperCase();
+      return faculty_id.includes(this.faculty.id);
     }
   }]);
 
@@ -75537,7 +75824,7 @@ window.Fire = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
  //gate js
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$gate = new _Gate__WEBPACK_IMPORTED_MODULE_11__["default"](window.user); //vueX & vueRouter
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$gate = new _Gate__WEBPACK_IMPORTED_MODULE_11__["default"](window.user, window.stud, window.facu); //vueX & vueRouter
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vee_validate__WEBPACK_IMPORTED_MODULE_2__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_4__["default"]);

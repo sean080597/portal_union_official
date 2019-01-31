@@ -1,5 +1,6 @@
 <template>
-    <div class="container">
+<div>
+    <div class="container" v-if="$gate.isAdmin()">
         <form @submit.prevent="submitChangeInfoStudent">
             <div class="row">
                 <div class="input-group mb-3 col-12">
@@ -207,6 +208,11 @@
             </div>
         </form>
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -249,35 +255,40 @@ export default {
     methods: {
         loadStudentInfo(){
             this.$Progress.start();
-            axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (
-                this.student_info = data[0], this.$Progress.increase(20),
-                this.faculty_id = data[0].faculty_id,
-                this.form.name = data[0].name,
-                this.form.birthday = data[0].birthday,
-                this.form.sex = data[0].sex,
-                this.form.hometown = data[0].hometown,
-                this.form.union_date = data[0].union_date,
-                this.form.religion = data[0].religion,
-                this.form.is_submit = data[0].is_submit,
-                this.form.phone = data[0].phone,
-                this.form.email = data[0].email,
-                this.form.address = data[0].address,
-                this.form.class_room_id = data[0].class_room_id,
-                this.form.image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
-                //set old image
-                this.oldProfileImage = (data[0].image != null) ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png'
-            ));
-            axios.get('/api/getAllFaculties').then(({data}) => (
-                this.faculties = data, this.$Progress.increase(20)
-            ));
-            axios.get('/api/getAllClassrooms').then(({data}) => (
-                this.all_classrooms = data, this.$Progress.increase(20)
-            )).then(() => { this.filtedClassrooms() });
-            axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
-                this.relations = data,
-                this.assignRelationsInfo(this.form, data),
-                this.$Progress.increase(20)
-            ));
+            if(this.$gate.isAdmin()){
+                axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (
+                    this.student_info = data[0],
+                    this.faculty_id = data[0].faculty_id,
+                    this.form.name = data[0].name,
+                    this.form.birthday = data[0].birthday,
+                    this.form.sex = data[0].sex,
+                    this.form.hometown = data[0].hometown,
+                    this.form.union_date = data[0].union_date,
+                    this.form.religion = data[0].religion,
+                    this.form.is_submit = data[0].is_submit,
+                    this.form.phone = data[0].phone,
+                    this.form.email = data[0].email,
+                    this.form.address = data[0].address,
+                    this.form.class_room_id = data[0].class_room_id,
+                    this.form.image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
+                    //set old image
+                    this.oldProfileImage = (data[0].image != null) ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png',
+                    this.$Progress.increase(20)
+                ));
+                axios.get('/api/getAllFaculties').then(({data}) => (
+                    this.faculties = data, this.$Progress.increase(20)
+                ));
+                axios.get('/api/getAllClassrooms').then(({data}) => (
+                    this.all_classrooms = data, this.$Progress.increase(20)
+                )).then(() => { this.filtedClassrooms() });
+                axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
+                    this.relations = data,
+                    this.assignRelationsInfo(this.form, data),
+                    this.$Progress.finish()
+                ));
+            }else{
+                this.$Progress.fail();
+            }
         },
         assignRelationsInfo(form, relations){
             $.each(relations, function (index, value) {

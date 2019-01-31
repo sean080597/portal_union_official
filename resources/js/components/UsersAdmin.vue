@@ -153,7 +153,7 @@ export default {
     methods: {
         loadUsers(){
             this.$Progress.start();
-            if(this.$gate.isAdmin){
+            if(this.$gate.isAdmin()){
                 axios.get('api/user_admin').then(({data}) => (this.users = data.data));
             }
             this.$Progress.set(80);

@@ -77,7 +77,7 @@ export default {
     methods: {
         loadStudents(){
             this.$Progress.start();
-            if(this.$gate.isAdmin){
+            if(this.$gate.isAdmin()){
                 axios.get('api/student_admin').then(({data}) => (this.students = data.data));
                 // axios.get('api/indexWithoutSchoolLeaderAccs').then(({data}) => (this.user_types = data));
             }
