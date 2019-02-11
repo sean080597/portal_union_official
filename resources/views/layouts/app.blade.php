@@ -97,7 +97,7 @@
                             ĐG đoàn viên
                         </a>
                         <ul class="collapse list-unstyled" id="ql-dv">
-                            <li><a href="#">ĐG cá nhân</a></li>
+                            <li><router-link to="/criteria-evaluation-profile/{{ auth()->user()->student->id }}">ĐG cá nhân</router-link></li>
                             <li><a href="#">Lớp quản lý</a></li>
                             <li><a href="#">Khoa quản lý</a></li>
                             <li><a href="#">Trường quản lý</a></li>

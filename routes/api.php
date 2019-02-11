@@ -23,6 +23,8 @@ Route::apiResources(['user_admin' => 'API\UserController']);
 Route::apiResources(['faculty_admin' => 'API\FacultyController']);
 Route::apiResources(['classroom_admin' => 'API\ClassRoomController']);
 Route::apiResources(['student_admin' => 'API\StudentController']);
+Route::apiResources(['criteria_mandatory' => 'API\CriteriaMandatoryController']);
+Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelregisController']);
 
 //Client
 //Faculty

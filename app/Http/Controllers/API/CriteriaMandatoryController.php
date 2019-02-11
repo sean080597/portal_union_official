@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use App\CriteriaMandatory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CriteriaMandatoryController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class CriteriaMandatoryController extends Controller
      */
     public function index()
     {
-        //
+        return CriteriaMandatory::all();
     }
 
     /**

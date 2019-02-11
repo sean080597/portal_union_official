@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\CriteriaSelregis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,7 @@ class CriteriaSelregisController extends Controller
      */
     public function index()
     {
-        //
+        return CriteriaSelregis::all();
     }
 
     /**
