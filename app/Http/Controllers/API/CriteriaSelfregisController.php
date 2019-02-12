@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Student;
-use App\CriteriaMandatory;
+use App\CriteriaSelregis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class StudentCriteriaMandatoryController extends Controller
+class CriteriaSelfregisController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +19,7 @@ class StudentCriteriaMandatoryController extends Controller
      */
     public function index()
     {
-        //
+        return CriteriaSelregis::all();
     }
 
     /**
@@ -36,13 +39,9 @@ class StudentCriteriaMandatoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($student_id)
+    public function show($id)
     {
-        if (Student::findOrfail($student_id)->getMarksCriMan->count() > 0){
-            return Student::findOrfail($student_id)->getMarksCriMan;
-        }else{
-            return CriteriaMandatory::all();
-        }
+        //
     }
 
     /**

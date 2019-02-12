@@ -24,7 +24,7 @@ Route::apiResources(['faculty_admin' => 'API\FacultyController']);
 Route::apiResources(['classroom_admin' => 'API\ClassRoomController']);
 Route::apiResources(['student_admin' => 'API\StudentController']);
 Route::apiResources(['criteria_mandatory' => 'API\CriteriaMandatoryController']);
-Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelregisController']);
+Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelfregisController']);
 
 //Client
 //Faculty
@@ -52,3 +52,7 @@ Route::get('/indexWithoutSchoolLeaderAccs', 'API\RoleController@indexWithoutScho
 Route::get('/allblahblah', function(){
     return Student::where('class_room_id', '15DTH12')->latest()->get()->chunk(50);
 });
+
+//Criteria
+Route::get('/getMarkCriMan/{student_id}', 'API\StudentCriteriaMandatoryController@show');
+Route::get('/getMarkCriSel/{student_id}', 'API\StudentCriteriaSelregisController@show');

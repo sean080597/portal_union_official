@@ -44,10 +44,24 @@ class Student extends Model
     }
 
     public function criteria_mandatories(){
-        return $this->belongsToMany('App\CriteriaMandatory', 'student_criteria_mandatories');
+        return $this->belongsToMany('App\CriteriaMandatory', 'student_criteria_mandatories',
+        'student_id', 'criteria_id');
     }
 
     public function criteria_selfregis(){
-        return $this->belongsToMany('App\CriteriaSelfregis', 'student_criteria_selregis');
+        return $this->belongsToMany('App\CriteriaSelfregis', 'student_criteria_selregis',
+        'student_id', 'criteria_id');
+    }
+
+    public function getMarksCriMan()
+    {
+        return $this->belongsToMany('App\CriteriaMandatory', 'student_criteria_mandatories',
+        'student_id', 'criteria_id')->withPivot('self_assessment', 'mark_student', 'mark_classroom', 'mark_faculty', 'mark_school');
+    }
+
+    public function getMarksCriSel()
+    {
+        return $this->belongsToMany('App\CriteriaSelregis', 'student_criteria_selregis',
+        'student_id', 'criteria_id')->withPivot('content_regis', 'self_assessment', 'mark_student', 'mark_classroom', 'mark_faculty', 'mark_school');
     }
 }
