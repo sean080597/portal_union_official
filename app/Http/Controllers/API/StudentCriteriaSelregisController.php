@@ -41,7 +41,10 @@ class StudentCriteriaSelregisController extends Controller
         if (Student::findOrfail($student_id)->getMarksCriSel->count() > 0){
             return Student::findOrfail($student_id)->getMarksCriSel;
         }else{
-            return CriteriaSelregis::all();
+            return CriteriaSelregis::all()->map(function ($value, $key) {
+                $value['pivot'] = ['content_regis' => ''];
+                return $value;
+            });
         }
     }
 

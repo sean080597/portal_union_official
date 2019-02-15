@@ -1,5 +1,6 @@
 <template>
-    <div class="wrap-table">
+<div>
+    <div class="wrap-table" v-if="checkToShow">
         <div class="note-info">
             <div class="row">
                 <div class="col-sm-6"><p><span>Tên: </span>{{ student_info.name }}</p></div>
@@ -41,7 +42,8 @@
                             <td class="text-center p-1">
                                 <!-- <input type="text" class="form-control"
                                 :value="(cri_man.pivot != null) ? 'no null' :"> -->
-                                <select :name="'cri_man_selfassess_'+index" :id="'cri_man_selfassess_'+index" class="form-control">
+                                <select :name="'cri_man_selfassess_'+index" :id="'cri_man_selfassess_'+index" class="form-control"
+                                :disabled="checkArray[0]">
                                     <option value="" :selected="cri_man.pivot == null" disabled>- Chọn ĐG -</option>
                                     <option v-for="(self_assess, index) in opts_selfassess"
                                     :key="index" :value="self_assess.k"
@@ -50,16 +52,41 @@
                                 </select>
                             </td>
                             <td class="text-center p-1">
-                                <select :name="'cri_man_markstu_'+index" :id="'cri_man_markstu_'+index" class="form-control">
+                                <select :name="'cri_man_markstu_'+index" :id="'cri_man_markstu_'+index" class="form-control"
+                                :disabled="checkArray[0]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     :selected="(cri_man.pivot != null) ? mark == cri_man.pivot.mark_student : null"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
+                            <td class="text-center">
+                                <select :name="'cri_man_markcla_'+index" :id="'cri_man_markcla_'+index" class="form-control"
+                                :disabled="checkArray[1]">
+                                    <option v-for="(mark, index) in opts_mark"
+                                    :key="index" :value="mark"
+                                    :selected="(cri_man.pivot != null) ? mark == cri_man.pivot.mark_classroom : null"
+                                    >{{ mark }}</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select :name="'cri_man_markfac_'+index" :id="'cri_man_markfac_'+index" class="form-control"
+                                :disabled="checkArray[2]">
+                                    <option v-for="(mark, index) in opts_mark"
+                                    :key="index" :value="mark"
+                                    :selected="(cri_man.pivot != null) ? mark == cri_man.pivot.mark_faculty : null"
+                                    >{{ mark }}</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select :name="'cri_man_marksch_'+index" :id="'cri_man_marksch_'+index" class="form-control"
+                                :disabled="checkArray[3]">
+                                    <option v-for="(mark, index) in opts_mark"
+                                    :key="index" :value="mark"
+                                    :selected="(cri_man.pivot != null) ? mark == cri_man.pivot.mark_school : null"
+                                    >{{ mark }}</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="6" style="font-weight:700"><span>II. </span> Nội dung đoàn viên tự đăng ký thực hiên<span> (Tối đa: 30đ)</span></td>
@@ -70,29 +97,55 @@
                                     {{ index+1 }}. {{ cri_self.content }}
                                 </span>
                                 <textarea class="form-control" rows="3" :name="'cri_self_content_'+index" :id="'cri_self_content_'+index"
-                                v-model="cri_self.pivot.content_regis"></textarea>
+                                v-model="cri_self.pivot.content_regis" :disabled="checkArray[0]"></textarea>
                             </td>
                             <td class="text-center p-1">
                                 <!-- <input type="text" class="form-control"> -->
-                                <select :name="'cri_self_selfassess_'+index" :id="'cri_self_selfassess_'+index" class="form-control">
-                                    <option value="" :selected="cri_self.pivot == null" disabled>- Chọn ĐG -</option>
+                                <select :name="'cri_self_selfassess_'+index" :id="'cri_self_selfassess_'+index" class="form-control"
+                                :disabled="checkArray[0]">
+                                    <option value="" :selected="cri_self.pivot.self_assessment == null" disabled>- Chọn ĐG -</option>
                                     <option v-for="(self_assess, index) in opts_selfassess"
                                     :key="index" :value="self_assess.k"
-                                    :selected="(cri_self.pivot != null) ? self_assess.k == cri_self.pivot.self_assessment : null"
+                                    :selected="(cri_self.pivot.self_assessment != null) ? self_assess.k == cri_self.pivot.self_assessment : null"
                                     >{{ self_assess.v }}</option>
                                 </select>
                             </td>
                             <td class="text-center p-1">
-                                <select :name="'cri_self_markstu_'+index" :id="'cri_self_markstu_'+index" class="form-control">
+                                <select :name="'cri_self_markstu_'+index" :id="'cri_self_markstu_'+index" class="form-control"
+                                :disabled="checkArray[0]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     :selected="(cri_self.pivot != null) ? mark == cri_self.pivot.mark_student : null"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
+                            <td class="text-center">
+                                <select :name="'cri_self_markcla_'+index" :id="'cri_self_markcla_'+index" class="form-control"
+                                :disabled="checkArray[1]">
+                                    <option v-for="(mark, index) in opts_mark"
+                                    :key="index" :value="mark"
+                                    :selected="(cri_self.pivot != null) ? mark == cri_self.pivot.mark_classroom : null"
+                                    >{{ mark }}</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select :name="'cri_self_markfac_'+index" :id="'cri_self_markfac_'+index" class="form-control"
+                                :disabled="checkArray[2]">
+                                    <option v-for="(mark, index) in opts_mark"
+                                    :key="index" :value="mark"
+                                    :selected="(cri_self.pivot != null) ? mark == cri_self.pivot.mark_faculty : null"
+                                    >{{ mark }}</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select :name="'cri_self_marksch_'+index" :id="'cri_self_marksch_'+index" class="form-control"
+                                :disabled="checkArray[3]">
+                                    <option v-for="(mark, index) in opts_mark"
+                                    :key="index" :value="mark"
+                                    :selected="(cri_self.pivot != null) ? mark == cri_self.pivot.mark_school : null"
+                                    >{{ mark }}</option>
+                                </select>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -102,6 +155,11 @@
             </div>
         </form>
     </div>
+
+    <div class="mb-5" v-else>
+        <not-found></not-found>
+    </div>
+</div>
 </template>
 <script>
 export default {
@@ -116,20 +174,43 @@ export default {
                 { k: 'k', v: 'Khá' },
                 { k: 't', v: 'Tốt' }
             ],
-            opts_mark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            opts_mark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            checkArray: [],
+            checkToShow: false,
         }
     },
     methods: {
         loadListCriteria(){
             this.$Progress.start();
-            axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (this.student_info = data[0]));
-            axios.get('/api/getMarkCriMan/' + this.student_id).then(({data}) => (this.ls_cri_mand = data));
-            axios.get('/api/getMarkCriSel/' + this.student_id).then(({data}) => (this.ls_cri_self = data));
+            axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (
+                this.student_info = data[0],
+                this.checkArray = this.$gate.isValidToShowMarks(data[0].class_room_id),
+                this.checkToShow = this.$gate.isStudentProfilePagePassed(data[0].class_room_id)
+            )).then(()=>{
+                if(this.checkToShow){
+                    axios.get('/api/getMarkCriMan/' + this.student_id).then(({data}) => (this.ls_cri_mand = data));
+                    axios.get('/api/getMarkCriSel/' + this.student_id).then(({data}) => (this.ls_cri_self = data, this.$Progress.finish()));
+                }else{
+                    this.$Progress.fail()
+                }
+            });
         }
     },
     created() {
         this.loadListCriteria();
     },
+    mounted() {
+        // this.$store.dispatch('fetch_criteria', this.student_id);
+        // this.$store.dispatch('fetch_criteria');
+    },
+    computed: {
+        // getListCriMan(){
+        //     return this.$store.getters.getMarkCriMan
+        // },
+        // getListCriSel(){
+        //     return this.$store.getters.getMarkCriSel
+        // },
+    }
 }
 </script>
 <style scoped>

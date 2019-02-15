@@ -76,6 +76,29 @@ export default class Gate{
         return false;
     }
 
+    //check valid for evaluation
+    isEvaluateProfilePagePassed(cla_id){
+        
+    }
+
+    isValidToShowMarks(cla_id){
+        if(this.user.role_id === 'adm'){ return [true, true, true, true] }
+        if(this.user.role_id === 'sch'){ return [true, true, true, false] }
+        if(this.user.role_id === 'fac'){
+            let curUrl = window.location.pathname;
+            let student_id = curUrl.match(/([^\/]*)\/*$/)[1];
+            if(student_id.includes(this.student.id)) return [false, true, false, true]
+            else return [true, true, false, true]
+        }
+        if(this.user.role_id === 'cla'){
+            if(cla_id.includes(this.student.class_room_id)) return [false, false, true, true]
+            else return [true, false, true, true]
+        }
+        if(this.user.role_id === 'stu'){
+            return [false, true, true, true]
+        }
+    }
+
     showRoleId(){
         let curUrl = window.location.pathname;
         let faculty_id = curUrl.match(/([^\/]*)\/*$/)[1].toUpperCase();

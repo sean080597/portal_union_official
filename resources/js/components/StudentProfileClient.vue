@@ -192,12 +192,15 @@ export default {
                 this.profile_image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
                 this.$Progress.increase(40),
                 this.checkToShow = this.$gate.isStudentProfilePagePassed(data[0].class_room_id)
-            ));
-            if(this.checkToShow){
-                axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
-                    this.relations = data, this.$Progress.finish()
-                ));
-            }
+            )).then(()=>{
+                if(this.checkToShow){
+                    axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
+                        this.relations = data, this.$Progress.finish()
+                    ));
+                }else{
+                    this.$Progress.fail()
+                }
+            });
         },
         getProfileImage(){
             if(this.profile_image == 'img_avatar1.png'){
