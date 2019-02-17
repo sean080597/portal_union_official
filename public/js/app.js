@@ -2305,10 +2305,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile_lab.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2465,25 +2465,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      student_id: this.$route.params.student_id,
+      // student_id: this.$route.params.student_id,
       student_info: {},
-      ls_cri_mand: {},
-      ls_cri_self: {},
       opts_selfassess: [{
         k: 'tb',
         v: 'Trung bình'
@@ -2496,7 +2482,25 @@ __webpack_require__.r(__webpack_exports__);
       }],
       opts_mark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       checkArray: [],
-      checkToShow: false
+      checkToShow: false,
+      form: new Form({
+        student_id: this.$route.params.student_id,
+        cri_man: {
+          self_assessment: [],
+          mark_student: [],
+          mark_classroom: [],
+          mark_faculty: [],
+          mark_school: []
+        },
+        cri_self: {
+          content_regis: [],
+          self_assessment: [],
+          mark_student: [],
+          mark_classroom: [],
+          mark_faculty: [],
+          mark_school: []
+        }
+      })
     };
   },
   methods: {
@@ -2504,37 +2508,49 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
+      axios.get('/api/getUserStudentInfoByStuId/' + this.form.student_id).then(function (_ref) {
         var data = _ref.data;
         return _this.student_info = data[0], _this.checkArray = _this.$gate.isValidToShowMarks(data[0].class_room_id), _this.checkToShow = _this.$gate.isStudentProfilePagePassed(data[0].class_room_id);
       }).then(function () {
         if (_this.checkToShow) {
-          axios.get('/api/getMarkCriMan/' + _this.student_id).then(function (_ref2) {
+          axios.get('/api/getMarkCriMan/' + _this.form.student_id).then(function (_ref2) {
             var data = _ref2.data;
-            return _this.ls_cri_mand = data;
+            return data.forEach(function (e) {
+              _this.form.cri_man.self_assessment.push(e.self_assessment), _this.form.cri_man.mark_student.push(e.mark_student), _this.form.cri_man.mark_classroom.push(e.mark_classroom), _this.form.cri_man.mark_faculty.push(e.mark_faculty), _this.form.cri_man.mark_school.push(e.mark_school);
+            });
           });
-          axios.get('/api/getMarkCriSel/' + _this.student_id).then(function (_ref3) {
+          axios.get('/api/getMarkCriSel/' + _this.form.student_id).then(function (_ref3) {
             var data = _ref3.data;
-            return _this.ls_cri_self = data, _this.$Progress.finish();
+            return data.forEach(function (e) {
+              _this.form.cri_self.content_regis.push(e.content_regis), _this.form.cri_self.self_assessment.push(e.self_assessment), _this.form.cri_self.mark_student.push(e.mark_student), _this.form.cri_self.mark_classroom.push(e.mark_classroom), _this.form.cri_self.mark_faculty.push(e.mark_faculty), _this.form.cri_self.mark_school.push(e.mark_school), _this.$Progress.finish();
+            });
           });
         } else {
           _this.$Progress.fail();
         }
       });
+    },
+    submitEvaluation: function submitEvaluation() {
+      this.$Progress.start();
+      this.form.post('/api/submitEvaluation').then(function () {}).catch(function () {
+        Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+      });
+      this.$Progress.finish();
     }
   },
   created: function created() {
     this.loadListCriteria();
   },
-  mounted: function mounted() {// this.$store.dispatch('fetch_criteria', this.student_id);
-    // this.$store.dispatch('fetch_criteria');
+  mounted: function mounted() {
+    this.$store.dispatch('fetch_criteria');
   },
-  computed: {// getListCriMan(){
-    //     return this.$store.getters.getMarkCriMan
-    // },
-    // getListCriSel(){
-    //     return this.$store.getters.getMarkCriSel
-    // },
+  computed: {
+    getListCriMan: function getListCriMan() {
+      return this.$store.getters.getMarkCriMan;
+    },
+    getListCriSel: function getListCriSel() {
+      return this.$store.getters.getMarkCriSel;
+    }
   }
 });
 
@@ -4916,10 +4932,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css&":
-/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css& ***!
-  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4928,7 +4944,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ntr td[data-v-5998eb35]{\r\n    vertical-align: middle;\n}\nselect[data-v-5998eb35]{\r\n    padding: .375rem 0 .375rem .5rem;\n}\n.form-control[data-v-5998eb35]{\r\n    width: -webkit-fill-available;\n}\r\n", ""]);
+exports.push([module.i, "\ntr td[data-v-6efd0e83]{\r\n    vertical-align: middle;\n}\nselect[data-v-6efd0e83]{\r\n    padding: .375rem 0 .375rem .5rem;\n}\n.form-control[data-v-6efd0e83]{\r\n    width: -webkit-fill-available;\n}\r\n", ""]);
 
 // exports
 
@@ -40662,15 +40678,15 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css&":
-/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css& ***!
-  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css&");
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -55043,10 +55059,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -55095,434 +55111,674 @@ var render = function() {
           _vm._v(" "),
           _vm._m(0),
           _vm._v(" "),
-          _c("form", { attrs: { action: "" } }, [
-            _c("div", { staticClass: "table-responsive" }, [
-              _c(
-                "table",
-                {
-                  staticClass: "table table-striped table-hover table-bordered",
-                  attrs: { id: "table" }
-                },
-                [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    [
-                      _vm._m(2),
-                      _vm._v(" "),
-                      _vm._l(_vm.ls_cri_mand, function(cri_man, index) {
-                        return _c("tr", { key: "cri_man" + index }, [
-                          _c("td", [
-                            _c("span", [_vm._v(_vm._s(index + 1) + ". ")]),
-                            _vm._v(_vm._s(cri_man.content))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center p-1" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_man_selfassess_" + index,
-                                  id: "cri_man_selfassess_" + index,
-                                  disabled: _vm.checkArray[0]
-                                }
-                              },
-                              [
-                                _c(
-                                  "option",
-                                  {
-                                    attrs: { value: "", disabled: "" },
-                                    domProps: {
-                                      selected: cri_man.pivot == null
-                                    }
-                                  },
-                                  [_vm._v("- Chọn ĐG -")]
-                                ),
-                                _vm._v(" "),
-                                _vm._l(_vm.opts_selfassess, function(
-                                  self_assess,
-                                  index
-                                ) {
-                                  return _c(
-                                    "option",
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.submitEvaluation($event)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "table-responsive" }, [
+                _c(
+                  "table",
+                  {
+                    staticClass:
+                      "table table-striped table-hover table-bordered",
+                    attrs: { id: "table" }
+                  },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      [
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _vm._l(_vm.getListCriMan, function(cri_man, index) {
+                          return _c("tr", { key: "cri_man" + index }, [
+                            _c("td", [
+                              _c("span", [_vm._v(_vm._s(index + 1) + ". ")]),
+                              _vm._v(_vm._s(cri_man.content))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center p-1" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
                                     {
-                                      key: index,
-                                      domProps: {
-                                        value: self_assess.k,
-                                        selected:
-                                          cri_man.pivot != null
-                                            ? self_assess.k ==
-                                              cri_man.pivot.self_assessment
-                                            : null
-                                      }
-                                    },
-                                    [_vm._v(_vm._s(self_assess.v))]
-                                  )
-                                })
-                              ],
-                              2
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center p-1" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_man_markstu_" + index,
-                                  id: "cri_man_markstu_" + index,
-                                  disabled: _vm.checkArray[0]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_man.pivot != null
-                                          ? mark == cri_man.pivot.mark_student
-                                          : null
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_man.self_assessment[index],
+                                      expression:
+                                        "form.cri_man.self_assessment[index]"
                                     }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_man_selfassess_" + cri_man.id,
+                                    id: "cri_man_selfassess_" + cri_man.id,
+                                    disabled: _vm.checkArray[0]
                                   },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_man_markcla_" + index,
-                                  id: "cri_man_markcla_" + index,
-                                  disabled: _vm.checkArray[1]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_man.pivot != null
-                                          ? mark == cri_man.pivot.mark_classroom
-                                          : null
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_man.self_assessment,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
                                     }
-                                  },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_man_markfac_" + index,
-                                  id: "cri_man_markfac_" + index,
-                                  disabled: _vm.checkArray[2]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_man.pivot != null
-                                          ? mark == cri_man.pivot.mark_faculty
-                                          : null
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_man_marksch_" + index,
-                                  id: "cri_man_marksch_" + index,
-                                  disabled: _vm.checkArray[3]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_man.pivot != null
-                                          ? mark == cri_man.pivot.mark_school
-                                          : null
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ])
-                        ])
-                      }),
-                      _vm._v(" "),
-                      _vm._m(3),
-                      _vm._v(" "),
-                      _vm._l(_vm.ls_cri_self, function(cri_self, index) {
-                        return _c("tr", { key: "cri_self" + index }, [
-                          _c("td", { staticClass: "p-1" }, [
-                            _c("span", { staticStyle: { margin: "5px" } }, [
-                              _vm._v(
-                                "\r\n                                    " +
-                                  _vm._s(index + 1) +
-                                  ". " +
-                                  _vm._s(cri_self.content) +
-                                  "\r\n                                "
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "option",
+                                    { attrs: { value: "", disabled: "" } },
+                                    [_vm._v("- Chọn ĐG -")]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.opts_selfassess, function(
+                                    self_assess,
+                                    index
+                                  ) {
+                                    return _c(
+                                      "option",
+                                      {
+                                        key: index,
+                                        domProps: { value: self_assess.k }
+                                      },
+                                      [_vm._v(_vm._s(self_assess.v))]
+                                    )
+                                  })
+                                ],
+                                2
                               )
                             ]),
                             _vm._v(" "),
-                            _c("textarea", {
-                              directives: [
+                            _c("td", { staticClass: "text-center p-1" }, [
+                              _c(
+                                "select",
                                 {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: cri_self.pivot.content_regis,
-                                  expression: "cri_self.pivot.content_regis"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                rows: "3",
-                                name: "cri_self_content_" + index,
-                                id: "cri_self_content_" + index,
-                                disabled: _vm.checkArray[0]
-                              },
-                              domProps: { value: cri_self.pivot.content_regis },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    cri_self.pivot,
-                                    "content_regis",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center p-1" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_self_selfassess_" + index,
-                                  id: "cri_self_selfassess_" + index,
-                                  disabled: _vm.checkArray[0]
-                                }
-                              },
-                              [
-                                _c(
-                                  "option",
-                                  {
-                                    attrs: { value: "", disabled: "" },
-                                    domProps: {
-                                      selected:
-                                        cri_self.pivot.self_assessment == null
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_man.mark_student[index],
+                                      expression:
+                                        "form.cri_man.mark_student[index]"
                                     }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_man_markstu_" + cri_man.id,
+                                    id: "cri_man_markstu_" + cri_man.id,
+                                    disabled: _vm.checkArray[0]
                                   },
-                                  [_vm._v("- Chọn ĐG -")]
-                                ),
-                                _vm._v(" "),
-                                _vm._l(_vm.opts_selfassess, function(
-                                  self_assess,
-                                  index
-                                ) {
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_man.mark_student,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
                                   return _c(
                                     "option",
-                                    {
-                                      key: index,
-                                      domProps: {
-                                        value: self_assess.k,
-                                        selected:
-                                          cri_self.pivot.self_assessment != null
-                                            ? self_assess.k ==
-                                              cri_self.pivot.self_assessment
-                                            : null
-                                      }
-                                    },
-                                    [_vm._v(_vm._s(self_assess.v))]
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
                                   )
-                                })
-                              ],
-                              2
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center p-1" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_self_markstu_" + index,
-                                  id: "cri_self_markstu_" + index,
-                                  disabled: _vm.checkArray[0]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_self.pivot != null
-                                          ? mark == cri_self.pivot.mark_student
-                                          : null
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_man.mark_classroom[index],
+                                      expression:
+                                        "form.cri_man.mark_classroom[index]"
                                     }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_man_markcla_" + cri_man.id,
+                                    id: "cri_man_markcla_" + cri_man.id,
+                                    disabled: _vm.checkArray[1]
                                   },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_self_markcla_" + index,
-                                  id: "cri_self_markcla_" + index,
-                                  disabled: _vm.checkArray[1]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_self.pivot != null
-                                          ? mark ==
-                                            cri_self.pivot.mark_classroom
-                                          : null
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_man.mark_classroom,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
                                     }
-                                  },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_self_markfac_" + index,
-                                  id: "cri_self_markfac_" + index,
-                                  disabled: _vm.checkArray[2]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_self.pivot != null
-                                          ? mark == cri_self.pivot.mark_faculty
-                                          : null
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_man.mark_faculty[index],
+                                      expression:
+                                        "form.cri_man.mark_faculty[index]"
                                     }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_man_markfac_" + cri_man.id,
+                                    id: "cri_man_markfac_" + cri_man.id,
+                                    disabled: _vm.checkArray[2]
                                   },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "select",
-                              {
-                                staticClass: "form-control",
-                                attrs: {
-                                  name: "cri_self_marksch_" + index,
-                                  id: "cri_self_marksch_" + index,
-                                  disabled: _vm.checkArray[3]
-                                }
-                              },
-                              _vm._l(_vm.opts_mark, function(mark, index) {
-                                return _c(
-                                  "option",
-                                  {
-                                    key: index,
-                                    domProps: {
-                                      value: mark,
-                                      selected:
-                                        cri_self.pivot != null
-                                          ? mark == cri_self.pivot.mark_school
-                                          : null
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_man.mark_faculty,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
                                     }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_man.mark_school[index],
+                                      expression:
+                                        "form.cri_man.mark_school[index]"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_man_marksch_" + cri_man.id,
+                                    id: "cri_man_marksch_" + cri_man.id,
+                                    disabled: _vm.checkArray[3]
                                   },
-                                  [_vm._v(_vm._s(mark))]
-                                )
-                              }),
-                              0
-                            )
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_man.mark_school,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ])
                           ])
-                        ])
-                      })
-                    ],
-                    2
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _vm._m(4)
-            ])
-          ])
+                        }),
+                        _vm._v(" "),
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _vm._l(_vm.getListCriSel, function(cri_self, index) {
+                          return _c("tr", { key: "cri_self" + index }, [
+                            _c("td", { staticClass: "p-1" }, [
+                              _c("span", { staticStyle: { margin: "5px" } }, [
+                                _vm._v(
+                                  "\r\n                                    " +
+                                    _vm._s(index + 1) +
+                                    ". " +
+                                    _vm._s(cri_self.content) +
+                                    "\r\n                                "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("textarea", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_self.content_regis[index],
+                                    expression:
+                                      "form.cri_self.content_regis[index]"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  rows: "3",
+                                  name: "cri_self_content_" + cri_self.id,
+                                  id: "cri_self_content_" + cri_self.id,
+                                  disabled: _vm.checkArray[0]
+                                },
+                                domProps: {
+                                  value: _vm.form.cri_self.content_regis[index]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_self.content_regis,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center p-1" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_self.self_assessment[
+                                          index
+                                        ],
+                                      expression:
+                                        "form.cri_self.self_assessment[index]"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_self_selfassess_" + cri_self.id,
+                                    id: "cri_self_selfassess_" + cri_self.id,
+                                    disabled: _vm.checkArray[0]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_self.self_assessment,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "option",
+                                    { attrs: { value: "", disabled: "" } },
+                                    [_vm._v("- Chọn ĐG -")]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.opts_selfassess, function(
+                                    self_assess,
+                                    index
+                                  ) {
+                                    return _c(
+                                      "option",
+                                      {
+                                        key: index,
+                                        domProps: { value: self_assess.k }
+                                      },
+                                      [_vm._v(_vm._s(self_assess.v))]
+                                    )
+                                  })
+                                ],
+                                2
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center p-1" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_self.mark_student[index],
+                                      expression:
+                                        "form.cri_self.mark_student[index]"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_self_markstu_" + cri_self.id,
+                                    id: "cri_self_markstu_" + cri_self.id,
+                                    disabled: _vm.checkArray[0]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_self.mark_student,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_self.mark_classroom[index],
+                                      expression:
+                                        "form.cri_self.mark_classroom[index]"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_self_markcla_" + cri_self.id,
+                                    id: "cri_self_markcla_" + cri_self.id,
+                                    disabled: _vm.checkArray[1]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_self.mark_classroom,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_self.mark_faculty[index],
+                                      expression:
+                                        "form.cri_self.mark_faculty[index]"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_self_markfac_" + cri_self.id,
+                                    id: "cri_self_markfac_" + cri_self.id,
+                                    disabled: _vm.checkArray[2]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_self.mark_faculty,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.form.cri_self.mark_school[index],
+                                      expression:
+                                        "form.cri_self.mark_school[index]"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    name: "cri_self_marksch_" + cri_self.id,
+                                    id: "cri_self_marksch_" + cri_self.id,
+                                    disabled: _vm.checkArray[3]
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.form.cri_self.mark_school,
+                                        index,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.opts_mark, function(mark, index) {
+                                  return _c(
+                                    "option",
+                                    { key: index, domProps: { value: mark } },
+                                    [_vm._v(_vm._s(mark))]
+                                  )
+                                }),
+                                0
+                              )
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(4)
+              ])
+            ]
+          )
         ])
       : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
@@ -55636,7 +55892,11 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "d-flex justify-content-end" }, [
-      _c("button", { staticClass: "btn btn-success" }, [_vm._v("Xác nhận")])
+      _c(
+        "button",
+        { staticClass: "btn btn-success", attrs: { type: "submit" } },
+        [_vm._v("Xác nhận")]
+      )
     ])
   }
 ]
@@ -77549,7 +77809,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component(vform__WEBPACK_IMPORTED_MOD
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_8___default.a, {
   color: '#0063ae',
   failedColor: 'red',
-  thickness: '5px'
+  thickness: '3px'
 }); //Sweet Alert 2
 
 window.Swal = sweetalert2__WEBPACK_IMPORTED_MODULE_9___default.a;
@@ -77941,18 +78201,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/EvaluateProfile.vue":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/EvaluateProfile.vue ***!
-  \*****************************************************/
+/***/ "./resources/js/components/EvaluateProfile_lab.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/EvaluateProfile_lab.vue ***!
+  \*********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true& */ "./resources/js/components/EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true&");
-/* harmony import */ var _EvaluateProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EvaluateProfile.vue?vue&type=script&lang=js& */ "./resources/js/components/EvaluateProfile.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css& */ "./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css&");
+/* harmony import */ var _EvaluateProfile_lab_vue_vue_type_template_id_6efd0e83_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true& */ "./resources/js/components/EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true&");
+/* harmony import */ var _EvaluateProfile_lab_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EvaluateProfile_lab.vue?vue&type=script&lang=js& */ "./resources/js/components/EvaluateProfile_lab.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css& */ "./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -77963,66 +78223,66 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _EvaluateProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _EvaluateProfile_lab_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EvaluateProfile_lab_vue_vue_type_template_id_6efd0e83_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _EvaluateProfile_lab_vue_vue_type_template_id_6efd0e83_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  "5998eb35",
+  "6efd0e83",
   null
   
 )
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/EvaluateProfile.vue"
+component.options.__file = "resources/js/components/EvaluateProfile_lab.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/EvaluateProfile.vue?vue&type=script&lang=js&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/EvaluateProfile.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************/
+/***/ "./resources/js/components/EvaluateProfile_lab.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/EvaluateProfile_lab.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile_lab.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css&":
-/*!**************************************************************************************************************!*\
-  !*** ./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css& ***!
-  \**************************************************************************************************************/
+/***/ "./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css& ***!
+  \******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=style&index=0&id=5998eb35&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_style_index_0_id_5998eb35_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=style&index=0&id=6efd0e83&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_style_index_0_id_6efd0e83_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
-/***/ "./resources/js/components/EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true&":
-/*!************************************************************************************************!*\
-  !*** ./resources/js/components/EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true& ***!
-  \************************************************************************************************/
+/***/ "./resources/js/components/EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true& ***!
+  \****************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile.vue?vue&type=template&id=5998eb35&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_template_id_6efd0e83_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EvaluateProfile_lab.vue?vue&type=template&id=6efd0e83&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_template_id_6efd0e83_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_lab_vue_vue_type_template_id_6efd0e83_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -78955,7 +79215,7 @@ var routes = [{
   component: __webpack_require__(/*! ./components/StudentProfileAdmin.vue */ "./resources/js/components/StudentProfileAdmin.vue").default
 }, {
   path: '/evaluate-profile/:student_id',
-  component: __webpack_require__(/*! ./components/EvaluateProfile.vue */ "./resources/js/components/EvaluateProfile.vue").default
+  component: __webpack_require__(/*! ./components/EvaluateProfile_lab.vue */ "./resources/js/components/EvaluateProfile_lab.vue").default
 }];
 
 /***/ }),
@@ -78980,16 +79240,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     welcomeMessage: 'Welcome to my vue App',
-    student_info: {}
+    student_info: {},
+    ls_cri_mand: {},
+    ls_cri_self: {}
   },
   getters: {
     welcome: function welcome(state) {
       return state.welcomeMessage;
+    },
+    getMarkCriMan: function getMarkCriMan(state) {
+      return state.ls_cri_mand;
+    },
+    getMarkCriSel: function getMarkCriSel(state) {
+      return state.ls_cri_self;
     }
   },
   mutations: {
     FETCH_CUR_USER: function FETCH_CUR_USER(state, payload) {
       state.student_info = payload;
+    },
+    FETCH_CRIT_MAN: function FETCH_CRIT_MAN(state, payload) {
+      state.ls_cri_mand = payload;
+    },
+    FETCH_CRIT_SEL: function FETCH_CRIT_SEL(state, payload) {
+      state.ls_cri_self = payload;
     }
   },
   actions: {
@@ -79024,6 +79298,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return fetch_cur_user;
+    }(),
+    fetch_criteria: function () {
+      var _fetch_criteria = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(context) {
+        var _ref2, data, res;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.get('/api/criteria_mandatory');
+
+              case 2:
+                _ref2 = _context2.sent;
+                data = _ref2.data;
+                context.commit('FETCH_CRIT_MAN', data);
+                _context2.next = 7;
+                return axios.get('/api/criteria_selfregis');
+
+              case 7:
+                res = _context2.sent;
+                context.commit('FETCH_CRIT_SEL', res.data);
+
+              case 9:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function fetch_criteria(_x3) {
+        return _fetch_criteria.apply(this, arguments);
+      }
+
+      return fetch_criteria;
     }() // fetch_criteria: async (context, student_id) => {
     //     let {data} = await axios.get('/api/getMarkCriMan/' + student_id)
     //     context.commit('FETCH_CRIT_MAN', data)

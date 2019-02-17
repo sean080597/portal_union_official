@@ -42,7 +42,7 @@ Vue.component(AlertError.name, AlertError);
 Vue.use(VueProgressBar, {
     color: '#0063ae',
     failedColor: 'red',
-    thickness: '5px',
+    thickness: '3px',
 })
 //Sweet Alert 2
 window.Swal = Swal;

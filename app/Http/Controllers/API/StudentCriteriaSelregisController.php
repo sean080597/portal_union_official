@@ -39,12 +39,31 @@ class StudentCriteriaSelregisController extends Controller
     public function show($student_id)
     {
         if (Student::findOrfail($student_id)->getMarksCriSel->count() > 0){
-            return Student::findOrfail($student_id)->getMarksCriSel;
+            $data = array();
+            $ls_marks = Student::findOrfail($student_id)->getMarksCriSel;
+            foreach ($ls_marks as $key => $value) {
+                $data[] = $value->pivot;
+            }
+            return response()->json($data);
         }else{
-            return CriteriaSelregis::all()->map(function ($value, $key) {
-                $value['pivot'] = ['content_regis' => ''];
-                return $value;
-            });
+            // return CriteriaSelregis::all()->map(function ($value, $key) {
+            //     $value['pivot'] = ['content_regis' => ''];
+            //     return $value;
+            // });
+            $ls_marks = CriteriaSelregis::all();
+            foreach ($ls_marks as $key => $value) {
+                $data[] = [
+                    'student_id' => $student_id,
+                    'criteria_id' => $value->id,
+                    'content_regis' => '',
+                    'self_assessment' => '',
+                    'mark_student' => 0,
+                    'mark_classroom' => 0,
+                    'mark_faculty' => 0,
+                    'mark_school' => 0,
+                ];
+            }
+            return response()->json($data);
         }
     }
 
