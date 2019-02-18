@@ -194,6 +194,7 @@ export default {
                 if(this.checkToShow){
                     axios.get('/api/getMarkCriMan/' + this.form.student_id).then(({data}) => (
                         data.forEach(e => {
+                            let cri_id = 'cri_mark-' + e.criteria_id;
                             this.form.cri_man.self_assessment.push(e.self_assessment),
                             this.form.cri_man.mark_student.push(e.mark_student),
                             this.form.cri_man.mark_classroom.push(e.mark_classroom),

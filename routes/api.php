@@ -56,4 +56,4 @@ Route::get('/allblahblah', function(){
 //Criteria
 Route::get('/getMarkCriMan/{student_id}', 'API\StudentCriteriaMandatoryController@show');
 Route::get('/getMarkCriSel/{student_id}', 'API\StudentCriteriaSelregisController@show');
-Route::post('/submitEvaluation', 'API\StudentCriteriaMandatoryController@submitEvaluation');
+Route::post('/submitEvaluation', 'API\SubmitEvaluationInfoController@submitEvaluation');

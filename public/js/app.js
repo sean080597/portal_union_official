@@ -2516,6 +2516,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.get('/api/getMarkCriMan/' + _this.form.student_id).then(function (_ref2) {
             var data = _ref2.data;
             return data.forEach(function (e) {
+              var cri_id = 'cri_mark-' + e.criteria_id;
               _this.form.cri_man.self_assessment.push(e.self_assessment), _this.form.cri_man.mark_student.push(e.mark_student), _this.form.cri_man.mark_classroom.push(e.mark_classroom), _this.form.cri_man.mark_faculty.push(e.mark_faculty), _this.form.cri_man.mark_school.push(e.mark_school);
             });
           });

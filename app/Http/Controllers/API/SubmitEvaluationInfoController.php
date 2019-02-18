@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Student;
-use App\CriteriaMandatory;
+use App\StudentCriteriaMandatory;
+use App\StudentCriteriaSelregis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class StudentCriteriaMandatoryController extends Controller
+class SubmitEvaluationInfoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,31 +37,9 @@ class StudentCriteriaMandatoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($student_id)
+    public function show($id)
     {
-        $data = array();
-        if (Student::findOrfail($student_id)->getMarksCriMan->count() > 0){
-            // return Student::findOrfail($student_id)->getMarksCriMan;
-            $ls_marks = Student::findOrfail($student_id)->getMarksCriMan;
-            foreach ($ls_marks as $key => $value) {
-                $data[] = $value->pivot;
-            }
-            return response()->json($data);
-        }else{
-            $ls_marks = CriteriaMandatory::all();
-            foreach ($ls_marks as $key => $value) {
-                $data[] = [
-                    'student_id' => $student_id,
-                    'criteria_id' => $value->id,
-                    'self_assessment' => '',
-                    'mark_student' => 0,
-                    'mark_classroom' => 0,
-                    'mark_faculty' => 0,
-                    'mark_school' => 0,
-                ];
-            }
-            return response()->json($data);
-        }
+        //
     }
 
     /**
@@ -84,5 +63,24 @@ class StudentCriteriaMandatoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function submitEvaluation(Request $request)
+    {
+        // return StudentCriteriaMandatory::where('student_id', $request->student_id)->get();
+        // return $request->cri_man;
+        $data = array();
+        $count = collect($request->cri_man['mark_classroom'])->count();
+        for ($i=0; $i < $count; $i++) {
+            $data[] = [
+                'criteria_id' => $request->cri_man['mark_student'][$i],
+                'mark_student' => $request->cri_man['mark_student'][$i],
+                'mark_classroom' => $request->cri_man['mark_classroom'][$i],
+                'mark_faculty' => $request->cri_man['mark_faculty'][$i],
+                'mark_school' => $request->cri_man['mark_school'][$i],
+                'self_assessment' => $request->cri_man['self_assessment'][$i]
+            ];
+        }
+        return $data;
     }
 }
