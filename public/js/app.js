@@ -2543,12 +2543,19 @@ __webpack_require__.r(__webpack_exports__);
       this.$validator.validateAll().then(function (result) {
         if (result) {
           _this2.form.post('/api/submitEvaluation').then(function (response) {
-            console.log(response.data);
+            if (response.data.success) {
+              toast({
+                type: 'success',
+                title: 'Đánh giá thành công'
+              });
+
+              _this2.$Progress.finish();
+            }
           }).catch(function () {
+            _this2.$Progress.fail();
+
             Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
           });
-
-          _this2.$Progress.finish();
         } else {
           _this2.$Progress.fail();
         }

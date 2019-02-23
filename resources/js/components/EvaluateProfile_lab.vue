@@ -231,12 +231,18 @@ export default {
                 if (result) {
                     this.form.post('/api/submitEvaluation')
                     .then(response => {
-                        console.log(response.data);
+                        if(response.data.success) {
+                            toast({
+                                type: 'success',
+                                title: 'Đánh giá thành công'
+                            });
+                            this.$Progress.finish();
+                        }
                     })
                     .catch(() => {
+                        this.$Progress.fail();
                         Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
                     });
-                    this.$Progress.finish();
                 }else{
                     this.$Progress.fail();
                 }

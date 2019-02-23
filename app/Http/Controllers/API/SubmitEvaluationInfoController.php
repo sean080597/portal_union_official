@@ -7,6 +7,7 @@ use App\StudentCriteriaMandatory;
 use App\StudentCriteriaSelregis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 
 class SubmitEvaluationInfoController extends Controller
 {
@@ -67,24 +68,30 @@ class SubmitEvaluationInfoController extends Controller
 
     public function submitEvaluation(Request $request)
     {
-        return $request->cri_self['content_regis'][2];
         $student = StudentCriteriaSelregis::where('student_id', $request->student_id)->get();
         if($student->isEmpty()){
             //init table name
             $table = '`student_criteria_mandatories`';
-            // $sql_cri_man = self::generateInsertCmd($request, $request->cri_man, $table, 0);
+            $sql_cri_man = self::generateInsertCmd($request, $request->cri_man, $table, 0);
             $table = '`student_criteria_selregis`';
-            return $sql_cri_self = self::generateInsertCmd($request, $request->cri_self, $table, 1);
+            $sql_cri_self = self::generateInsertCmd($request, $request->cri_self, $table, 1);
+
+            DB::insert($sql_cri_man);
+            DB::insert($sql_cri_self);
+            return response()->json(['success' => true]);
         }else{
             //get condition to generate what to update
             $check = $request->checkArray;
             //init table name
-            $table = '`student_criteria_selregis`';
-            $sql_cri_self = self::generateUpdateCmd($request, $request->cri_self, $table, $check, 1);
             $table = '`student_criteria_mandatories`';
             $sql_cri_man = self::generateUpdateCmd($request, $request->cri_man, $table, $check, 0);
+            $table = '`student_criteria_selregis`';
+            $sql_cri_self = self::generateUpdateCmd($request, $request->cri_self, $table, $check, 1);
+
+            DB::update($sql_cri_man);
+            DB::update($sql_cri_self);
+            return response()->json(['success' => true]);
         }
-        return $sql_cri_self;
     }
 
     //private function to generate updating cmd
@@ -145,22 +152,14 @@ class SubmitEvaluationInfoController extends Controller
 
         for ($i=0; $i < $count; $i++) {
             $sql .= '(\''.$request->student_id.'\', \''.$dataCriteria['criteria_id'][$i].'\', ';
-
-            $aaa = json_decode(json_encode(self::convertUnicode($dataCriteria['content_regis'][$i])), true)['original'];
-
-            if($isCriSelf) $sql .= '\''.$aaa.'\', ';
+            if($isCriSelf) $sql .= '\''.$dataCriteria['content_regis'][$i].'\', ';
             $sql .= '\''.$dataCriteria['self_assessment'][$i].'\', ';
             $sql .= '\''.$dataCriteria['mark_student'][$i].'\', ';
             $sql .= '\''.$dataCriteria['mark_classroom'][$i].'\', ';
             $sql .= '\''.$dataCriteria['mark_faculty'][$i].'\', ';
             $sql .= '\''.$dataCriteria['mark_school'][$i].'\', CURDATE(), CURDATE()),';
         }
-        // return $sql = rtrim($sql, ",");//remove comma before WHERE
-
-        for ($i=0; $i < $count; $i++) {
-            echo json_decode(json_encode($dataCriteria['content_regis'][$i])).'</br>';
-        }
-        // return json_decode($dataCriteria['content_regis'][1]);
+        return $sql = rtrim($sql, ",");//remove comma before WHERE
     }
 
     private function convertUnicode($data){
