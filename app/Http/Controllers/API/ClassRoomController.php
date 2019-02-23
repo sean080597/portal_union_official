@@ -11,7 +11,7 @@ class ClassRoomController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -97,5 +97,16 @@ class ClassRoomController extends Controller
     //get all classrooms
     public function getAllClassrooms(){
         return ClassRoom::orderBy('id', 'ASC')->get()->chunk(50)->collapse();
+    }
+
+    //search classrooms
+    public function search(){
+        $faculty_id = \Request::get('fac_id');
+        if ($search = \Request::get('q')) {
+            return ClassRoom::with('secretary')->where('faculty_id', $faculty_id)->where('id', 'LIKE', "%$search%")
+                    ->orderBy('id', 'ASC')->paginate(20);
+        }else{
+            return ClassRoom::with('secretary')->where('faculty_id', $faculty_id)->orderBy('id', 'ASC')->paginate(20);
+        }
     }
 }

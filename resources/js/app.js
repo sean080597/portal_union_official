@@ -13,6 +13,7 @@ window.Fire = new Vue()
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import _ from 'lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
 import VueRouter from 'vue-router'

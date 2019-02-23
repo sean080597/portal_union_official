@@ -68,7 +68,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-info text-white">Tìm kiếm</span>
                     </div>
-                    <input type="text" class="form-control" id="table-search" />
+                    <input type="search" class="form-control" aria-label="Search" v-model="search" @keyup="searchit"/>
                 </div>
             </div>
         </div>
@@ -121,31 +121,53 @@ export default {
             faculty_id: this.$route.params.faculty_id,
             classrooms: {},
             facultyLeaderAccs: {},
+            search: ''
         }
     },
     methods: {
         getResults(page = 1) {
-			axios.get('/api/getClassroomsClient/'+this.faculty_id+'?page=' + page)
-				.then(response => {
-					this.classrooms = response.data;
-				});
+            this.$Progress.start()
+            if(this.search){
+                axios.get('/api/findClassroom?fac_id=' + this.faculty_id + '&q=' + this.search + '&page=' + page)
+                .then(response => {
+                    this.classrooms = response.data
+                    this.$Progress.finish()
+                })
+            }else{
+                axios.get('/api/getClassroomsClient/'+this.faculty_id+'?page=' + page)
+                .then(response => {
+                    this.classrooms = response.data
+                    this.$Progress.finish()
+                })
+            }
 		},
         loadClassrooms(){
-            this.$Progress.start();
+            this.$Progress.start()
             if(this.$gate.isClassroomPagePassed()){
                 axios.get('/api/getFacultyLeaderAccs/' + this.faculty_id).then(({data}) => (
                     this.facultyLeaderAccs = data, this.$Progress.increase(30)
-                ));
+                ))
                 axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (
                     this.classrooms = data, this.$Progress.finish()
-                ));
+                ))
             }else{
-                this.$Progress.fail();
+                this.$Progress.fail()
             }
         },
+        searchit: _.debounce(function() {
+                this.$Progress.start()
+                axios.get('/api/findClassroom?fac_id=' + this.faculty_id + '&q=' + this.search)
+                .then((data) => {
+                    this.classrooms = data.data
+                    this.$Progress.finish()
+                })
+                .catch(() => {
+                    this.$Progress.fail()
+                })
+            }, 1500)
     },
     created() {
-        this.loadClassrooms();
+        this.loadClassrooms()
     },
 }
 </script>

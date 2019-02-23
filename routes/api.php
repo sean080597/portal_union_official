@@ -35,6 +35,7 @@ Route::get('/getAllFaculties', 'API\FacultyController@getAllFaculties');
 Route::get('/getFacultyLeaderAccs/{faculty_id}', 'API\FacultyController@getFacultyLeaderAccs');
 Route::get('/getClassroomsClient/{faculty_id}', 'API\ClassRoomController@index_client');
 Route::get('/getAllClassrooms', 'API\ClassRoomController@getAllClassrooms');
+Route::get('/findClassroom', 'API\ClassRoomController@search');
 
 //Student
 Route::get('/getClassroomAccs/{classroom_id}', 'API\ClassRoomController@getClassroomAccs');
