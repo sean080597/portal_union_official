@@ -77,10 +77,6 @@ export default class Gate{
     }
 
     //check valid for evaluation
-    isEvaluateProfilePagePassed(cla_id){
-        
-    }
-
     isValidToShowMarks(cla_id){
         if(this.user.role_id === 'adm'){ return [true, true, true, true] }
         if(this.user.role_id === 'sch'){ return [true, true, true, false] }

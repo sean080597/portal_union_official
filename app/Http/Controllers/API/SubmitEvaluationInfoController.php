@@ -67,20 +67,103 @@ class SubmitEvaluationInfoController extends Controller
 
     public function submitEvaluation(Request $request)
     {
-        // return StudentCriteriaMandatory::where('student_id', $request->student_id)->get();
-        // return $request->cri_man;
-        $data = array();
-        $count = collect($request->cri_man['mark_classroom'])->count();
-        for ($i=0; $i < $count; $i++) {
-            $data[] = [
-                'criteria_id' => $request->cri_man['mark_student'][$i],
-                'mark_student' => $request->cri_man['mark_student'][$i],
-                'mark_classroom' => $request->cri_man['mark_classroom'][$i],
-                'mark_faculty' => $request->cri_man['mark_faculty'][$i],
-                'mark_school' => $request->cri_man['mark_school'][$i],
-                'self_assessment' => $request->cri_man['self_assessment'][$i]
-            ];
+        return $request->cri_self['content_regis'][2];
+        $student = StudentCriteriaSelregis::where('student_id', $request->student_id)->get();
+        if($student->isEmpty()){
+            //init table name
+            $table = '`student_criteria_mandatories`';
+            // $sql_cri_man = self::generateInsertCmd($request, $request->cri_man, $table, 0);
+            $table = '`student_criteria_selregis`';
+            return $sql_cri_self = self::generateInsertCmd($request, $request->cri_self, $table, 1);
+        }else{
+            //get condition to generate what to update
+            $check = $request->checkArray;
+            //init table name
+            $table = '`student_criteria_selregis`';
+            $sql_cri_self = self::generateUpdateCmd($request, $request->cri_self, $table, $check, 1);
+            $table = '`student_criteria_mandatories`';
+            $sql_cri_man = self::generateUpdateCmd($request, $request->cri_man, $table, $check, 0);
         }
-        return $data;
+        return $sql_cri_self;
+    }
+
+    //private function to generate updating cmd
+    private function generateUpdateCmd(Request $request, $dataCriteria, $tableName, $checkCondition, $isCriSelf){
+        $data = array();
+        $count = collect($dataCriteria['mark_classroom'])->count();
+        for ($i=0; $i < $count; $i++) {
+            $data[$i] = [
+                'criteria_id' => $dataCriteria['criteria_id'][$i],
+                'mark_student' => $dataCriteria['mark_student'][$i],
+                'mark_classroom' => $dataCriteria['mark_classroom'][$i],
+                'mark_faculty' => $dataCriteria['mark_faculty'][$i],
+                'mark_school' => $dataCriteria['mark_school'][$i],
+                'self_assessment' => $dataCriteria['self_assessment'][$i]
+            ];
+
+            if($isCriSelf) $data[$i]['content_regis'] = $dataCriteria['content_regis'][$i];
+        }
+
+        //init cmd to update marks
+        $sql_markstu = $sql_markcla = $sql_markfac = $sql_marksch = $sql_selfassess = $sql_content = '';
+        for ($i=0; $i < $count; $i++) {
+            $sql_markstu .= ' when criteria_id = '.$data[$i]['criteria_id'].' then '.$data[$i]['mark_student'];
+            $sql_markcla .= ' when criteria_id = '.$data[$i]['criteria_id'].' then '.$data[$i]['mark_classroom'];
+            $sql_markfac .= ' when criteria_id = '.$data[$i]['criteria_id'].' then '.$data[$i]['mark_faculty'];
+            $sql_marksch .= ' when criteria_id = '.$data[$i]['criteria_id'].' then '.$data[$i]['mark_school'];
+            $sql_selfassess .= ' when criteria_id = '.$data[$i]['criteria_id'].' then \''.$data[$i]['self_assessment'].'\'';
+            if($isCriSelf) $sql_content .= ' when criteria_id = '.$data[$i]['criteria_id'].' then \''.$data[$i]['content_regis'].'\'';
+        }
+
+        // generate cmd to update student_cri
+        // $sql = 'UPDATE '.$tableName.' SET `created_at` = current_date(), `updated_at` = current_date(),';
+        $sql = 'UPDATE '.$tableName.' SET `updated_at` = current_date(),';
+
+        if($isCriSelf && !$checkCondition[0]) $sql .= '`content_regis` = (case '.$sql_content.' end),';
+
+        if(!$checkCondition[0]) $sql .= '`self_assessment` = (case '.$sql_selfassess.' end),'
+                                        .'`mark_student` = (case '.$sql_markstu.' end),';
+        if(!$checkCondition[1]) $sql .= '`mark_classroom` = (case '.$sql_markcla.' end),';
+
+        if(!$checkCondition[2]) $sql .= '`mark_faculty` = (case '.$sql_markfac.' end),';
+
+        if(!$checkCondition[3]) $sql .= '`mark_school` = (case '.$sql_marksch.' end)';
+
+        $sql = rtrim($sql, ",");//remove comma before WHERE
+        return $sql .= 'WHERE criteria_id in ('.implode(",", $request->cri_man['criteria_id']).') AND student_id = '.$request->student_id;
+    }
+
+    //private function to generate updating cmd
+    private function generateInsertCmd(Request $request, $dataCriteria, $tableName, $isCriSelf){
+        $data = array();
+        $count = collect($dataCriteria['mark_classroom'])->count();
+        // generate cmd to insert student_cri
+        if($isCriSelf)
+            $sql = 'INSERT INTO '.$tableName.' (`student_id`, `criteria_id`, `content_regis`, `self_assessment`, `mark_student`, `mark_classroom`, `mark_faculty`, `mark_school`, `created_at`, `updated_at`) VALUES ';
+        else
+            $sql = 'INSERT INTO '.$tableName.' (`student_id`, `criteria_id`, `self_assessment`, `mark_student`, `mark_classroom`, `mark_faculty`, `mark_school`, `created_at`, `updated_at`) VALUES ';
+
+        for ($i=0; $i < $count; $i++) {
+            $sql .= '(\''.$request->student_id.'\', \''.$dataCriteria['criteria_id'][$i].'\', ';
+
+            $aaa = json_decode(json_encode(self::convertUnicode($dataCriteria['content_regis'][$i])), true)['original'];
+
+            if($isCriSelf) $sql .= '\''.$aaa.'\', ';
+            $sql .= '\''.$dataCriteria['self_assessment'][$i].'\', ';
+            $sql .= '\''.$dataCriteria['mark_student'][$i].'\', ';
+            $sql .= '\''.$dataCriteria['mark_classroom'][$i].'\', ';
+            $sql .= '\''.$dataCriteria['mark_faculty'][$i].'\', ';
+            $sql .= '\''.$dataCriteria['mark_school'][$i].'\', CURDATE(), CURDATE()),';
+        }
+        // return $sql = rtrim($sql, ",");//remove comma before WHERE
+
+        for ($i=0; $i < $count; $i++) {
+            echo json_decode(json_encode($dataCriteria['content_regis'][$i])).'</br>';
+        }
+        // return json_decode($dataCriteria['content_regis'][1]);
+    }
+
+    private function convertUnicode($data){
+        // return response()->json($data, 200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
     }
 }

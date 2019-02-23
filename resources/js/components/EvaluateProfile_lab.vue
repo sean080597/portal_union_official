@@ -40,8 +40,9 @@
                         <tr v-for="(cri_man, index) in getListCriMan" :key="'cri_man'+index">
                             <td><span>{{ index+1 }}. </span>{{ cri_man.content }}</td>
                             <td class="text-center p-1">
-                                <select :name="'cri_man_selfassess_'+cri_man.id" :id="'cri_man_selfassess_'+cri_man.id" class="form-control"
-                                :disabled="checkArray[0]" v-model="form.cri_man.self_assessment[index]">
+                                <select class="form-control" :name="'criman_'+cri_man.id"
+                                v-validate="'required'" :class="{ 'is-invalid': errors.has('criman_'+cri_man.id) }"
+                                :disabled="form.checkArray[0]" v-model="form.cri_man.self_assessment[index]">
                                     <option value="" disabled>- Chọn ĐG -</option>
                                     <option v-for="(self_assess, index) in opts_selfassess"
                                     :key="index" :value="self_assess.k"
@@ -49,32 +50,32 @@
                                 </select>
                             </td>
                             <td class="text-center p-1">
-                                <select :name="'cri_man_markstu_'+cri_man.id" :id="'cri_man_markstu_'+cri_man.id" class="form-control"
-                                :disabled="checkArray[0]" v-model="form.cri_man.mark_student[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[0]" v-model="form.cri_man.mark_student[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select :name="'cri_man_markcla_'+cri_man.id" :id="'cri_man_markcla_'+cri_man.id" class="form-control"
-                                :disabled="checkArray[1]" v-model="form.cri_man.mark_classroom[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[1]" v-model="form.cri_man.mark_classroom[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select :name="'cri_man_markfac_'+cri_man.id" :id="'cri_man_markfac_'+cri_man.id" class="form-control"
-                                :disabled="checkArray[2]" v-model="form.cri_man.mark_faculty[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[2]" v-model="form.cri_man.mark_faculty[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select :name="'cri_man_marksch_'+cri_man.id" :id="'cri_man_marksch_'+cri_man.id" class="form-control"
-                                :disabled="checkArray[3]" v-model="form.cri_man.mark_school[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[3]" v-model="form.cri_man.mark_school[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
@@ -89,13 +90,16 @@
                                 <span style="margin: 5px;">
                                     {{ index+1 }}. {{ cri_self.content }}
                                 </span>
-                                <textarea class="form-control" rows="3" :name="'cri_self_content_'+cri_self.id" :id="'cri_self_content_'+cri_self.id"
-                                v-model="form.cri_self.content_regis[index]" :disabled="checkArray[0]"></textarea>
+                                <textarea class="form-control" rows="3" :name="'criself_'+cri_self.id"
+                                v-validate="'required'" :class="{'textarea': true, 'is-invalid': errors.has('criself_'+cri_self.id) }"
+                                v-model="form.cri_self.content_regis[index]" :disabled="form.checkArray[0]"></textarea>
+                                <div v-show="errors.has('criself_'+cri_self.id)" class="invalid-feedback">Không được để trống</div>
                             </td>
                             <td class="text-center p-1">
-                                <!-- <input type="text" class="form-control"> -->
-                                <select :name="'cri_self_selfassess_'+cri_self.id" :id="'cri_self_selfassess_'+cri_self.id" class="form-control"
-                                :disabled="checkArray[0]" v-model="form.cri_self.self_assessment[index]">
+                                <select class="form-control" :name="'criself_selfassess'+cri_self.id"
+                                :disabled="form.checkArray[0]"
+                                v-validate="'required'" :class="{ 'is-invalid': errors.has('criself_selfassess'+cri_self.id) }"
+                                v-model="form.cri_self.self_assessment[index]">
                                     <option value="" disabled>- Chọn ĐG -</option>
                                     <option v-for="(self_assess, index) in opts_selfassess"
                                     :key="index" :value="self_assess.k"
@@ -103,24 +107,24 @@
                                 </select>
                             </td>
                             <td class="text-center p-1">
-                                <select :name="'cri_self_markstu_'+cri_self.id" :id="'cri_self_markstu_'+cri_self.id" class="form-control"
-                                :disabled="checkArray[0]" v-model="form.cri_self.mark_student[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[0]" v-model="form.cri_self.mark_student[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select :name="'cri_self_markcla_'+cri_self.id" :id="'cri_self_markcla_'+cri_self.id" class="form-control"
-                                :disabled="checkArray[1]" v-model="form.cri_self.mark_classroom[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[1]" v-model="form.cri_self.mark_classroom[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select :name="'cri_self_markfac_'+cri_self.id" :id="'cri_self_markfac_'+cri_self.id" class="form-control"
-                                :disabled="checkArray[2]" v-model="form.cri_self.mark_faculty[index]">
+                                <select class="form-control"
+                                :disabled="form.checkArray[2]" v-model="form.cri_self.mark_faculty[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
@@ -128,7 +132,7 @@
                             </td>
                             <td class="text-center">
                                 <select :name="'cri_self_marksch_'+cri_self.id" :id="'cri_self_marksch_'+cri_self.id" class="form-control"
-                                :disabled="checkArray[3]" v-model="form.cri_self.mark_school[index]">
+                                :disabled="form.checkArray[3]" v-model="form.cri_self.mark_school[index]">
                                     <option v-for="(mark, index) in opts_mark"
                                     :key="index" :value="mark"
                                     >{{ mark }}</option>
@@ -161,11 +165,12 @@ export default {
                 { k: 't', v: 'Tốt' }
             ],
             opts_mark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            checkArray: [],
             checkToShow: false,
             form: new Form({
                 student_id: this.$route.params.student_id,
+                checkArray: [],
                 cri_man:{
+                    criteria_id: [],
                     self_assessment: [],
                     mark_student: [],
                     mark_classroom: [],
@@ -173,6 +178,7 @@ export default {
                     mark_school: []
                 },
                 cri_self:{
+                    criteria_id: [],
                     content_regis: [],
                     self_assessment: [],
                     mark_student: [],
@@ -188,13 +194,13 @@ export default {
             this.$Progress.start();
             axios.get('/api/getUserStudentInfoByStuId/' + this.form.student_id).then(({data}) => (
                 this.student_info = data[0],
-                this.checkArray = this.$gate.isValidToShowMarks(data[0].class_room_id),
+                this.form.checkArray = this.$gate.isValidToShowMarks(data[0].class_room_id),
                 this.checkToShow = this.$gate.isStudentProfilePagePassed(data[0].class_room_id)
             )).then(()=>{
                 if(this.checkToShow){
                     axios.get('/api/getMarkCriMan/' + this.form.student_id).then(({data}) => (
                         data.forEach(e => {
-                            let cri_id = 'cri_mark-' + e.criteria_id;
+                            this.form.cri_man.criteria_id.push(e.criteria_id),
                             this.form.cri_man.self_assessment.push(e.self_assessment),
                             this.form.cri_man.mark_student.push(e.mark_student),
                             this.form.cri_man.mark_classroom.push(e.mark_classroom),
@@ -204,6 +210,7 @@ export default {
                     ));
                     axios.get('/api/getMarkCriSel/' + this.form.student_id).then(({data}) => (
                         data.forEach(e => {
+                            this.form.cri_self.criteria_id.push(e.criteria_id),
                             this.form.cri_self.content_regis.push(e.content_regis),
                             this.form.cri_self.self_assessment.push(e.self_assessment),
                             this.form.cri_self.mark_student.push(e.mark_student),
@@ -220,14 +227,20 @@ export default {
         },
         submitEvaluation(){
             this.$Progress.start();
-            this.form.post('/api/submitEvaluation')
-            .then(() => {
-                
-            })
-            .catch(() => {
-                Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.form.post('/api/submitEvaluation')
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(() => {
+                        Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+                    });
+                    this.$Progress.finish();
+                }else{
+                    this.$Progress.fail();
+                }
             });
-            this.$Progress.finish();
         }
     },
     created() {

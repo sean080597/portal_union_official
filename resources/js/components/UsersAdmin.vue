@@ -198,9 +198,8 @@ export default {
                     .catch(() => {
                         //do sth with error
                     });
-                }
-                if(!result){
-                    //do sth with error
+                }else{
+                    this.$Progress.fail();
                 }
             });
             this.$Progress.finish();

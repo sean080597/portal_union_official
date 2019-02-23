@@ -2465,6 +2465,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2481,11 +2485,12 @@ __webpack_require__.r(__webpack_exports__);
         v: 'Tốt'
       }],
       opts_mark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      checkArray: [],
       checkToShow: false,
       form: new Form({
         student_id: this.$route.params.student_id,
+        checkArray: [],
         cri_man: {
+          criteria_id: [],
           self_assessment: [],
           mark_student: [],
           mark_classroom: [],
@@ -2493,6 +2498,7 @@ __webpack_require__.r(__webpack_exports__);
           mark_school: []
         },
         cri_self: {
+          criteria_id: [],
           content_regis: [],
           self_assessment: [],
           mark_student: [],
@@ -2510,20 +2516,19 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.start();
       axios.get('/api/getUserStudentInfoByStuId/' + this.form.student_id).then(function (_ref) {
         var data = _ref.data;
-        return _this.student_info = data[0], _this.checkArray = _this.$gate.isValidToShowMarks(data[0].class_room_id), _this.checkToShow = _this.$gate.isStudentProfilePagePassed(data[0].class_room_id);
+        return _this.student_info = data[0], _this.form.checkArray = _this.$gate.isValidToShowMarks(data[0].class_room_id), _this.checkToShow = _this.$gate.isStudentProfilePagePassed(data[0].class_room_id);
       }).then(function () {
         if (_this.checkToShow) {
           axios.get('/api/getMarkCriMan/' + _this.form.student_id).then(function (_ref2) {
             var data = _ref2.data;
             return data.forEach(function (e) {
-              var cri_id = 'cri_mark-' + e.criteria_id;
-              _this.form.cri_man.self_assessment.push(e.self_assessment), _this.form.cri_man.mark_student.push(e.mark_student), _this.form.cri_man.mark_classroom.push(e.mark_classroom), _this.form.cri_man.mark_faculty.push(e.mark_faculty), _this.form.cri_man.mark_school.push(e.mark_school);
+              _this.form.cri_man.criteria_id.push(e.criteria_id), _this.form.cri_man.self_assessment.push(e.self_assessment), _this.form.cri_man.mark_student.push(e.mark_student), _this.form.cri_man.mark_classroom.push(e.mark_classroom), _this.form.cri_man.mark_faculty.push(e.mark_faculty), _this.form.cri_man.mark_school.push(e.mark_school);
             });
           });
           axios.get('/api/getMarkCriSel/' + _this.form.student_id).then(function (_ref3) {
             var data = _ref3.data;
             return data.forEach(function (e) {
-              _this.form.cri_self.content_regis.push(e.content_regis), _this.form.cri_self.self_assessment.push(e.self_assessment), _this.form.cri_self.mark_student.push(e.mark_student), _this.form.cri_self.mark_classroom.push(e.mark_classroom), _this.form.cri_self.mark_faculty.push(e.mark_faculty), _this.form.cri_self.mark_school.push(e.mark_school), _this.$Progress.finish();
+              _this.form.cri_self.criteria_id.push(e.criteria_id), _this.form.cri_self.content_regis.push(e.content_regis), _this.form.cri_self.self_assessment.push(e.self_assessment), _this.form.cri_self.mark_student.push(e.mark_student), _this.form.cri_self.mark_classroom.push(e.mark_classroom), _this.form.cri_self.mark_faculty.push(e.mark_faculty), _this.form.cri_self.mark_school.push(e.mark_school), _this.$Progress.finish();
             });
           });
         } else {
@@ -2532,11 +2537,22 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     submitEvaluation: function submitEvaluation() {
+      var _this2 = this;
+
       this.$Progress.start();
-      this.form.post('/api/submitEvaluation').then(function () {}).catch(function () {
-        Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this2.form.post('/api/submitEvaluation').then(function (response) {
+            console.log(response.data);
+          }).catch(function () {
+            Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+          });
+
+          _this2.$Progress.finish();
+        } else {
+          _this2.$Progress.fail();
+        }
       });
-      this.$Progress.finish();
     }
   },
   created: function created() {
@@ -4088,9 +4104,8 @@ __webpack_require__.r(__webpack_exports__);
             }
           }).catch(function () {//do sth with error
           });
-        }
-
-        if (!result) {//do sth with error
+        } else {
+          _this3.$Progress.fail();
         }
       });
       this.$Progress.finish();
@@ -55152,6 +55167,12 @@ var render = function() {
                                 {
                                   directives: [
                                     {
+                                      name: "validate",
+                                      rawName: "v-validate",
+                                      value: "required",
+                                      expression: "'required'"
+                                    },
+                                    {
                                       name: "model",
                                       rawName: "v-model",
                                       value:
@@ -55161,10 +55182,14 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
+                                  class: {
+                                    "is-invalid": _vm.errors.has(
+                                      "criman_" + cri_man.id
+                                    )
+                                  },
                                   attrs: {
-                                    name: "cri_man_selfassess_" + cri_man.id,
-                                    id: "cri_man_selfassess_" + cri_man.id,
-                                    disabled: _vm.checkArray[0]
+                                    name: "criman_" + cri_man.id,
+                                    disabled: _vm.form.checkArray[0]
                                   },
                                   on: {
                                     change: function($event) {
@@ -55229,11 +55254,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_man_markstu_" + cri_man.id,
-                                    id: "cri_man_markstu_" + cri_man.id,
-                                    disabled: _vm.checkArray[0]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[0] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55283,11 +55304,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_man_markcla_" + cri_man.id,
-                                    id: "cri_man_markcla_" + cri_man.id,
-                                    disabled: _vm.checkArray[1]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[1] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55337,11 +55354,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_man_markfac_" + cri_man.id,
-                                    id: "cri_man_markfac_" + cri_man.id,
-                                    disabled: _vm.checkArray[2]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[2] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55391,11 +55404,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_man_marksch_" + cri_man.id,
-                                    id: "cri_man_marksch_" + cri_man.id,
-                                    disabled: _vm.checkArray[3]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[3] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55450,6 +55459,12 @@ var render = function() {
                               _c("textarea", {
                                 directives: [
                                   {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  },
+                                  {
                                     name: "model",
                                     rawName: "v-model",
                                     value:
@@ -55459,11 +55474,16 @@ var render = function() {
                                   }
                                 ],
                                 staticClass: "form-control",
+                                class: {
+                                  textarea: true,
+                                  "is-invalid": _vm.errors.has(
+                                    "criself_" + cri_self.id
+                                  )
+                                },
                                 attrs: {
                                   rows: "3",
-                                  name: "cri_self_content_" + cri_self.id,
-                                  id: "cri_self_content_" + cri_self.id,
-                                  disabled: _vm.checkArray[0]
+                                  name: "criself_" + cri_self.id,
+                                  disabled: _vm.form.checkArray[0]
                                 },
                                 domProps: {
                                   value: _vm.form.cri_self.content_regis[index]
@@ -55480,7 +55500,26 @@ var render = function() {
                                     )
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has(
+                                        "criself_" + cri_self.id
+                                      ),
+                                      expression:
+                                        "errors.has('criself_'+cri_self.id)"
+                                    }
+                                  ],
+                                  staticClass: "invalid-feedback"
+                                },
+                                [_vm._v("Không được để trống")]
+                              )
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center p-1" }, [
@@ -55488,6 +55527,12 @@ var render = function() {
                                 "select",
                                 {
                                   directives: [
+                                    {
+                                      name: "validate",
+                                      rawName: "v-validate",
+                                      value: "required",
+                                      expression: "'required'"
+                                    },
                                     {
                                       name: "model",
                                       rawName: "v-model",
@@ -55500,10 +55545,14 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
+                                  class: {
+                                    "is-invalid": _vm.errors.has(
+                                      "criself_selfassess" + cri_self.id
+                                    )
+                                  },
                                   attrs: {
-                                    name: "cri_self_selfassess_" + cri_self.id,
-                                    id: "cri_self_selfassess_" + cri_self.id,
-                                    disabled: _vm.checkArray[0]
+                                    name: "criself_selfassess" + cri_self.id,
+                                    disabled: _vm.form.checkArray[0]
                                   },
                                   on: {
                                     change: function($event) {
@@ -55568,11 +55617,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_self_markstu_" + cri_self.id,
-                                    id: "cri_self_markstu_" + cri_self.id,
-                                    disabled: _vm.checkArray[0]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[0] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55622,11 +55667,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_self_markcla_" + cri_self.id,
-                                    id: "cri_self_markcla_" + cri_self.id,
-                                    disabled: _vm.checkArray[1]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[1] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55676,11 +55717,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_self_markfac_" + cri_self.id,
-                                    id: "cri_self_markfac_" + cri_self.id,
-                                    disabled: _vm.checkArray[2]
-                                  },
+                                  attrs: { disabled: _vm.form.checkArray[2] },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -55733,7 +55770,7 @@ var render = function() {
                                   attrs: {
                                     name: "cri_self_marksch_" + cri_self.id,
                                     id: "cri_self_marksch_" + cri_self.id,
-                                    disabled: _vm.checkArray[3]
+                                    disabled: _vm.form.checkArray[3]
                                   },
                                   on: {
                                     change: function($event) {
@@ -77701,9 +77738,6 @@ function () {
       return false;
     } //check valid for evaluation
 
-  }, {
-    key: "isEvaluateProfilePagePassed",
-    value: function isEvaluateProfilePagePassed(cla_id) {}
   }, {
     key: "isValidToShowMarks",
     value: function isValidToShowMarks(cla_id) {
