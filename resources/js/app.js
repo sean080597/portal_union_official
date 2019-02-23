@@ -77,6 +77,8 @@ Vue.filter('myTimeDateFormat', function(updated_time){
     return moment(updated_time).locale('vi').format('LT L');//10:35 29/12/2018
 });
 
+Vue.component('pagination', require('laravel-vue-pagination'));
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

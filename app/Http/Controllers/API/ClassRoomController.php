@@ -20,12 +20,12 @@ class ClassRoomController extends Controller
      */
     public function index()
     {
-        return ClassRoom::with('faculty')->orderBy('id', 'ASC')->paginate(30);
+        return ClassRoom::with('faculty')->orderBy('id', 'ASC')->paginate(20);
     }
 
     public function index_client($faculty_id)
     {
-        return ClassRoom::with('secretary')->where('faculty_id', $faculty_id)->orderBy('id', 'ASC')->paginate(30);
+        return ClassRoom::with('secretary')->where('faculty_id', $faculty_id)->orderBy('id', 'ASC')->paginate(20);
     }
 
     /**

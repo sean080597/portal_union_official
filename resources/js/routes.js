@@ -11,4 +11,5 @@ export const routes = [
     { path: '/students-admin', component: require('./components/StudentsAdmin.vue').default },
     { path: '/student-profile-admin/:student_id', component: require('./components/StudentProfileAdmin.vue').default },
     { path: '/evaluate-profile/:student_id', component: require('./components/EvaluateProfile_lab.vue').default },
+    { path: '*', component: require('./components/NotFound.vue').default },
 ];

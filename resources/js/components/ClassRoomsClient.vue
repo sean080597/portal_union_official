@@ -87,7 +87,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(classroom, index) in classrooms" :key="index">
+                    <tr v-for="(classroom, index) in classrooms.data" :key="index">
                         <td>{{ index + 1 }}</td>
                         <td>{{ classroom.id }}</td>
                         <td v-if="classroom.secretary != null">{{ classroom.secretary.name }}</td>
@@ -105,6 +105,7 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination :data="classrooms" @pagination-change-page="getResults"></pagination>
         </div>
     </div>
 
@@ -123,6 +124,12 @@ export default {
         }
     },
     methods: {
+        getResults(page = 1) {
+			axios.get('/api/getClassroomsClient/'+this.faculty_id+'?page=' + page)
+				.then(response => {
+					this.classrooms = response.data;
+				});
+		},
         loadClassrooms(){
             this.$Progress.start();
             if(this.$gate.isClassroomPagePassed()){
@@ -130,7 +137,7 @@ export default {
                     this.facultyLeaderAccs = data, this.$Progress.increase(30)
                 ));
                 axios.get('/api/getClassroomsClient/' + this.faculty_id).then(({data}) => (
-                    this.classrooms = data.data, this.$Progress.finish()
+                    this.classrooms = data, this.$Progress.finish()
                 ));
             }else{
                 this.$Progress.fail();
