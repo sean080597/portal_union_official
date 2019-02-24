@@ -32,7 +32,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-info text-white">Tìm kiếm</span>
                     </div>
-                    <input type="text" class="form-control" id="table-search" />
+                    <input type="search" class="form-control" v-model="search" @keyup="searchit" aria-label="Search"/>
                 </div>
             </div>
         </div>
@@ -42,7 +42,8 @@
                 <thead class="thead-light">
                     <tr>
                         <th>STT</th>
-                        <th class="width-100">Khoa</th>
+                        <th class="width-100">Mã</th>
+                        <th class="width-200">Khoa</th>
                         <th class="width-200">Bí thư</th>
                         <th class="width-200">Email</th>
                         <th class="width-100">Điện thoại</th>
@@ -51,8 +52,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(faculty, index) in faculties" :key="index">
+                    <tr v-for="(faculty, index) in faculties.data" :key="index">
                         <td>{{ index + 1 }}</td>
+                        <td>{{ faculty.id | upText}}</td>
                         <td>{{ faculty.name }}</td>
                         <td v-if="faculty.secretary != null">{{ faculty.secretary.name }}</td>
                         <td v-else></td>
@@ -69,6 +71,10 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination :data="faculties" @pagination-change-page="getResults" :limit="3">
+                <span slot="prev-nav">&lt; Prev</span>
+	            <span slot="next-nav">Next &gt;</span>
+            </pagination>
         </div>
     </div>
 
@@ -83,9 +89,26 @@ export default {
         return {
             faculties: {},
             schoolLeaderAccs: {},
+            search: ''
         }
     },
     methods: {
+        getResults(page = 1) {
+            this.$Progress.start()
+            if(this.search){
+                axios.get('/api/findFaculty?q=' + this.search + '&page=' + page)
+                .then(response => {
+                    this.faculties = response.data
+                    this.$Progress.finish()
+                })
+            }else{
+                axios.get('/api/faculty_admin?page=' + page)
+                .then(response => {
+                    this.faculties = response.data
+                    this.$Progress.finish()
+                })
+            }
+		},
         loadFaculties(){
             this.$Progress.start();
             if(this.$gate.isAdminOrAccSchool()){
@@ -93,12 +116,23 @@ export default {
                     this.schoolLeaderAccs = data, this.$Progress.increase(30)
                 ));
                 axios.get('api/faculty_admin').then(({data}) => (
-                    this.faculties = data.data, this.$Progress.finish()
+                    this.faculties = data, this.$Progress.finish()
                 ));
             }else{
                 this.$Progress.fail();
             }
         },
+        searchit: _.debounce(function() {
+            this.$Progress.start()
+            axios.get('/api/findFaculty?&q=' + this.search)
+            .then((data) => {
+                this.faculties = data.data
+                this.$Progress.finish()
+            })
+            .catch(() => {
+                this.$Progress.fail()
+            })
+        }, 1500)
     },
     created() {
         this.loadFaculties();

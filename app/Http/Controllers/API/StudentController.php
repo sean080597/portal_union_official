@@ -12,7 +12,7 @@ class StudentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -31,7 +31,10 @@ class StudentController extends Controller
 
     public function index_client($classroom_id)
     {
-        return Student::with('user')->where('class_room_id', $classroom_id)->paginate(30);
+        // return Student::with('user')->where('class_room_id', $classroom_id)->paginate(30);
+        return DB::table('students AS s')->select('s.id as mssv', 's.name', 's.birthday', 'u.email', 'u.phone', 's.class_room_id')
+            ->join('users AS u', 'u.id', '=', 's.user_id')
+            ->where('s.class_room_id', $classroom_id)->paginate(30);
     }
 
     /**
@@ -122,5 +125,46 @@ class StudentController extends Controller
             }
         }
         return response()->json(['message' => 'Success']);
+    }
+
+    //search students
+    public function search(){
+        $classroom_id = \Request::get('cla_id');
+        if ($search = \Request::get('q')) {
+            return DB::table('students AS s')->select('s.id as mssv', 's.name', 's.birthday', 'u.email', 'u.phone', 's.class_room_id')
+            ->join('users AS u', 'u.id', '=', 's.user_id')
+            ->where('s.class_room_id', $classroom_id)
+            ->where(function($query) use ($search){
+                $query->where('s.id', 'LIKE', "%$search%")
+                ->orWhere('s.name', 'LIKE', "%$search%")
+                ->orWhere('u.phone', 'LIKE', "%$search%")
+                ->orWhere('u.email', 'LIKE', "%$search%");
+            })->paginate(30);
+        }else{
+            return DB::table('students AS s')->select('s.id as mssv', 's.name', 's.birthday', 'u.email', 'u.phone', 's.class_room_id')
+            ->join('users AS u', 'u.id', '=', 's.user_id')
+            ->where('s.class_room_id', $classroom_id)->paginate(30);
+        }
+    }
+
+    public function searchByAdmin(){
+        if ($search = \Request::get('q')) {
+            return DB::table('students AS s')->select('s.*', 's.id as mssv', 'f.id as faculty_id', 'f.name as faculty_name', 'u.*')
+            ->join('users AS u', 'u.id', '=', 's.user_id')
+            ->join('class_rooms AS c', 'c.id', '=', 's.class_room_id')
+            ->join('faculties AS f', 'f.id', '=', 'c.faculty_id')
+            ->where('s.id', 'LIKE', "%$search%")
+            ->orWhere('s.name', 'LIKE', "%$search%")
+            ->orWhere('u.phone', 'LIKE', "%$search%")
+            ->orWhere('u.email', 'LIKE', "%$search%")
+            ->orWhere('c.id', 'LIKE', "%$search%")
+            ->orderBy('c.id', 'ASC')->paginate(30);
+        }else{
+            return DB::table('students AS s')->select('s.*', 's.id as mssv', 'f.id as faculty_id', 'f.name as faculty_name', 'u.*')
+            ->join('users AS u', 'u.id', '=', 's.user_id')
+            ->join('class_rooms AS c', 'c.id', '=', 's.class_room_id')
+            ->join('faculties AS f', 'f.id', '=', 'c.faculty_id')
+            ->orderBy('c.id', 'ASC')->paginate(30);
+        }
     }
 }

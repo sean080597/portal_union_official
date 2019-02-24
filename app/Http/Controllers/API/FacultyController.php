@@ -23,7 +23,7 @@ class FacultyController extends Controller
     public function index()
     {
         // $this->authorize('isAdmin');
-        return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(10);
+        return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(20);
         // if (Gate::allows('isAccFaculty')) {
         //     return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(10);
         // }else{
@@ -108,5 +108,16 @@ class FacultyController extends Controller
     //get all faculties
     public function getAllFaculties(){
         return Faculty::orderBy('name', 'ASC')->get();
+    }
+
+    //search classrooms
+    public function search(){
+        if ($search = \Request::get('q')) {
+            return Faculty::with('secretary')->where('id', 'LIKE', "%$search%")
+                        ->orWhere('name', 'LIKE', "%$search%")
+                        ->orderBy('name', 'ASC')->paginate(20);
+        }else{
+            return Faculty::with('secretary')->orderBy('name', 'ASC')->paginate(20);
+        }
     }
 }

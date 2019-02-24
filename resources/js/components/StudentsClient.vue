@@ -68,7 +68,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-info text-white">Tìm kiếm</span>
                     </div>
-                    <input type="text" class="form-control" id="table-search" />
+                    <input type="search" class="form-control" aria-label="Search" v-model="search" @keyup="searchit"/>
                 </div>
             </div>
         </div>
@@ -88,13 +88,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(student, index) in students" :key="index">
+                    <tr v-for="(student, index) in students.data" :key="index">
                         <td>{{ index + 1 }}</td>
-                        <td>{{ student.id }}</td>
+                        <td>{{ student.mssv }}</td>
                         <td>{{ student.name }}</td>
                         <td>{{ student.birthday | myDateFormat }}</td>
-                        <td>{{ student.user.email }}</td>
-                        <td>{{ student.user.phone }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.phone }}</td>
                         <td class="text-center text-primary">
                             <router-link :to="'/student-profile/' + student.id"><i class="far fa-eye"></i></router-link>
                         </td>
@@ -104,6 +104,10 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination :data="students" @pagination-change-page="getResults" :limit="3">
+                <span slot="prev-nav">&lt; Prev</span>
+	            <span slot="next-nav">Next &gt;</span>
+            </pagination>
         </div>
     </div>
 
@@ -119,9 +123,26 @@ export default {
             classroom_id: this.$route.params.classroom_id,
             students: {},
             classroomLeaderAccs: {},
+            search: ''
         }
     },
     methods: {
+        getResults(page = 1) {
+            this.$Progress.start()
+            if(this.search){
+                axios.get('/api/findStudent?cla_id=' + this.classroom_id + '&q=' + this.search + '&page=' + page)
+                .then(response => {
+                    this.students = response.data
+                    this.$Progress.finish()
+                })
+            }else{
+                axios.get('/api/getStudentsClient/' + this.classroom_id + '?page=' + page)
+                .then(response => {
+                    this.students = response.data
+                    this.$Progress.finish()
+                })
+            }
+		},
         loadStudents(){
             this.$Progress.start();
             if(this.$gate.isStudentsPagePassed()){
@@ -129,12 +150,23 @@ export default {
                     this.classroomLeaderAccs = data, this.$Progress.increase(30)
                 ));
                 axios.get('/api/getStudentsClient/' + this.classroom_id).then(({data}) => (
-                    this.students = data.data, this.$Progress.finish()
+                    this.students = data, this.$Progress.finish()
                 ));
             }else{
                 this.$Progress.fail();
             }
-        }
+        },
+        searchit: _.debounce(function() {
+            this.$Progress.start()
+            axios.get('/api/findStudent?&cla_id=' + this.classroom_id + '&q=' + this.search)
+            .then((data) => {
+                this.students = data.data
+                this.$Progress.finish()
+            })
+            .catch(() => {
+                this.$Progress.fail()
+            })
+        }, 1500)
     },
     created() {
         this.loadStudents();

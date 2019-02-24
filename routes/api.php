@@ -30,17 +30,21 @@ Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelfregisController'])
 //Faculty
 Route::get('/getSchoolLeaderAccs', 'API\FacultyController@getSchoolLeaderAccs');
 Route::get('/getAllFaculties', 'API\FacultyController@getAllFaculties');
+Route::get('/findFaculty', 'API\FacultyController@search');
 
 //ClassRoom
 Route::get('/getFacultyLeaderAccs/{faculty_id}', 'API\FacultyController@getFacultyLeaderAccs');
 Route::get('/getClassroomsClient/{faculty_id}', 'API\ClassRoomController@index_client');
 Route::get('/getAllClassrooms', 'API\ClassRoomController@getAllClassrooms');
 Route::get('/findClassroom', 'API\ClassRoomController@search');
+Route::get('/findClassroomAdmin', 'API\ClassRoomController@searchByAdmin');
 
 //Student
 Route::get('/getClassroomAccs/{classroom_id}', 'API\ClassRoomController@getClassroomAccs');
 Route::get('/getStudentsClient/{classroom_id}', 'API\StudentController@index_client');
 Route::put('/updateProfile', 'API\StudentController@updateProfile');
+Route::get('/findStudent', 'API\StudentController@search');
+Route::get('/findStudentAdmin', 'API\StudentController@searchByAdmin');
 
 //get user student info by user_id
 Route::get('/getUserStudentInfoByUserId/{user_id}', 'API\UserController@getUserStudentInfoByUserId');

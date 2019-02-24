@@ -1883,6 +1883,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1893,27 +1897,46 @@ __webpack_require__.r(__webpack_exports__);
         idToUpdate: '',
         id: '',
         faculty_id: ''
-      })
+      }),
+      search: ''
     };
   },
   methods: {
-    loadClassrooms: function loadClassrooms() {
+    getResults: function getResults() {
       var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start();
+
+      if (this.search) {
+        axios.get('/api/findClassroomAdmin?q=' + this.search + '&page=' + page).then(function (response) {
+          _this.classrooms = response.data;
+
+          _this.$Progress.finish();
+        });
+      } else {
+        axios.get('/api/classroom_admin?page=' + page).then(function (response) {
+          _this.classrooms = response.data;
+
+          _this.$Progress.finish();
+        });
+      }
+    },
+    loadClassrooms: function loadClassrooms() {
+      var _this2 = this;
 
       this.$Progress.start();
 
       if (this.$gate.isAdmin()) {
         axios.get('api/classroom_admin').then(function (_ref) {
           var data = _ref.data;
-          return _this.classrooms = data.data;
+          return _this2.classrooms = data;
         });
         axios.get('api/faculty_admin').then(function (_ref2) {
           var data = _ref2.data;
-          return _this.faculties = data.data;
+          return _this2.faculties = data.data, _this2.$Progress.finish();
         });
       }
-
-      this.$Progress.finish();
     },
     newModal: function newModal() {
       this.editMode = false;
@@ -1943,7 +1966,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.finish();
     },
     deleteClassRoom: function deleteClassRoom(classroom_id) {
-      var _this2 = this;
+      var _this3 = this;
 
       Swal({
         title: 'Bạn có chắc chắn muốn xóa?',
@@ -1956,7 +1979,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           //send request to server
-          _this2.form.delete('api/classroom_admin/' + classroom_id).then(function () {
+          _this3.form.delete('api/classroom_admin/' + classroom_id).then(function () {
             //set event to reload faculties
             Fire.$emit('ReloadClassRoom');
 
@@ -1970,7 +1993,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateClassRoom: function updateClassRoom() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$Progress.start();
       this.form.put('api/classroom_admin/' + this.form.idToUpdate).then(function () {
@@ -1982,18 +2005,30 @@ __webpack_require__.r(__webpack_exports__);
 
         Fire.$emit('ReloadClassRoom');
 
-        _this3.$Progress.finish();
+        _this4.$Progress.finish();
       }).catch(function () {
-        _this3.$Progress.fail();
+        _this4.$Progress.fail();
       });
-    }
+    },
+    searchit: _.debounce(function () {
+      var _this5 = this;
+
+      this.$Progress.start();
+      axios.get('/api/findClassroomAdmin?q=' + this.search).then(function (data) {
+        _this5.classrooms = data.data;
+
+        _this5.$Progress.finish();
+      }).catch(function () {
+        _this5.$Progress.fail();
+      });
+    }, 1500)
   },
   created: function created() {
-    var _this4 = this;
+    var _this6 = this;
 
     this.loadClassrooms();
     Fire.$on('ReloadClassRoom', function () {
-      _this4.loadClassrooms();
+      _this6.loadClassrooms();
     });
   }
 });
@@ -2009,6 +2044,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -2772,6 +2810,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2782,25 +2824,46 @@ __webpack_require__.r(__webpack_exports__);
         id: '',
         name: '',
         note: ''
-      })
+      }),
+      search: ''
     };
   },
   methods: {
-    loadFaculties: function loadFaculties() {
+    getResults: function getResults() {
       var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start();
+
+      if (this.search) {
+        axios.get('/api/findFaculty?q=' + this.search + '&page=' + page).then(function (response) {
+          _this.faculties = response.data;
+
+          _this.$Progress.finish();
+        });
+      } else {
+        axios.get('/api/faculty_admin?page=' + page).then(function (response) {
+          _this.faculties = response.data;
+
+          _this.$Progress.finish();
+        });
+      }
+    },
+    loadFaculties: function loadFaculties() {
+      var _this2 = this;
 
       this.$Progress.start();
 
       if (this.$gate.isAdmin()) {
         axios.get('api/faculty_admin').then(function (_ref) {
           var data = _ref.data;
-          return _this.faculties = data.data;
+          return _this2.faculties = data, _this2.$Progress.finish();
         });
       }
-
-      this.$Progress.finish();
     },
     createFaculty: function createFaculty() {
+      var _this3 = this;
+
       this.$Progress.start();
       this.form.post('api/faculty_admin').then(function () {
         //set event to reload faculties
@@ -2810,14 +2873,18 @@ __webpack_require__.r(__webpack_exports__);
           type: 'success',
           title: 'Tạo khoa thành công'
         });
+
+        _this3.$Progress.finish();
       }).catch(function () {
         Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+
+        _this3.$Progress.fail();
       });
-      this.$Progress.finish();
     },
     deleteFaculty: function deleteFaculty(faculty_id) {
-      var _this2 = this;
+      var _this4 = this;
 
+      this.$Progress.start();
       Swal({
         title: 'Bạn có chắc chắn muốn xóa?',
         text: "Bạn sẽ không thể hoàn lại dữ liệu này!",
@@ -2829,21 +2896,25 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           //send request to server
-          _this2.form.delete('api/faculty_admin/' + faculty_id).then(function () {
+          _this4.form.delete('api/faculty_admin/' + faculty_id).then(function () {
             //set event to reload faculties
             Fire.$emit('ReloadFaculty');
 
             if (result.value) {
               Swal('Đã xóa!', 'Đã xóa khoa thành công.', 'success');
+
+              _this4.$Progress.finish();
             }
           }).catch(function () {
             Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+
+            _this4.$Progress.fail();
           });
         }
       });
     },
     updateFaculty: function updateFaculty() {
-      var _this3 = this;
+      var _this5 = this;
 
       this.$Progress.start();
       this.form.put('api/faculty_admin/' + this.form.idToUpdate).then(function () {
@@ -2855,9 +2926,9 @@ __webpack_require__.r(__webpack_exports__);
 
         Fire.$emit('ReloadFaculty');
 
-        _this3.$Progress.finish();
+        _this5.$Progress.finish();
       }).catch(function () {
-        _this3.$Progress.fail();
+        _this5.$Progress.fail();
       });
     },
     newModal: function newModal() {
@@ -2871,14 +2942,26 @@ __webpack_require__.r(__webpack_exports__);
       $('#modalFacultyAdmin').modal('show');
       this.form.fill(faculty);
       this.form.idToUpdate = faculty.id;
-    }
+    },
+    searchit: _.debounce(function () {
+      var _this6 = this;
+
+      this.$Progress.start();
+      axios.get('/api/findFaculty?&q=' + this.search).then(function (data) {
+        _this6.faculties = data.data;
+
+        _this6.$Progress.finish();
+      }).catch(function () {
+        _this6.$Progress.fail();
+      });
+    }, 1500)
   },
   created: function created() {
-    var _this4 = this;
+    var _this7 = this;
 
     this.loadFaculties();
     Fire.$on('ReloadFaculty', function () {
-      _this4.loadFaculties();
+      _this7.loadFaculties();
     }); // setInterval(() => this.loadFaculties(), 3000);
   }
 });
@@ -2973,32 +3056,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       faculties: {},
-      schoolLeaderAccs: {}
+      schoolLeaderAccs: {},
+      search: ''
     };
   },
   methods: {
-    loadFaculties: function loadFaculties() {
+    getResults: function getResults() {
       var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start();
+
+      if (this.search) {
+        axios.get('/api/findFaculty?q=' + this.search + '&page=' + page).then(function (response) {
+          _this.faculties = response.data;
+
+          _this.$Progress.finish();
+        });
+      } else {
+        axios.get('/api/faculty_admin?page=' + page).then(function (response) {
+          _this.faculties = response.data;
+
+          _this.$Progress.finish();
+        });
+      }
+    },
+    loadFaculties: function loadFaculties() {
+      var _this2 = this;
 
       this.$Progress.start();
 
       if (this.$gate.isAdminOrAccSchool()) {
         axios.get('api/getSchoolLeaderAccs').then(function (_ref) {
           var data = _ref.data;
-          return _this.schoolLeaderAccs = data, _this.$Progress.increase(30);
+          return _this2.schoolLeaderAccs = data, _this2.$Progress.increase(30);
         });
         axios.get('api/faculty_admin').then(function (_ref2) {
           var data = _ref2.data;
-          return _this.faculties = data.data, _this.$Progress.finish();
+          return _this2.faculties = data, _this2.$Progress.finish();
         });
       } else {
         this.$Progress.fail();
       }
-    }
+    },
+    searchit: _.debounce(function () {
+      var _this3 = this;
+
+      this.$Progress.start();
+      axios.get('/api/findFaculty?&q=' + this.search).then(function (data) {
+        _this3.faculties = data.data;
+
+        _this3.$Progress.finish();
+      }).catch(function () {
+        _this3.$Progress.fail();
+      });
+    }, 1500)
   },
   created: function created() {
     this.loadFaculties();
@@ -3733,34 +3855,69 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      students: {}
+      students: {},
+      search: ''
     };
   },
   methods: {
-    loadStudents: function loadStudents() {
+    getResults: function getResults() {
       var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start();
+
+      if (this.search) {
+        axios.get('/api/findStudentAdmin?q=' + this.search + '&page=' + page).then(function (response) {
+          _this.students = response.data;
+
+          _this.$Progress.finish();
+        });
+      } else {
+        axios.get('/api/student_admin?page=' + page).then(function (response) {
+          _this.students = response.data;
+
+          _this.$Progress.finish();
+        });
+      }
+    },
+    loadStudents: function loadStudents() {
+      var _this2 = this;
 
       this.$Progress.start();
 
       if (this.$gate.isAdmin()) {
         axios.get('api/student_admin').then(function (_ref) {
           var data = _ref.data;
-          return _this.students = data.data;
+          return _this2.students = data, _this2.$Progress.finish();
         }); // axios.get('api/indexWithoutSchoolLeaderAccs').then(({data}) => (this.user_types = data));
       }
+    },
+    searchit: _.debounce(function () {
+      var _this3 = this;
 
-      this.$Progress.finish();
-    }
+      this.$Progress.start();
+      axios.get('/api/findStudentAdmin?&q=' + this.search).then(function (data) {
+        _this3.students = data.data;
+
+        _this3.$Progress.finish();
+      }).catch(function () {
+        _this3.$Progress.fail();
+      });
+    }, 1500)
   },
   created: function created() {
-    var _this2 = this;
+    var _this4 = this;
 
     this.loadStudents();
     Fire.$on('ReloadStudent', function () {
-      _this2.loadStudents();
+      _this4.loadStudents();
     });
   }
 });
@@ -3890,33 +4047,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       classroom_id: this.$route.params.classroom_id,
       students: {},
-      classroomLeaderAccs: {}
+      classroomLeaderAccs: {},
+      search: ''
     };
   },
   methods: {
-    loadStudents: function loadStudents() {
+    getResults: function getResults() {
       var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start();
+
+      if (this.search) {
+        axios.get('/api/findStudent?cla_id=' + this.classroom_id + '&q=' + this.search + '&page=' + page).then(function (response) {
+          _this.students = response.data;
+
+          _this.$Progress.finish();
+        });
+      } else {
+        axios.get('/api/getStudentsClient/' + this.classroom_id + '?page=' + page).then(function (response) {
+          _this.students = response.data;
+
+          _this.$Progress.finish();
+        });
+      }
+    },
+    loadStudents: function loadStudents() {
+      var _this2 = this;
 
       this.$Progress.start();
 
       if (this.$gate.isStudentsPagePassed()) {
         axios.get('/api/getClassroomAccs/' + this.classroom_id).then(function (_ref) {
           var data = _ref.data;
-          return _this.classroomLeaderAccs = data, _this.$Progress.increase(30);
+          return _this2.classroomLeaderAccs = data, _this2.$Progress.increase(30);
         });
         axios.get('/api/getStudentsClient/' + this.classroom_id).then(function (_ref2) {
           var data = _ref2.data;
-          return _this.students = data.data, _this.$Progress.finish();
+          return _this2.students = data, _this2.$Progress.finish();
         });
       } else {
         this.$Progress.fail();
       }
-    }
+    },
+    searchit: _.debounce(function () {
+      var _this3 = this;
+
+      this.$Progress.start();
+      axios.get('/api/findStudent?&cla_id=' + this.classroom_id + '&q=' + this.search).then(function (data) {
+        _this3.students = data.data;
+
+        _this3.$Progress.finish();
+      }).catch(function () {
+        _this3.$Progress.fail();
+      });
+    }, 1500)
   },
   created: function created() {
     this.loadStudents();
@@ -55322,7 +55516,34 @@ var render = function() {
           _c("div", { staticClass: "row" }, [
             _vm._m(0),
             _vm._v(" "),
-            _vm._m(1),
+            _c("div", { staticClass: "col-md-9 mb-2" }, [
+              _c("div", { staticClass: "input-group" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "search", "aria-label": "Search" },
+                  domProps: { value: _vm.search },
+                  on: {
+                    keyup: _vm.searchit,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _vm._m(2),
             _vm._v(" "),
@@ -55342,77 +55563,103 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c(
-              "table",
-              {
-                staticClass: "table table-striped table-hover table-bordered",
-                attrs: { id: "table" }
-              },
-              [
-                _vm._m(3),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.classrooms, function(classroom, index) {
-                    return _c("tr", { key: classroom.id }, [
-                      _vm._m(4, true),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _vm._v(_vm._s(index + 1))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(_vm._s(_vm._f("upText")(classroom.id)))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(_vm._s(classroom.faculty.name) + " "),
-                        classroom.faculty.note !== null
-                          ? _c("span", [
-                              _vm._v("/ " + _vm._s(classroom.faculty.note))
-                            ])
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "text-primary",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                _vm.editModal(classroom)
+          _c(
+            "div",
+            { staticClass: "table-responsive" },
+            [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped table-hover table-bordered",
+                  attrs: { id: "table" }
+                },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.classrooms.data, function(classroom, index) {
+                      return _c("tr", { key: classroom.id }, [
+                        _vm._m(4, true),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(index + 1))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(_vm._s(_vm._f("upText")(classroom.id)))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(_vm._s(classroom.faculty.name) + " "),
+                          classroom.faculty.note !== null
+                            ? _c("span", [
+                                _vm._v("/ " + _vm._s(classroom.faculty.note))
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "text-primary",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  _vm.editModal(classroom)
+                                }
                               }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-user-edit" })]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "text-danger",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                _vm.deleteClassRoom(classroom.id)
+                            },
+                            [_c("i", { staticClass: "fas fa-user-edit" })]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "text-danger",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteClassRoom(classroom.id)
+                                }
                               }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-trash-alt" })]
-                        )
+                            },
+                            [_c("i", { staticClass: "fas fa-trash-alt" })]
+                          )
+                        ])
                       ])
-                    ])
-                  }),
-                  0
-                )
-              ]
-            )
-          ]),
+                    }),
+                    0
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "pagination",
+                {
+                  attrs: { data: _vm.classrooms, limit: 3 },
+                  on: { "pagination-change-page": _vm.getResults }
+                },
+                [
+                  _c(
+                    "span",
+                    { attrs: { slot: "prev-nav" }, slot: "prev-nav" },
+                    [_vm._v("< Prev")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { attrs: { slot: "next-nav" }, slot: "next-nav" },
+                    [_vm._v("Next >")]
+                  )
+                ]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -55713,18 +55960,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-9 mb-2" }, [
-      _c("div", { staticClass: "input-group" }, [
-        _c("div", { staticClass: "input-group-prepend" }, [
-          _c("span", { staticClass: "input-group-text bg-info text-white" }, [
-            _vm._v("Tìm kiếm")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", id: "table-search" }
-        })
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+        _vm._v("Tìm kiếm")
       ])
     ])
   },
@@ -55984,10 +56222,26 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c("pagination", {
-                attrs: { data: _vm.classrooms },
-                on: { "pagination-change-page": _vm.getResults }
-              })
+              _c(
+                "pagination",
+                {
+                  attrs: { data: _vm.classrooms, limit: 3 },
+                  on: { "pagination-change-page": _vm.getResults }
+                },
+                [
+                  _c(
+                    "span",
+                    { attrs: { slot: "prev-nav" }, slot: "prev-nav" },
+                    [_vm._v("< Prev")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { attrs: { slot: "next-nav" }, slot: "next-nav" },
+                    [_vm._v("Next >")]
+                  )
+                ]
+              )
             ],
             1
           )
@@ -57400,7 +57654,34 @@ var render = function() {
           _c("div", { staticClass: "row" }, [
             _vm._m(0),
             _vm._v(" "),
-            _vm._m(1),
+            _c("div", { staticClass: "col-md-9 mb-2" }, [
+              _c("div", { staticClass: "input-group" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "search", "aria-label": "Search" },
+                  domProps: { value: _vm.search },
+                  on: {
+                    keyup: _vm.searchit,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _vm._m(2),
             _vm._v(" "),
@@ -57420,70 +57701,98 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c(
-              "table",
-              {
-                staticClass: "table table-striped table-hover table-bordered",
-                attrs: { id: "table" }
-              },
-              [
-                _vm._m(3),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.faculties, function(faculty, index) {
-                    return _c("tr", { key: faculty.id }, [
-                      _vm._m(4, true),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _vm._v(_vm._s(index + 1))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm._f("upText")(faculty.id)))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(faculty.name))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(faculty.note))]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "text-primary",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                _vm.editModal(faculty)
+          _c(
+            "div",
+            { staticClass: "table-responsive" },
+            [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped table-hover table-bordered",
+                  attrs: { id: "table" }
+                },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.faculties.data, function(faculty, index) {
+                      return _c("tr", { key: faculty.id }, [
+                        _vm._m(4, true),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(index + 1))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(_vm._s(_vm._f("upText")(faculty.id)))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(faculty.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(faculty.note))]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "text-primary",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  _vm.editModal(faculty)
+                                }
                               }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-user-edit" })]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "text-danger",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                _vm.deleteFaculty(faculty.id)
+                            },
+                            [_c("i", { staticClass: "fas fa-user-edit" })]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "text-danger",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteFaculty(faculty.id)
+                                }
                               }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-trash-alt" })]
-                        )
+                            },
+                            [_c("i", { staticClass: "fas fa-trash-alt" })]
+                          )
+                        ])
                       ])
-                    ])
-                  }),
-                  0
-                )
-              ]
-            )
-          ]),
+                    }),
+                    0
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "pagination",
+                {
+                  attrs: { data: _vm.faculties, limit: 3 },
+                  on: { "pagination-change-page": _vm.getResults }
+                },
+                [
+                  _c(
+                    "span",
+                    { attrs: { slot: "prev-nav" }, slot: "prev-nav" },
+                    [_vm._v("< Prev")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { attrs: { slot: "next-nav" }, slot: "next-nav" },
+                    [_vm._v("Next >")]
+                  )
+                ]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -57784,18 +58093,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-9 mb-2" }, [
-      _c("div", { staticClass: "input-group" }, [
-        _c("div", { staticClass: "input-group-prepend" }, [
-          _c("span", { staticClass: "input-group-text bg-info text-white" }, [
-            _vm._v("Tìm kiếm")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", id: "table-search" }
-        })
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+        _vm._v("Tìm kiếm")
       ])
     ])
   },
@@ -57836,7 +58136,7 @@ var staticRenderFns = [
           [_vm._v("STT")]
         ),
         _vm._v(" "),
-        _c("th", { staticClass: "width-100" }, [_vm._v("MÃ Khoa")]),
+        _c("th", { staticClass: "width-100" }, [_vm._v("Mã Khoa")]),
         _vm._v(" "),
         _c("th", { staticClass: "width-200" }, [_vm._v("Tên Khoa")]),
         _vm._v(" "),
@@ -57913,59 +58213,120 @@ var render = function() {
             0
           ),
           _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c(
-              "table",
-              {
-                staticClass: "table table-striped table-hover table-bordered",
-                attrs: { id: "table" }
-              },
-              [
+          _c("div", { staticClass: "row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c("div", { staticClass: "input-group" }, [
                 _vm._m(1),
                 _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.faculties, function(faculty, index) {
-                    return _c("tr", { key: index }, [
-                      _c("td", [_vm._v(_vm._s(index + 1))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(faculty.name))]),
-                      _vm._v(" "),
-                      faculty.secretary != null
-                        ? _c("td", [_vm._v(_vm._s(faculty.secretary.name))])
-                        : _c("td"),
-                      _vm._v(" "),
-                      faculty.secretary != null
-                        ? _c("td", [_vm._v(_vm._s(faculty.secretary.email))])
-                        : _c("td"),
-                      _vm._v(" "),
-                      faculty.secretary != null
-                        ? _c("td", [_vm._v(_vm._s(faculty.secretary.phone))])
-                        : _c("td"),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        { staticClass: "text-center text-primary" },
-                        [
-                          _c(
-                            "router-link",
-                            { attrs: { to: "/classrooms/" + faculty.id } },
-                            [_c("i", { staticClass: "far fa-eye" })]
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm._m(2, true)
-                    ])
-                  }),
-                  0
-                )
-              ]
-            )
-          ])
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "search", "aria-label": "Search" },
+                  domProps: { value: _vm.search },
+                  on: {
+                    keyup: _vm.searchit,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "table-responsive" },
+            [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped table-hover table-bordered",
+                  attrs: { id: "table" }
+                },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.faculties.data, function(faculty, index) {
+                      return _c("tr", { key: index }, [
+                        _c("td", [_vm._v(_vm._s(index + 1))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(_vm._s(_vm._f("upText")(faculty.id)))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(faculty.name))]),
+                        _vm._v(" "),
+                        faculty.secretary != null
+                          ? _c("td", [_vm._v(_vm._s(faculty.secretary.name))])
+                          : _c("td"),
+                        _vm._v(" "),
+                        faculty.secretary != null
+                          ? _c("td", [_vm._v(_vm._s(faculty.secretary.email))])
+                          : _c("td"),
+                        _vm._v(" "),
+                        faculty.secretary != null
+                          ? _c("td", [_vm._v(_vm._s(faculty.secretary.phone))])
+                          : _c("td"),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          { staticClass: "text-center text-primary" },
+                          [
+                            _c(
+                              "router-link",
+                              { attrs: { to: "/classrooms/" + faculty.id } },
+                              [_c("i", { staticClass: "far fa-eye" })]
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _vm._m(3, true)
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "pagination",
+                {
+                  attrs: { data: _vm.faculties, limit: 3 },
+                  on: { "pagination-change-page": _vm.getResults }
+                },
+                [
+                  _c(
+                    "span",
+                    { attrs: { slot: "prev-nav" }, slot: "prev-nav" },
+                    [_vm._v("< Prev")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { attrs: { slot: "next-nav" }, slot: "next-nav" },
+                    [_vm._v("Next >")]
+                  )
+                ]
+              )
+            ],
+            1
+          )
         ])
       : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
@@ -57975,47 +58336,38 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-3 mb-2" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "input-group-prepend" }, [
-            _c(
-              "span",
-              { staticClass: "input-group-text bg-danger text-white" },
-              [_vm._v("Lọc")]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              staticClass: "form-control",
-              attrs: { name: "state", id: "maxRows" }
-            },
-            [
-              _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "0", selected: "" } }, [
-                _vm._v("Tất cả")
-              ])
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-9" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "input-group-prepend" }, [
-            _c("span", { staticClass: "input-group-text bg-info text-white" }, [
-              _vm._v("Tìm kiếm")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("input", {
+    return _c("div", { staticClass: "col-md-3 mb-2" }, [
+      _c("div", { staticClass: "input-group" }, [
+        _c("div", { staticClass: "input-group-prepend" }, [
+          _c("span", { staticClass: "input-group-text bg-danger text-white" }, [
+            _vm._v("Lọc")
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
             staticClass: "form-control",
-            attrs: { type: "text", id: "table-search" }
-          })
-        ])
+            attrs: { name: "state", id: "maxRows" }
+          },
+          [
+            _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "0", selected: "" } }, [
+              _vm._v("Tất cả")
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+        _vm._v("Tìm kiếm")
       ])
     ])
   },
@@ -58027,7 +58379,9 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("STT")]),
         _vm._v(" "),
-        _c("th", { staticClass: "width-100" }, [_vm._v("Khoa")]),
+        _c("th", { staticClass: "width-100" }, [_vm._v("Mã")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "width-200" }, [_vm._v("Khoa")]),
         _vm._v(" "),
         _c("th", { staticClass: "width-200" }, [_vm._v("Bí thư")]),
         _vm._v(" "),
@@ -61871,62 +62225,123 @@ var render = function() {
   return _c("div", [
     _vm.$gate.isAdmin()
       ? _c("div", { staticClass: "wrap-table" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c(
-              "table",
-              {
-                staticClass: "table table-striped table-hover table-bordered",
-                attrs: { id: "table" }
-              },
-              [
+          _c("div", { staticClass: "row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9 mb-2" }, [
+              _c("div", { staticClass: "input-group" }, [
                 _vm._m(1),
                 _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.students, function(student, index) {
-                    return _c("tr", { key: index }, [
-                      _vm._m(2, true),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _vm._v(_vm._s(index + 1))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.mssv))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.name))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.class_room_id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.faculty_name))]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        { staticClass: "text-center" },
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "text-primary",
-                              attrs: {
-                                to: "/student-profile-admin/" + student.mssv
-                              }
-                            },
-                            [_c("i", { staticClass: "fas fa-user-edit" })]
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm._m(3, true)
-                    ])
-                  }),
-                  0
-                )
-              ]
-            )
-          ])
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "search", "aria-label": "Search" },
+                  domProps: { value: _vm.search },
+                  on: {
+                    keyup: _vm.searchit,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3)
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "table-responsive" },
+            [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped table-hover table-bordered",
+                  attrs: { id: "table" }
+                },
+                [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.students.data, function(student, index) {
+                      return _c("tr", { key: index }, [
+                        _vm._m(5, true),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _vm._v(_vm._s(index + 1))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.mssv))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.class_room_id))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.faculty_name))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          { staticClass: "text-center" },
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "text-primary",
+                                attrs: {
+                                  to: "/student-profile-admin/" + student.mssv
+                                }
+                              },
+                              [_c("i", { staticClass: "fas fa-user-edit" })]
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _vm._m(6, true)
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "pagination",
+                {
+                  attrs: { data: _vm.students, limit: 3 },
+                  on: { "pagination-change-page": _vm.getResults }
+                },
+                [
+                  _c(
+                    "span",
+                    { attrs: { slot: "prev-nav" }, slot: "prev-nav" },
+                    [_vm._v("< Prev")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { attrs: { slot: "next-nav" }, slot: "next-nav" },
+                    [_vm._v("Next >")]
+                  )
+                ]
+              )
+            ],
+            1
+          )
         ])
       : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
@@ -61936,71 +62351,72 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-3 mb-2" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "input-group-prepend" }, [
-            _c("span", { staticClass: "input-group-text bg-info text-white" }, [
-              _vm._v("Lọc")
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              staticClass: "form-control",
-              attrs: { name: "state", id: "maxRows" }
-            },
-            [
-              _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "0", selected: "" } }, [
-                _vm._v("Tất cả")
-              ])
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-9 mb-2" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "input-group-prepend" }, [
-            _c("span", { staticClass: "input-group-text bg-info text-white" }, [
-              _vm._v("Tìm kiếm")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("input", {
+    return _c("div", { staticClass: "col-md-3 mb-2" }, [
+      _c("div", { staticClass: "input-group" }, [
+        _c("div", { staticClass: "input-group-prepend" }, [
+          _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+            _vm._v("Lọc")
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
             staticClass: "form-control",
-            attrs: { type: "text", id: "table-search" }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-3 mb-2" }, [
-        _c("div", { staticClass: "btn-group" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-secondary",
-              attrs: { type: "button", id: "select-all" }
-            },
-            [_vm._v("Chọn hết")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            { staticClass: "btn btn-danger", attrs: { type: "button" } },
-            [_vm._v("Xóa")]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-9 mb-2" }, [
-        _c("a", { staticClass: "btn btn-success mb-2", attrs: { href: "#" } }, [
-          _c("i", { staticClass: "fas fa-plus-circle" }),
-          _vm._v(" Thêm đoàn viên")
-        ])
+            attrs: { name: "state", id: "maxRows" }
+          },
+          [
+            _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "0", selected: "" } }, [
+              _vm._v("Tất cả")
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+        _vm._v("Tìm kiếm")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-3 mb-2" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-secondary",
+            attrs: { type: "button", id: "select-all" }
+          },
+          [_vm._v("Chọn hết")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          { staticClass: "btn btn-danger", attrs: { type: "button" } },
+          [_vm._v("Xóa")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-9 mb-2" }, [
+      _c("a", { staticClass: "btn btn-success mb-2", attrs: { href: "#" } }, [
+        _c("i", { staticClass: "fas fa-plus-circle" }),
+        _vm._v(" Thêm đoàn viên")
       ])
     ])
   },
@@ -62162,57 +62578,118 @@ var render = function() {
                 ])
           ]),
           _vm._v(" "),
-          _vm._m(6),
-          _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c(
-              "table",
-              {
-                staticClass: "table table-striped table-hover table-bordered",
-                attrs: { id: "table" }
-              },
-              [
+          _c("div", { staticClass: "row" }, [
+            _vm._m(6),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-9" }, [
+              _c("div", { staticClass: "input-group" }, [
                 _vm._m(7),
                 _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.students, function(student, index) {
-                    return _c("tr", { key: index }, [
-                      _c("td", [_vm._v(_vm._s(index + 1))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.name))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(_vm._s(_vm._f("myDateFormat")(student.birthday)))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.user.email))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(student.user.phone))]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        { staticClass: "text-center text-primary" },
-                        [
-                          _c(
-                            "router-link",
-                            { attrs: { to: "/student-profile/" + student.id } },
-                            [_c("i", { staticClass: "far fa-eye" })]
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "search", "aria-label": "Search" },
+                  domProps: { value: _vm.search },
+                  on: {
+                    keyup: _vm.searchit,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "table-responsive" },
+            [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped table-hover table-bordered",
+                  attrs: { id: "table" }
+                },
+                [
+                  _vm._m(8),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.students.data, function(student, index) {
+                      return _c("tr", { key: index }, [
+                        _c("td", [_vm._v(_vm._s(index + 1))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.mssv))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.name))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            _vm._s(_vm._f("myDateFormat")(student.birthday))
                           )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm._m(8, true)
-                    ])
-                  }),
-                  0
-                )
-              ]
-            )
-          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.email))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(student.phone))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          { staticClass: "text-center text-primary" },
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                attrs: { to: "/student-profile/" + student.id }
+                              },
+                              [_c("i", { staticClass: "far fa-eye" })]
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _vm._m(9, true)
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "pagination",
+                {
+                  attrs: { data: _vm.students, limit: 3 },
+                  on: { "pagination-change-page": _vm.getResults }
+                },
+                [
+                  _c(
+                    "span",
+                    { attrs: { slot: "prev-nav" }, slot: "prev-nav" },
+                    [_vm._v("< Prev")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    { attrs: { slot: "next-nav" }, slot: "next-nav" },
+                    [_vm._v("Next >")]
+                  )
+                ]
+              )
+            ],
+            1
+          )
         ])
       : _c("div", { staticClass: "mb-5" }, [_c("not-found")], 1)
   ])
@@ -62276,53 +62753,44 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-3 mb-2" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "input-group-prepend" }, [
-            _c(
-              "span",
-              { staticClass: "input-group-text bg-danger text-white" },
-              [_vm._v("Lọc")]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              staticClass: "form-control",
-              attrs: { name: "state", id: "maxRows" }
-            },
-            [
-              _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "20" } }, [_vm._v("20")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "30" } }, [_vm._v("30")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "40" } }, [_vm._v("40")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "0", selected: "" } }, [
-                _vm._v("Tất cả")
-              ])
-            ]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-9" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "input-group-prepend" }, [
-            _c("span", { staticClass: "input-group-text bg-info text-white" }, [
-              _vm._v("Tìm kiếm")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("input", {
+    return _c("div", { staticClass: "col-md-3 mb-2" }, [
+      _c("div", { staticClass: "input-group" }, [
+        _c("div", { staticClass: "input-group-prepend" }, [
+          _c("span", { staticClass: "input-group-text bg-danger text-white" }, [
+            _vm._v("Lọc")
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
             staticClass: "form-control",
-            attrs: { type: "text", id: "table-search" }
-          })
-        ])
+            attrs: { name: "state", id: "maxRows" }
+          },
+          [
+            _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "20" } }, [_vm._v("20")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "30" } }, [_vm._v("30")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "40" } }, [_vm._v("40")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "0", selected: "" } }, [
+              _vm._v("Tất cả")
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text bg-info text-white" }, [
+        _vm._v("Tìm kiếm")
       ])
     ])
   },

@@ -105,7 +105,10 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination :data="classrooms" @pagination-change-page="getResults"></pagination>
+            <pagination :data="classrooms" @pagination-change-page="getResults" :limit="3">
+                <span slot="prev-nav">&lt; Prev</span>
+	            <span slot="next-nav">Next &gt;</span>
+            </pagination>
         </div>
     </div>
 
@@ -155,16 +158,16 @@ export default {
             }
         },
         searchit: _.debounce(function() {
-                this.$Progress.start()
-                axios.get('/api/findClassroom?fac_id=' + this.faculty_id + '&q=' + this.search)
-                .then((data) => {
-                    this.classrooms = data.data
-                    this.$Progress.finish()
-                })
-                .catch(() => {
-                    this.$Progress.fail()
-                })
-            }, 1500)
+            this.$Progress.start()
+            axios.get('/api/findClassroom?fac_id=' + this.faculty_id + '&q=' + this.search)
+            .then((data) => {
+                this.classrooms = data.data
+                this.$Progress.finish()
+            })
+            .catch(() => {
+                this.$Progress.fail()
+            })
+        }, 1500)
     },
     created() {
         this.loadClassrooms()

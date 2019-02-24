@@ -18,7 +18,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-info text-white">Tìm kiếm</span>
                     </div>
-                    <input type="text" class="form-control" id="table-search" />
+                    <input type="search" class="form-control" v-model="search" @keyup="searchit" aria-label="Search"/>
                 </div>
             </div>
             <div class="col-sm-3 mb-2">
@@ -38,14 +38,14 @@
                     <tr>
                         <th style="width:10px"></th>
                         <th class="text-center" style="width:10px">STT</th>
-                        <th class="width-100">MÃ Khoa</th>
+                        <th class="width-100">Mã Khoa</th>
                         <th class="width-200">Tên Khoa</th>
                         <th>Note</th>
                         <th class="text-center" colspan="2">Tác vụ</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(faculty, index) in faculties" :key="faculty.id">
+                    <tr v-for="(faculty, index) in faculties.data" :key="faculty.id">
                         <td class="text-center"><input type="checkbox"></td>
                         <td class="text-center">{{ index + 1 }}</td>
                         <td>{{ faculty.id | upText}}</td>
@@ -60,6 +60,10 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination :data="faculties" @pagination-change-page="getResults" :limit="3">
+                <span slot="prev-nav">&lt; Prev</span>
+	            <span slot="next-nav">Next &gt;</span>
+            </pagination>
         </div>
 
         <!-- Modal -->
@@ -126,34 +130,55 @@ export default {
                 name: '',
                 note: '',
             }),
+            search: ''
         }
     },
     methods: {
-        loadFaculties(){
-            this.$Progress.start();
-            if(this.$gate.isAdmin()){
-                axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
+        getResults(page = 1) {
+            this.$Progress.start()
+            if(this.search){
+                axios.get('/api/findFaculty?q=' + this.search + '&page=' + page)
+                .then(response => {
+                    this.faculties = response.data
+                    this.$Progress.finish()
+                })
+            }else{
+                axios.get('/api/faculty_admin?page=' + page)
+                .then(response => {
+                    this.faculties = response.data
+                    this.$Progress.finish()
+                })
             }
-            this.$Progress.finish();
+		},
+        loadFaculties(){
+            this.$Progress.start()
+            if(this.$gate.isAdmin()){
+                axios.get('api/faculty_admin').then(({data}) => (
+                    this.faculties = data,
+                    this.$Progress.finish()
+                ))
+            }
         },
         createFaculty(){
-            this.$Progress.start();
+            this.$Progress.start()
             this.form.post('api/faculty_admin')
             .then(() => {
                 //set event to reload faculties
-                Fire.$emit('ReloadFaculty');
-                $('#modalFacultyAdmin').modal('hide');
+                Fire.$emit('ReloadFaculty')
+                $('#modalFacultyAdmin').modal('hide')
                 toast({
                     type: 'success',
                     title: 'Tạo khoa thành công'
-                });
+                })
+                this.$Progress.finish()
             })
             .catch(() => {
-                Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
-            });
-            this.$Progress.finish();
+                Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning')
+                this.$Progress.fail()
+            })
         },
         deleteFaculty(faculty_id){
+            this.$Progress.start()
             Swal({
                 title: 'Bạn có chắc chắn muốn xóa?',
                 text: "Bạn sẽ không thể hoàn lại dữ liệu này!",
@@ -171,10 +196,12 @@ export default {
                         Fire.$emit('ReloadFaculty');
                         if (result.value) {
                             Swal('Đã xóa!', 'Đã xóa khoa thành công.', 'success');
+                            this.$Progress.finish()
                         }
                     })
                     .catch(() => {
                         Swal('Failed!', 'Đã có lỗi xảy ra!', 'warning');
+                        this.$Progress.fail()
                     });
                 }
             })
@@ -207,7 +234,18 @@ export default {
             $('#modalFacultyAdmin').modal('show');
             this.form.fill(faculty);
             this.form.idToUpdate = faculty.id;
-        }
+        },
+        searchit: _.debounce(function() {
+            this.$Progress.start()
+            axios.get('/api/findFaculty?&q=' + this.search)
+            .then((data) => {
+                this.faculties = data.data
+                this.$Progress.finish()
+            })
+            .catch(() => {
+                this.$Progress.fail()
+            })
+        }, 1500)
     },
     created() {
         this.loadFaculties();

@@ -18,7 +18,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-info text-white">Tìm kiếm</span>
                     </div>
-                    <input type="text" class="form-control" id="table-search" />
+                    <input type="search" class="form-control" aria-label="Search" v-model="search" @keyup="searchit"/>
                 </div>
             </div>
             <div class="col-sm-3 mb-2">
@@ -44,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(classroom, index) in classrooms" :key="classroom.id">
+                    <tr v-for="(classroom, index) in classrooms.data" :key="classroom.id">
                         <td class="text-center"><input type="checkbox"></td>
                         <td class="text-center">{{ index + 1 }}</td>
                         <td>{{ classroom.id | upText}}</td>
@@ -58,6 +58,10 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination :data="classrooms" @pagination-change-page="getResults" :limit="3">
+                <span slot="prev-nav">&lt; Prev</span>
+	            <span slot="next-nav">Next &gt;</span>
+            </pagination>
         </div>
 
         <!-- Modal -->
@@ -117,17 +121,33 @@ export default {
                 idToUpdate: '',
                 id: '',
                 faculty_id: '',
-            })
+            }),
+            search: ''
         }
     },
     methods: {
+        getResults(page = 1) {
+            this.$Progress.start()
+            if(this.search){
+                axios.get('/api/findClassroomAdmin?q=' + this.search + '&page=' + page)
+                .then(response => {
+                    this.classrooms = response.data
+                    this.$Progress.finish()
+                })
+            }else{
+                axios.get('/api/classroom_admin?page=' + page)
+                .then(response => {
+                    this.classrooms = response.data
+                    this.$Progress.finish()
+                })
+            }
+		},
         loadClassrooms(){
             this.$Progress.start();
             if(this.$gate.isAdmin()){
-                axios.get('api/classroom_admin').then(({data}) => (this.classrooms = data.data));
-                axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data));
+                axios.get('api/classroom_admin').then(({data}) => (this.classrooms = data));
+                axios.get('api/faculty_admin').then(({data}) => (this.faculties = data.data, this.$Progress.finish()));
             }
-            this.$Progress.finish();
         },
         newModal(){
             this.editMode = false;
@@ -204,7 +224,18 @@ export default {
             .catch(() => {
                 this.$Progress.fail();
             });
-        }
+        },
+        searchit: _.debounce(function() {
+            this.$Progress.start()
+            axios.get('/api/findClassroomAdmin?q=' + this.search)
+            .then((data) => {
+                this.classrooms = data.data
+                this.$Progress.finish()
+            })
+            .catch(() => {
+                this.$Progress.fail()
+            })
+        }, 1500)
     },
     created(){
         this.loadClassrooms();
