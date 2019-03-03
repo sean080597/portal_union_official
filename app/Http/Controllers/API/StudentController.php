@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Student;
+use App\User;
+use App\Role;
 use DB;
+use App\Relation;
 use Image;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -45,7 +48,44 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //check was student?
+        $std = Student::find($request->id);
+        if(isset($std)){
+            return response(['error'=>'Đoàn viên đã tồn tại']);
+        }else{
+            $role = Role::find('stu');
+            $newUser = $role->users()->create($request->all());
+            $student = $newUser->student()->create($request->all());
+            if($student ==='undefined'){
+                $newUser->delete();
+                return response(['error'=>'Không thể tạo đoàn viên']);
+            }
+            else{
+                if($request->father_name !== null){
+                    $father = Relation::create([
+                        'name' => $request->father_name,
+                        'birthday' => $request->father_birthday,
+                        'phone' => $request->father_phone,
+                        'job' => $request->father_job,
+                        'role' => 1
+                    ]);
+                    $father->students()->attach($student);
+                }
+                if($request->mother_name !== null){
+                    $mother = Relation::create([
+                        'name' => $request->mother_name,
+                        'birthday' => $request->mother_birthday,
+                        'phone' => $request->mother_phone,
+                        'job' => $request->mother_job,
+                        'role' => 0
+                    ]);
+                    $mother->students()->attach($student);
+                }
+            }
+        }
+        
+        
+        return response(['success','result'=> $newUser]);
     }
 
     /**

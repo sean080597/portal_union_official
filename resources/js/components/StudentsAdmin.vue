@@ -28,7 +28,9 @@
                 </div>
             </div>
             <div class="col-sm-9 mb-2">
-                <a href="#" class="btn btn-success mb-2"><i class="fas fa-plus-circle"></i> Thêm đoàn viên</a>
+                <router-link :to="'/student-profile-admin/'">
+                    <a class="btn btn-success mb-2"><i class="fas fa-plus-circle"></i> Thêm đoàn viên</a>
+                </router-link>
             </div>
         </div>
 
@@ -76,7 +78,7 @@ export default {
     data() {
         return {
             students: {},
-            search: ''
+            search: '',
         }
     },
     methods: {

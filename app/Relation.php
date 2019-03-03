@@ -16,6 +16,6 @@ class Relation extends Model
 
     public function students()
     {
-        return $this->belongsToMany('App\Student', 'student_relations');
+        return $this->belongsToMany('App\Student', 'student_relations','relation_id','student_id');
     }
 }

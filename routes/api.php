@@ -43,6 +43,7 @@ Route::get('/findClassroomAdmin', 'API\ClassRoomController@searchByAdmin');
 Route::get('/getClassroomAccs/{classroom_id}', 'API\ClassRoomController@getClassroomAccs');
 Route::get('/getStudentsClient/{classroom_id}', 'API\StudentController@index_client');
 Route::put('/updateProfile', 'API\StudentController@updateProfile');
+Route::post('/createStudent', 'API\StudentController@store');
 Route::get('/findStudent', 'API\StudentController@search');
 Route::get('/findStudentAdmin', 'API\StudentController@searchByAdmin');
 

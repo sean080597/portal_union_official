@@ -3382,10 +3382,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['id'],
   data: function data() {
     return {
-      student_id: this.$route.params.student_id,
+      isCreate: '',
       student_info: {},
       faculty_id: '',
       faculties: {},
@@ -3393,19 +3412,25 @@ __webpack_require__.r(__webpack_exports__);
       all_classrooms: {},
       relations: {},
       form: new Form({
-        id: this.$route.params.student_id,
+        // user
         name: '',
+        phone: '',
+        email: '',
+        //password:'',
+        image: 'img_avatar1.png',
+        //class
+        class_room_id: '',
+        //student
+        id: '',
         birthday: '',
         sex: '',
         hometown: '',
         union_date: '',
         religion: '',
-        is_submit: '',
-        phone: '',
-        email: '',
+        ethnic: '',
+        is_submit: 0,
         address: '',
-        image: '',
-        class_room_id: '',
+        //relation
         father_name: '',
         father_birthday: '',
         father_phone: '',
@@ -3419,35 +3444,78 @@ __webpack_require__.r(__webpack_exports__);
       isFirstLoading: true
     };
   },
+  created: function created() {
+    this.$Progress.start(); //check id exist
+
+    if (this.id) {
+      //show info
+      this.isCreate = false;
+      this.student_id = this.id;
+      this.getStudent(this.id);
+      this.getRelationsInfo(this.id);
+    } else {
+      //create new student allowed
+      this.isCreate = true;
+      Vue.set(this.form.password, '');
+    }
+
+    this.getFaculties();
+    this.getClasses();
+    this.$Progress.finish();
+  },
   methods: {
-    loadStudentInfo: function loadStudentInfo() {
+    isAdmin: function isAdmin() {
+      if (this.$gate.isAdmin) {
+        return true;
+      }
+
+      return false;
+    },
+    // loadStudentInfo(){
+    //     this.$Progress.start();
+    //     if(this.$gate.isAdmin()){
+    //         axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(({data}) => (
+    //             this.student_info = data[0],
+    //             this.faculty_id = data[0].faculty_id,
+    //             this.form.name = data[0].name,
+    //             this.form.birthday = data[0].birthday,
+    //             this.form.sex = data[0].sex,
+    //             this.form.hometown = data[0].hometown,
+    //             this.form.union_date = data[0].union_date,
+    //             this.form.religion = data[0].religion,
+    //             this.form.is_submit = data[0].is_submit,
+    //             this.form.phone = data[0].phone,
+    //             this.form.email = data[0].email,
+    //             this.form.address = data[0].address,
+    //             this.form.class_room_id = data[0].class_room_id,
+    //             this.form.image = (data[0].image != null) ? data[0].image : 'img_avatar1.png',
+    //             //set old image
+    //             this.oldProfileImage = (data[0].image != null) ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png',
+    //             this.$Progress.increase(20)
+    //         ));
+    //         axios.get('/api/getAllFaculties').then(({data}) => (
+    //             this.faculties = data, this.$Progress.increase(20)
+    //         ));
+    //         axios.get('/api/getAllClassrooms').then(({data}) => (
+    //             this.all_classrooms = data, this.$Progress.increase(20)
+    //         )).then(() => { this.filtedClassrooms() });
+    //         axios.get('/api/getRelationsByStuId/' + this.student_id).then(({data}) => (
+    //             this.relations = data,
+    //             this.assignRelationsInfo(this.form, data),
+    //             this.$Progress.finish()
+    //         ));
+    //     }else{
+    //         this.$Progress.fail();
+    //     }
+    // },
+    getStudent: function getStudent(id) {
       var _this = this;
 
-      this.$Progress.start();
-
-      if (this.$gate.isAdmin()) {
-        axios.get('/api/getUserStudentInfoByStuId/' + this.student_id).then(function (_ref) {
-          var data = _ref.data;
-          return _this.student_info = data[0], _this.faculty_id = data[0].faculty_id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set old image
-          _this.oldProfileImage = data[0].image != null ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png', _this.$Progress.increase(20);
-        });
-        axios.get('/api/getAllFaculties').then(function (_ref2) {
-          var data = _ref2.data;
-          return _this.faculties = data, _this.$Progress.increase(20);
-        });
-        axios.get('/api/getAllClassrooms').then(function (_ref3) {
-          var data = _ref3.data;
-          return _this.all_classrooms = data, _this.$Progress.increase(20);
-        }).then(function () {
-          _this.filtedClassrooms();
-        });
-        axios.get('/api/getRelationsByStuId/' + this.student_id).then(function (_ref4) {
-          var data = _ref4.data;
-          return _this.relations = data, _this.assignRelationsInfo(_this.form, data), _this.$Progress.finish();
-        });
-      } else {
-        this.$Progress.fail();
-      }
+      axios.get('/api/getUserStudentInfoByStuId/' + id).then(function (_ref) {
+        var data = _ref.data;
+        return _this.faculty_id = data[0].faculty_id, _this.form.id = id, _this.form.name = data[0].name, _this.form.birthday = data[0].birthday, _this.form.sex = data[0].sex, _this.form.hometown = data[0].hometown, _this.form.union_date = data[0].union_date, _this.form.religion = data[0].religion, _this.form.ethnic = data[0].ethnic, _this.form.is_submit = data[0].is_submit, _this.form.phone = data[0].phone, _this.form.email = data[0].email, _this.form.address = data[0].address, _this.form.class_room_id = data[0].class_room_id, _this.form.image = data[0].image != null ? data[0].image : 'img_avatar1.png', //set old image
+        _this.oldProfileImage = data[0].image != null ? '/theme/images_profile/' + data[0].image : '/theme/images/img_avatar1.png';
+      });
     },
     assignRelationsInfo: function assignRelationsInfo(form, relations) {
       $.each(relations, function (index, value) {
@@ -3458,8 +3526,36 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    updateImageProfile: function updateImageProfile(e) {
+    getRelationsInfo: function getRelationsInfo(id) {
       var _this2 = this;
+
+      axios.get('/api/getRelationsByStuId/' + id).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.assignRelationsInfo(_this2.form, data);
+      });
+    },
+    getFaculties: function getFaculties() {
+      var _this3 = this;
+
+      axios.get('/api/getAllFaculties').then(function (response) {
+        _this3.faculties = response.data;
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    getClasses: function getClasses() {
+      var _this4 = this;
+
+      axios.get('/api/getAllClassrooms').then(function (response) {
+        _this4.all_classrooms = response.data;
+      }).then(function () {
+        _this4.filtedClassrooms();
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    updateImageProfile: function updateImageProfile(e) {
+      var _this5 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -3468,7 +3564,7 @@ __webpack_require__.r(__webpack_exports__);
         if (file['type'] == "image/jpeg" || file['type'] == "image/jpg" || file['type'] == "image/png") {
           if (file['size'] < 2097153) {
             reader.onloadend = function (file) {
-              _this2.form.image = reader.result;
+              _this5.form.image = reader.result;
             };
 
             reader.readAsDataURL(file);
@@ -3495,28 +3591,6 @@ __webpack_require__.r(__webpack_exports__);
         $("#update-profile-img").attr("src", this.oldProfileImage);
       }
     },
-    submitChangeInfoStudent: function submitChangeInfoStudent() {
-      var _this3 = this;
-
-      this.$Progress.start();
-      this.$validator.validateAll().then(function (result) {
-        if (result) {
-          _this3.form.put('/api/updateProfile').then(function () {
-            toast({
-              type: 'success',
-              title: 'Đã sửa thông tin thành công!'
-            });
-
-            _this3.$Progress.finish();
-          }).catch(function () {
-            _this3.$Progress.fail();
-          });
-        } else {
-          // Swal('error', 'Chưa điền đầy đủ thông tin!', 'error');
-          _this3.$Progress.fail();
-        }
-      });
-    },
     getProfileImage: function getProfileImage() {
       if (this.form.image == 'img_avatar1.png') {
         return "/theme/images/img_avatar1.png";
@@ -3525,7 +3599,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     filtedClassrooms: function filtedClassrooms() {
-      var _this4 = this;
+      var _this6 = this;
 
       if (!this.isFirstLoading) {
         //reset select option
@@ -3535,12 +3609,59 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.classrooms = this.all_classrooms.filter(function (el) {
-        return el.faculty_id == _this4.faculty_id;
+        return el.faculty_id == _this6.faculty_id;
+      });
+    },
+    submitChangeInfoStudent: function submitChangeInfoStudent() {
+      var _this7 = this;
+
+      this.$Progress.start();
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this7.form.put('/api/updateProfile').then(function () {
+            toast({
+              type: 'success',
+              title: 'Đã sửa thông tin thành công!'
+            });
+
+            _this7.$Progress.finish();
+          }).catch(function () {
+            _this7.$Progress.fail();
+          });
+        } else {
+          // Swal('error', 'Chưa điền đầy đủ thông tin!', 'error');
+          _this7.$Progress.fail();
+        }
+      });
+    },
+    createStudent: function createStudent() {
+      var _this8 = this;
+
+      this.$Progress.start();
+      this.form.password = this.form.id;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this8.form.post('/api/createStudent').then(function () {
+            toast({
+              type: 'success',
+              title: 'Đã thêm thông tin thành công!'
+            });
+
+            _this8.$Progress.finish();
+          }).catch(function () {
+            _this8.$Progress.fail();
+          });
+        } else {
+          // Swal('error', 'Chưa điền đầy đủ thông tin!', 'error');
+          toast({
+            type: 'error',
+            title: 'Tạo không thành công!'
+          });
+
+          _this8.$Progress.fail();
+        }
       });
     }
-  },
-  created: function created() {
-    this.loadStudentInfo();
   }
 });
 
@@ -3786,6 +3907,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -60184,7 +60307,9 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  return _vm.submitChangeInfoStudent($event)
+                  _vm.isCreate
+                    ? _vm.createStudent()
+                    : _vm.submitChangeInfoStudent()
                 }
               }
             },
@@ -60193,27 +60318,72 @@ var render = function() {
                 _c("div", { staticClass: "input-group mb-3 col-12" }, [
                   _vm._m(0),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.id,
-                        expression: "form.id"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", disabled: "" },
-                    domProps: { value: _vm.form.id },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _vm.isCreate
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.id,
+                            expression: "form.id"
+                          },
+                          {
+                            name: "validate",
+                            rawName: "v-validate",
+                            value: "required|max:11",
+                            expression: "'required|max:11'"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: { "is-invalid": _vm.errors.has("name") },
+                        attrs: { name: "mssv", id: "mssv", type: "text" },
+                        domProps: { value: _vm.form.id },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "id", $event.target.value)
+                          }
                         }
-                        _vm.$set(_vm.form, "id", $event.target.value)
-                      }
-                    }
-                  })
+                      })
+                    : _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.id,
+                            expression: "form.id"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", disabled: "" },
+                        domProps: { value: _vm.form.id },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "id", $event.target.value)
+                          }
+                        }
+                      }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("mssv"),
+                          expression: "errors.has('mssv')"
+                        }
+                      ],
+                      staticClass: "invalid-feedback"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("mssv")))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-md-6" }, [
@@ -60354,9 +60524,16 @@ var render = function() {
                                     rawName: "v-model",
                                     value: _vm.form.sex,
                                     expression: "form.sex"
+                                  },
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
                                   }
                                 ],
                                 staticClass: "form-control",
+                                class: { "is-invalid": _vm.form.sex == "" },
                                 attrs: { name: "sex", id: "sex" },
                                 on: {
                                   change: function($event) {
@@ -60382,7 +60559,7 @@ var render = function() {
                               [
                                 _c(
                                   "option",
-                                  { attrs: { value: "-1", disabled: "" } },
+                                  { attrs: { value: "", disabled: "" } },
                                   [_vm._v("=== Chọn giới tính ===")]
                                 ),
                                 _vm._v(" "),
@@ -60626,8 +60803,8 @@ var render = function() {
                                 {
                                   name: "validate",
                                   rawName: "v-validate",
-                                  value: "numeric|min:10",
-                                  expression: "'numeric|min:10'"
+                                  value: "required|numeric|min:10",
+                                  expression: "'required|numeric|min:10'"
                                 }
                               ],
                               staticClass: "form-control",
@@ -60760,8 +60937,8 @@ var render = function() {
                             {
                               name: "validate",
                               rawName: "v-validate",
-                              value: "required|min:10|max:100",
-                              expression: "'required|min:10|max:100'"
+                              value: "required|min:10|max:200",
+                              expression: "'required|min:10|max:200'"
                             }
                           ],
                           staticClass: "form-control",
@@ -60867,10 +61044,18 @@ var render = function() {
                                   }
                                 },
                                 [
-                                  _vm._v(_vm._s(faculty.name) + " "),
+                                  _vm._v(
+                                    "\r\n                                        " +
+                                      _vm._s(faculty.name) +
+                                      "\r\n                                        "
+                                  ),
                                   faculty.note !== null
                                     ? _c("span", [
-                                        _vm._v("/ " + _vm._s(faculty.note))
+                                        _vm._v(
+                                          "\r\n                                            / " +
+                                            _vm._s(faculty.note) +
+                                            "\r\n                                        "
+                                        )
                                       ])
                                     : _vm._e()
                                 ]
@@ -60947,7 +61132,13 @@ var render = function() {
                                       _vm.student_info.class_room_id
                                   }
                                 },
-                                [_vm._v(_vm._s(classroom.id))]
+                                [
+                                  _vm._v(
+                                    "\r\n                                        " +
+                                      _vm._s(classroom.id) +
+                                      "\r\n                                    "
+                                  )
+                                ]
                               )
                             })
                           ],
@@ -60997,8 +61188,8 @@ var render = function() {
                             {
                               name: "validate",
                               rawName: "v-validate",
-                              value: "alpha_spaces",
-                              expression: "'alpha_spaces'"
+                              value: "max:200",
+                              expression: "'max:200'"
                             }
                           ],
                           staticClass: "form-control",
@@ -61166,8 +61357,8 @@ var render = function() {
                             {
                               name: "validate",
                               rawName: "v-validate",
-                              value: "alpha_spaces",
-                              expression: "'alpha_spaces'"
+                              value: "max:200",
+                              expression: "'max:200'"
                             }
                           ],
                           staticClass: "form-control",
@@ -61235,8 +61426,8 @@ var render = function() {
                             {
                               name: "validate",
                               rawName: "v-validate",
-                              value: "alpha_spaces",
-                              expression: "'alpha_spaces'"
+                              value: "max:200",
+                              expression: "'max:200'"
                             }
                           ],
                           staticClass: "form-control",
@@ -61404,8 +61595,8 @@ var render = function() {
                             {
                               name: "validate",
                               rawName: "v-validate",
-                              value: "alpha_spaces",
-                              expression: "'alpha_spaces'"
+                              value: "max:200",
+                              expression: "'max:200'"
                             }
                           ],
                           staticClass: "form-control",
@@ -61450,14 +61641,45 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-success mx-auto mt-3",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v("Lưu thông tin")]
-                )
+                this.isAdmin()
+                  ? _c("div", { staticClass: "mx-auto mt-3" }, [
+                      _vm.isCreate == true
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-success",
+                              attrs: { type: "submit" }
+                            },
+                            [_vm._v("Tạo mới")]
+                          )
+                        : _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "submit" }
+                            },
+                            [_vm._v("Lưu thông tin")]
+                          )
+                    ])
+                  : _c("div", { staticClass: "mx-auto mt-3" }, [
+                      _vm.isCreate == true
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-success",
+                              attrs: { type: "submit", disabled: "" }
+                            },
+                            [_vm._v("Tạo mới")]
+                          )
+                        : _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "submit", disabled: "" }
+                            },
+                            [_vm._v("Lưu thông tin")]
+                          )
+                    ])
               ])
             ]
           )
@@ -62259,7 +62481,23 @@ var render = function() {
             _vm._v(" "),
             _vm._m(2),
             _vm._v(" "),
-            _vm._m(3)
+            _c(
+              "div",
+              { staticClass: "col-sm-9 mb-2" },
+              [
+                _c(
+                  "router-link",
+                  { attrs: { to: "/student-profile-admin/" } },
+                  [
+                    _c("a", { staticClass: "btn btn-success mb-2" }, [
+                      _c("i", { staticClass: "fas fa-plus-circle" }),
+                      _vm._v(" Thêm đoàn viên")
+                    ])
+                  ]
+                )
+              ],
+              1
+            )
           ]),
           _vm._v(" "),
           _c(
@@ -62273,13 +62511,13 @@ var render = function() {
                   attrs: { id: "table" }
                 },
                 [
-                  _vm._m(4),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c(
                     "tbody",
                     _vm._l(_vm.students.data, function(student, index) {
                       return _c("tr", { key: index }, [
-                        _vm._m(5, true),
+                        _vm._m(4, true),
                         _vm._v(" "),
                         _c("td", { staticClass: "text-center" }, [
                           _vm._v(_vm._s(index + 1))
@@ -62311,7 +62549,7 @@ var render = function() {
                           1
                         ),
                         _vm._v(" "),
-                        _vm._m(6, true)
+                        _vm._m(5, true)
                       ])
                     }),
                     0
@@ -62406,17 +62644,6 @@ var staticRenderFns = [
           { staticClass: "btn btn-danger", attrs: { type: "button" } },
           [_vm._v("Xóa")]
         )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-sm-9 mb-2" }, [
-      _c("a", { staticClass: "btn btn-success mb-2", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "fas fa-plus-circle" }),
-        _vm._v(" Thêm đoàn viên")
       ])
     ])
   },
@@ -62651,7 +62878,9 @@ var render = function() {
                             _c(
                               "router-link",
                               {
-                                attrs: { to: "/student-profile/" + student.id }
+                                attrs: {
+                                  to: "/student-profile/" + student.mssv
+                                }
                               },
                               [_c("i", { staticClass: "far fa-eye" })]
                             )
@@ -81106,8 +81335,12 @@ var routes = [{
   path: '/students-admin',
   component: __webpack_require__(/*! ./components/StudentsAdmin.vue */ "./resources/js/components/StudentsAdmin.vue").default
 }, {
-  path: '/student-profile-admin/:student_id',
+  path: '/student-profile-admin',
   component: __webpack_require__(/*! ./components/StudentProfileAdmin.vue */ "./resources/js/components/StudentProfileAdmin.vue").default
+}, {
+  path: '/student-profile-admin/:id',
+  component: __webpack_require__(/*! ./components/StudentProfileAdmin.vue */ "./resources/js/components/StudentProfileAdmin.vue").default,
+  props: true
 }, {
   path: '/evaluate-profile/:student_id',
   component: __webpack_require__(/*! ./components/EvaluateProfile_lab.vue */ "./resources/js/components/EvaluateProfile_lab.vue").default
@@ -81264,8 +81497,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\portal_union_official-lab\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\portal_union_official-lab\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\laravel\portal_union_official\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\laravel\portal_union_official\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -96,7 +96,7 @@
                         <td>{{ student.email }}</td>
                         <td>{{ student.phone }}</td>
                         <td class="text-center text-primary">
-                            <router-link :to="'/student-profile/' + student.id"><i class="far fa-eye"></i></router-link>
+                            <router-link :to="'/student-profile/' + student.mssv"><i class="far fa-eye"></i></router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">hello</span>
