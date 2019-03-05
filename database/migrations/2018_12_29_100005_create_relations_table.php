@@ -14,7 +14,7 @@ class CreateRelationsTable extends Migration
     public function up()
     {
         Schema::create('relations', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unique();
             $table->string('name', 50);
             $table->date('birthday')->nullable();
             $table->char('phone', 10)->nullable();

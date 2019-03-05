@@ -14,6 +14,7 @@ class CreateStudentCriteriaSelregisTable extends Migration
     public function up()
     {
         Schema::create('student_criteria_selregis', function (Blueprint $table) {
+            $table->increments('id')->unique();
             $table->char('student_id', 10);
             $table->integer('criteria_id')->unsigned();
             $table->text('content_regis');
@@ -22,7 +23,7 @@ class CreateStudentCriteriaSelregisTable extends Migration
             $table->tinyInteger('mark_classroom')->unsigned()->default('0');
             $table->tinyInteger('mark_faculty')->unsigned()->default('0');
             $table->tinyInteger('mark_school')->unsigned()->default('0');
-            $table->primary(array('student_id', 'criteria_id'));
+            // $table->primary(array('student_id', 'criteria_id'));
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('criteria_id')->references('id')->on('criteria_selregis')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

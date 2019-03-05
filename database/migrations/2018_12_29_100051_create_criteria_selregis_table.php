@@ -14,7 +14,7 @@ class CreateCriteriaSelregisTable extends Migration
     public function up()
     {
         Schema::create('criteria_selregis', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unique();
             $table->text('content');
             $table->timestamps();
         });

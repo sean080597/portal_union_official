@@ -59,7 +59,9 @@ Route::get('/allblahblah', function(){
     return Student::where('class_room_id', '15DTH12')->latest()->get()->chunk(50);
 });
 
-//Criteria
+//Criteria evaluation
 Route::get('/getMarkCriMan/{student_id}', 'API\StudentCriteriaMandatoryController@show');
 Route::get('/getMarkCriSel/{student_id}', 'API\StudentCriteriaSelregisController@show');
 Route::post('/submitEvaluation', 'API\SubmitEvaluationInfoController@submitEvaluation');
+
+Route::get('/getResultEvaluateClassroom/{classroom_id}', 'API\StudentController@getResultEvaluateClassroom');

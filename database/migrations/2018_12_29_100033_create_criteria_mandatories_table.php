@@ -14,7 +14,7 @@ class CreateCriteriaMandatoriesTable extends Migration
     public function up()
     {
         Schema::create('criteria_mandatories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id')->unique();
             $table->text('content');
             $table->timestamps();
         });

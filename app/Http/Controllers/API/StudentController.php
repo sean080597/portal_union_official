@@ -83,8 +83,6 @@ class StudentController extends Controller
                 }
             }
         }
-        
-        
         return response(['success','result'=> $newUser]);
     }
 
@@ -206,5 +204,10 @@ class StudentController extends Controller
             ->join('faculties AS f', 'f.id', '=', 'c.faculty_id')
             ->orderBy('c.id', 'ASC')->paginate(30);
         }
+    }
+
+    //Evaluation Info
+    public function getResultEvaluateClassroom($classroom_id){
+        
     }
 }

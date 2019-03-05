@@ -14,7 +14,7 @@ class CreateClassRoomsTable extends Migration
     public function up()
     {
         Schema::create('class_rooms', function (Blueprint $table) {
-            $table->string('id', 10);
+            $table->string('id', 10)->unique();
             $table->string('faculty_id', 4);
             $table->integer('uid_secretary')->unsigned()->nullable();
             $table->integer('uid_deputysecre1')->unsigned()->nullable();

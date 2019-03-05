@@ -14,7 +14,7 @@ class CreateFacultiesTable extends Migration
     public function up()
     {
         Schema::create('faculties', function (Blueprint $table) {
-            $table->string('id', 4);
+            $table->string('id', 4)->unique();
             $table->string('name', 50);
             $table->string('note', 20)->nullable();
             $table->integer('uid_secretary')->unsigned()->nullable();
