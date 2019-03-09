@@ -15,7 +15,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 import VeeValidate from 'vee-validate'
-import vSelect from 'vue-select'
 import VueRouter from 'vue-router'
 import {routes} from './routes'
 import StoreData from './store'
@@ -32,7 +31,6 @@ Vue.prototype.$gate = new Gate(window.user, window.stud, window.facu)
 Vue.use(VeeValidate)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-Vue.component('v-select', vSelect)
 
 const store = new Vuex.Store(StoreData);
 //vue form

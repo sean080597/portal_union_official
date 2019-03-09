@@ -17,7 +17,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Năm Học</span>
                         </div>
-                        <select class="form-control">
+                        <select class="form-control" disabled>
                             <option value="2013-2014">2013-2014</option>
                             <option value="2014-2015">2014-2015</option>
                             <option value="2015-2016">2015-2016</option>
@@ -31,14 +31,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Thống kê</span>
                         </div>
-                        <select class="form-control">
+                        <select class="form-control" disabled>
                             <option value="3">Đoàn viên</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 mb-2">
-                <select class="form-control">
+                <select class="form-control" disabled>
                     <option value="-1">Tác vụ khác</option>
                 </select>
             </div>
@@ -58,7 +58,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-info text-white">Tìm kiếm</span>
                     </div>
-                    <input type="text" class="form-control" id="table-search" />
+                    <input type="search" class="form-control" aria-label="Search" v-model="search" @keyup="searchit"/>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                         <td class="text-center">{{ stu.rank }}</td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-success" v-if="stu.mark_student != null">Hoàn thành</span>
-                            <span class="badge badge-pill badge-danger" v-else>Chưa xong</span>
+                            <span class="badge badge-pill badge-warning" v-else>Chưa xong</span>
                         </td>
                         <td class="text-center">
                             <router-link :to="'/evaluate-profile/'+stu.id" class="text-primary"><i class="fas fa-pencil-alt"></i></router-link>
@@ -131,12 +131,11 @@ export default {
         getResults(page = 1) {
             this.$Progress.start()
             if(this.search){
-                // axios.get('/api/findClassroomAdmin?q=' + this.search + '&page=' + page)
-                // .then(response => {
-                //     this.classrooms = response.data
-                //     this.$Progress.finish()
-                // })
-                Swal('SORRY!', 'Coming soon!', 'warning')
+                axios.get('/api/findEvaluateStudentsStatistic?cla_id='+this.classroom_id+'&y='+this.year+'&q=' + this.search+'&page='+page)
+                .then(response => {
+                    this.students = response.data
+                    this.$Progress.finish()
+                })
             }else{
                 axios.get('/api/getStatisticStudentsDetail/'+this.classroom_id+'?y='+this.year+'&page=' + page)
                 .then(response => {
@@ -155,6 +154,17 @@ export default {
                 this.$Progress.fail();
             }
         },
+        searchit: _.debounce(function() {
+            this.$Progress.start()
+            axios.get('/api/findEvaluateStudentsStatistic?cla_id='+this.classroom_id+'&y='+this.year+'&q=' + this.search)
+            .then((data) => {
+                this.students = data.data
+                this.$Progress.finish()
+            })
+            .catch(() => {
+                this.$Progress.fail()
+            })
+        }, 1500)
     },
     created() {
         this.loadStudents();

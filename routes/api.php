@@ -55,9 +55,6 @@ Route::get('/getRelationsByStuId/{student_id}', 'API\StudentController@getRelati
 
 //get role
 Route::get('/indexWithoutSchoolLeaderAccs', 'API\RoleController@indexWithoutSchoolLeaderAccs');
-Route::get('/allblahblah', function(){
-    return Student::where('class_room_id', '15DTH12')->latest()->get()->chunk(50);
-});
 
 //Criteria evaluation
 Route::get('/getMarkCriMan/{student_id}', 'API\StudentCriteriaMandatoryController@show');
@@ -66,3 +63,10 @@ Route::post('/submitEvaluation', 'API\SubmitEvaluationInfoController@submitEvalu
 
 Route::get('/getStatisticStudentsDetail/{classroom_id}', 'API\StudentController@getStatisticStudentsDetail');
 Route::get('/getStatisticStudentsDashboard/{classroom_id}', 'API\StudentController@getStatisticStudentsDashboard');
+
+Route::get('/findEvaluateStudentsStatistic', 'API\StudentController@findEvaluateStudentsStatistic');
+
+//blahblah
+Route::get('/allblahblah', function(){
+    return Student::where('class_room_id', '15DTH12')->latest()->get()->chunk(50);
+});

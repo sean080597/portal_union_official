@@ -10,7 +10,7 @@
             </ul>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-3 mb-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -30,7 +30,7 @@
                     <input type="text" class="form-control" id="table-search" />
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered" id="table">
