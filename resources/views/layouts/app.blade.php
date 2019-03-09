@@ -100,7 +100,7 @@
                             @cannot('isAdminOrAccSchool')
                                 <li><router-link to="/evaluate-profile/{{ auth()->user()->student->id }}">ĐG cá nhân</router-link></li>
                                 @cannot('isAccStudent')
-                                <li><router-link to="/evaluate-students/{{ auth()->user()->student->class_room_id }}">Lớp quản lý</router-link></li>
+                                <li><router-link to="/evaluate-students-dashboard/{{ auth()->user()->student->class_room_id }}">Lớp quản lý</router-link></li>
                                 @endcannot
                                 @can('isAccFaculty')
                                 <li><a href="QLTongKhoa.html">Khoa quản lý</a></li>

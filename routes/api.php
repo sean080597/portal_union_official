@@ -64,4 +64,5 @@ Route::get('/getMarkCriMan/{student_id}', 'API\StudentCriteriaMandatoryControlle
 Route::get('/getMarkCriSel/{student_id}', 'API\StudentCriteriaSelregisController@show');
 Route::post('/submitEvaluation', 'API\SubmitEvaluationInfoController@submitEvaluation');
 
-Route::get('/getResultEvaluateClassroom/{classroom_id}', 'API\StudentController@getResultEvaluateClassroom');
+Route::get('/getStatisticStudentsDetail/{classroom_id}', 'API\StudentController@getStatisticStudentsDetail');
+Route::get('/getStatisticStudentsDashboard/{classroom_id}', 'API\StudentController@getStatisticStudentsDashboard');

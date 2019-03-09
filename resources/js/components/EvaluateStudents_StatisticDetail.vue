@@ -82,21 +82,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td>15110993</td>
-                        <td>Trương Quốc Cẩm</td>
-                        <td>10/10/1990</td>
-                        <td class="text-center">100</td>
-                        <td class="text-center">100</td>
-                        <td class="text-center">100</td>
-                        <td class="text-center">100</td>
-                        <td class="text-center">Giỏi</td>
+                    <tr v-for="(stu, index) in students.data" :key="index">
+                        <td class="text-center">{{ index + 1 }}</td>
+                        <td>{{ stu.id }}</td>
+                        <td>{{ stu.name }}</td>
+                        <td>{{ stu.birthday | myDateFormat }}</td>
+                        <td class="text-center">{{ stu.mark_student }}</td>
+                        <td class="text-center">{{ stu.mark_classroom }}</td>
+                        <td class="text-center">{{ stu.mark_faculty }}</td>
+                        <td class="text-center">{{ stu.mark_school }}</td>
+                        <td class="text-center">{{ stu.rank }}</td>
                         <td class="text-center">
-                            <span class="badge badge-pill badge-success">Hoàn thành</span>
+                            <span class="badge badge-pill badge-success" v-if="stu.mark_student != null">Hoàn thành</span>
+                            <span class="badge badge-pill badge-danger" v-else>Chưa xong</span>
                         </td>
                         <td class="text-center">
-                            <a href="DGDV.html" class="text-primary"><i class="fas fa-pencil-alt"></i></a>
+                            <router-link :to="'/evaluate-profile/'+stu.id" class="text-primary"><i class="fas fa-pencil-alt"></i></router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">note</span>
@@ -104,11 +105,10 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="pagination-container">
-                <nav>
-                    <ul class="pagination justify-content-end"></ul>
-                </nav>
-            </div>
+            <pagination :data="students" @pagination-change-page="getResults" :limit="3">
+                <span slot="prev-nav">&lt; Prev</span>
+	            <span slot="next-nav">Next &gt;</span>
+            </pagination>
         </div>
     </div>
 
@@ -122,15 +122,33 @@ export default {
     data() {
         return {
             classroom_id: this.$route.params.classroom_id,
+            year: this.$route.query.y,
             students: {},
             search: ''
         }
     },
     methods: {
+        getResults(page = 1) {
+            this.$Progress.start()
+            if(this.search){
+                // axios.get('/api/findClassroomAdmin?q=' + this.search + '&page=' + page)
+                // .then(response => {
+                //     this.classrooms = response.data
+                //     this.$Progress.finish()
+                // })
+                Swal('SORRY!', 'Coming soon!', 'warning')
+            }else{
+                axios.get('/api/getStatisticStudentsDetail/'+this.classroom_id+'?y='+this.year+'&page=' + page)
+                .then(response => {
+                    this.students = response.data
+                    this.$Progress.finish()
+                })
+            }
+		},
         loadStudents(){
             this.$Progress.start();
             if(this.$gate.isStudentsPagePassed()){
-                axios.get('/api/getStudentsClient/' + this.classroom_id).then(({data}) => (
+                axios.get('/api/getStatisticStudentsDetail/' + this.classroom_id + '?y='+this.year).then(({data}) => (
                     this.students = data, this.$Progress.finish()
                 ));
             }else{
@@ -139,7 +157,7 @@ export default {
         },
     },
     created() {
-        // this.loadStudents();
+        this.loadStudents();
     },
 }
 </script>

@@ -207,7 +207,43 @@ class StudentController extends Controller
     }
 
     //Evaluation Info
-    public function getResultEvaluateClassroom($classroom_id){
-        
+    public function getStatisticStudentsDetail($classroom_id){
+        $year = \Request::get('y');
+
+        $arr_condition = ['Xuất sắc', 'Khá', 'Trung bình', 'Yếu'];
+        $sql_condition = 'CASE WHEN SUM(mark_school)>84 THEN "'.$arr_condition[0]
+        .'" WHEN SUM(mark_school)>69 THEN "'.$arr_condition[1]
+        .'" WHEN SUM(mark_school)>49 THEN "'.$arr_condition[2]
+        .'" ELSE "'.$arr_condition[3].'" END rank, ';
+
+        return DB::table('students as s')
+            ->select('s.id', 's.name', 's.birthday', 'tb_mark.*')
+            ->leftJoin(DB::raw('(SELECT student_id, SUM(mark_student) mark_student, SUM(mark_classroom) mark_classroom, SUM(mark_faculty) mark_faculty, SUM(mark_school) mark_school,'
+            .$sql_condition.'YEAR(updated_at) updated_at '
+            .'FROM (SELECT scm.student_id, scm.mark_student, scm.mark_classroom, scm.mark_faculty, scm.mark_school, scm.updated_at FROM student_criteria_mandatories scm UNION ALL
+            SELECT scs.student_id, scs.mark_student, scs.mark_classroom, scs.mark_faculty, scs.mark_school, scs.updated_at FROM student_criteria_selregis scs) alias
+            WHERE YEAR(updated_at) = '.$year.'
+            GROUP BY student_id, updated_at) tb_mark'), function($join){
+                $join->on('s.id', '=', 'tb_mark.student_id');
+            })
+            ->where('s.class_room_id', $classroom_id)
+            ->paginate(25);
+    }
+
+    public function getStatisticStudentsDashboard($classroom_id){
+        $result['data'] = DB::table('students as s')
+            ->select(DB::raw('COUNT(mark_student) notnull, tb_mark.updated_at'))
+            ->join(DB::raw('(SELECT student_id, SUM(mark_student) mark_student, YEAR(updated_at) updated_at
+            FROM (SELECT scm.student_id, scm.mark_student, scm.updated_at FROM student_criteria_mandatories scm UNION ALL
+                SELECT scs.student_id, scs.mark_student, scs.updated_at FROM student_criteria_selregis scs) alias
+            GROUP BY student_id, updated_at) tb_mark'), function($join){
+                $join->on('s.id', '=', 'tb_mark.student_id');
+            })
+            ->where('s.class_room_id', $classroom_id)
+            ->groupBy('updated_at')
+            ->get();
+
+        $result['total_quantity'] = DB::table('students as s')->where('class_room_id', $classroom_id)->count();
+        return $result;
     }
 }

@@ -12,6 +12,7 @@ export const routes = [
     { path: '/student-profile-admin', component: require('./components/StudentProfileAdmin.vue').default},
     { path: '/student-profile-admin/:id', component: require('./components/StudentProfileAdmin.vue').default, props:true },
     { path: '/evaluate-profile/:student_id', component: require('./components/EvaluateProfile.vue').default },
-    { path: '/evaluate-students/:classroom_id', component: require('./components/EvaluateStudents_Statistic.vue').default },
+    { path: '/evaluate-students-dashboard/:classroom_id', component: require('./components/EvaluateStudents_StatisticDashboard.vue').default },
+    { path: '/evaluate-students-detail/:classroom_id', component: require('./components/EvaluateStudents_StatisticDetail.vue').default },
     { path: '*', component: require('./components/NotFound.vue').default },
 ];
