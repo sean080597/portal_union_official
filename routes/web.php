@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +13,9 @@
 
 Auth::routes();
 Route::get('/user-info', function(){
-  dd(auth()->user());
-});
+  return auth()->user();
+})->middleware('auth');
+// Route::get('/try', function(){
+//   return auth()->user()->getFaculty;
+// });
 Route::get('{path}', "HomeController@index")->where( 'path', '([A-z\d-\/_.]+)?' );

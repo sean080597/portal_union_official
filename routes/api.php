@@ -61,10 +61,13 @@ Route::get('/getMarkCriMan/{student_id}', 'API\StudentCriteriaMandatoryControlle
 Route::get('/getMarkCriSel/{student_id}', 'API\StudentCriteriaSelregisController@show');
 Route::post('/submitEvaluation', 'API\SubmitEvaluationInfoController@submitEvaluation');
 
-Route::get('/getStatisticStudentsDetail/{classroom_id}', 'API\StudentController@getStatisticStudentsDetail');
-Route::get('/getStatisticStudentsDashboard/{classroom_id}', 'API\StudentController@getStatisticStudentsDashboard');
+Route::get('/getStatisticClassroomDetail/{classroom_id}', 'API\StudentController@getStatisticClassroomDetail');
+Route::get('/getStatisticClassroomDashboard/{classroom_id}', 'API\StudentController@getStatisticClassroomDashboard');
 
-Route::get('/findEvaluateStudentsStatistic', 'API\StudentController@findEvaluateStudentsStatistic');
+Route::get('/getStatisticFacultyDetail/{faculty_id}', 'API\ClassRoomController@getStatisticFacultyDetail');
+Route::get('/getStatisticFacultyDashboard/{faculty_id}', 'API\ClassRoomController@getStatisticFacultyDashboard');
+
+Route::get('/findEvaluateClassroomStatistic', 'API\StudentController@findEvaluateClassroomStatistic');
 
 //blahblah
 Route::get('/allblahblah', function(){

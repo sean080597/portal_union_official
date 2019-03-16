@@ -207,7 +207,7 @@ class StudentController extends Controller
     }
 
     //Evaluation Info
-    public function getStatisticStudentsDetail($classroom_id){
+    public function getStatisticClassroomDetail($classroom_id){
         $year = \Request::get('y');
 
         $arr_condition = ['Xuất sắc', 'Khá', 'Trung bình', 'Yếu'];
@@ -230,9 +230,9 @@ class StudentController extends Controller
             ->paginate(25);
     }
 
-    public function getStatisticStudentsDashboard($classroom_id){
+    public function getStatisticClassroomDashboard($classroom_id){
         $result['data'] = DB::table('students as s')
-            ->select(DB::raw('COUNT(mark_student) notnull, tb_mark.updated_at'))
+            ->select(DB::raw('COUNT(mark_student) evaluated, tb_mark.updated_at'))
             ->join(DB::raw('(SELECT student_id, SUM(mark_student) mark_student, YEAR(updated_at) updated_at
             FROM (SELECT scm.student_id, scm.mark_student, scm.updated_at FROM student_criteria_mandatories scm UNION ALL
                 SELECT scs.student_id, scs.mark_student, scs.updated_at FROM student_criteria_selregis scs) alias
@@ -248,7 +248,7 @@ class StudentController extends Controller
     }
 
     //search student evaluation
-    public function findEvaluateStudentsStatistic(){
+    public function findEvaluateClassroomStatistic(){
         $classroom_id = \Request::get('cla_id');
         $year = \Request::get('y');
 

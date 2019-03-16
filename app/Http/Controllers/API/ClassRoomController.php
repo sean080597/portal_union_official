@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\API;
 
-use App\ClassRoom;
-use App\Student;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
+use App\ClassRoom;
+use App\Student;
 
 class ClassRoomController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -118,5 +119,25 @@ class ClassRoomController extends Controller
         }else{
             return ClassRoom::with('faculty')->orderBy('id', 'ASC')->paginate(20);
         }
+    }
+
+    //get evaluation of a faculty by
+    public function getStatisticFacultyDashboard($faculty_id){
+        $result['data'] = DB::select(DB::raw('SELECT COUNT(isDone) count_done, updated_at
+            FROM (SELECT tb_eval_all_faculties.*, total_stu.total, IF(tb_eval_all_faculties.evaluated = total_stu.total, "Hoàn thành", "Chưa xong") isDone
+                FROM tb_eval_all_faculties
+                INNER JOIN (SELECT COUNT(*) total, class_room_id FROM students  GROUP BY class_room_id) total_stu
+                ON tb_eval_all_faculties.class_room_id = total_stu.class_room_id
+            WHERE total_stu.class_room_id LIKE "%'.$faculty_id.'%") tb_eval_result_by_facid
+            GROUP BY updated_at'));
+        $result['total_classrooms'] = DB::table('class_rooms')->where('faculty_id', $faculty_id)->count();
+        return $result;
+    }
+
+    public function getStatisticFacultyDetail($faculty_id){
+        $year = \Request::get('y');
+        $result['data'] = DB::select(DB::raw('SELECT * FROM tb_eval_all_faculties WHERE updated_at = "'.$year.'"'));
+        $result['total_classrooms'] = DB::table('class_rooms')->where('faculty_id', $faculty_id)->count();
+        return $result;
     }
 }

@@ -52,12 +52,12 @@
                         <td>11/11/{{ item.updated_at-1 }}</td>
                         <td>11/11/{{ item.updated_at }}</td>
                         <td class="text-center">
-                            <span class="badge badge-pill badge-success" v-if="item.notnull == ls_evaluation.total_quantity">Hoàn thành</span>
+                            <span class="badge badge-pill badge-success" v-if="item.evaluated == ls_evaluation.total_quantity">Hoàn thành</span>
                             <span class="badge badge-pill badge-warning" v-else>Chưa xong</span>
                         </td>
-                        <td class="text-center">{{ item.notnull }}/{{ ls_evaluation.total_quantity }}</td>
+                        <td class="text-center">{{ item.evaluated }}/{{ ls_evaluation.total_quantity }}</td>
                         <td class="text-center">
-                            <router-link :to="'/evaluate-students-detail/'+classroom_id+'?y='+item.updated_at" class="text-primary">
+                            <router-link :to="'/evaluate-classroom-detail/'+classroom_id+'?y='+item.updated_at" class="text-primary">
                                 <i class="far fa-eye"></i>
                             </router-link>
                         </td>
@@ -89,7 +89,7 @@ export default {
         loadLsEvaluation(){
             this.$Progress.start();
             if(this.$gate.isStudentsPagePassed()){
-                axios.get('/api/getStatisticStudentsDashboard/' + this.classroom_id).then(({data}) => (
+                axios.get('/api/getStatisticClassroomDashboard/' + this.classroom_id).then(({data}) => (
                     this.ls_evaluation = data, this.$Progress.finish()
                 ));
             }else{

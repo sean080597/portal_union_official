@@ -131,13 +131,13 @@ export default {
         getResults(page = 1) {
             this.$Progress.start()
             if(this.search){
-                axios.get('/api/findEvaluateStudentsStatistic?cla_id='+this.classroom_id+'&y='+this.year+'&q=' + this.search+'&page='+page)
+                axios.get('/api/findEvaluateClassroomStatistic?cla_id='+this.classroom_id+'&y='+this.year+'&q=' + this.search+'&page='+page)
                 .then(response => {
                     this.students = response.data
                     this.$Progress.finish()
                 })
             }else{
-                axios.get('/api/getStatisticStudentsDetail/'+this.classroom_id+'?y='+this.year+'&page=' + page)
+                axios.get('/api/getStatisticClassroomDetail/'+this.classroom_id+'?y='+this.year+'&page=' + page)
                 .then(response => {
                     this.students = response.data
                     this.$Progress.finish()
@@ -147,7 +147,7 @@ export default {
         loadStudents(){
             this.$Progress.start();
             if(this.$gate.isStudentsPagePassed()){
-                axios.get('/api/getStatisticStudentsDetail/' + this.classroom_id + '?y='+this.year).then(({data}) => (
+                axios.get('/api/getStatisticClassroomDetail/' + this.classroom_id + '?y='+this.year).then(({data}) => (
                     this.students = data, this.$Progress.finish()
                 ));
             }else{
@@ -156,7 +156,7 @@ export default {
         },
         searchit: _.debounce(function() {
             this.$Progress.start()
-            axios.get('/api/findEvaluateStudentsStatistic?cla_id='+this.classroom_id+'&y='+this.year+'&q=' + this.search)
+            axios.get('/api/findEvaluateClassroomStatistic?cla_id='+this.classroom_id+'&y='+this.year+'&q=' + this.search)
             .then((data) => {
                 this.students = data.data
                 this.$Progress.finish()
