@@ -3088,22 +3088,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      // student_id: this.$route.params.student_id,
       student_info: {},
-      opts_selfassess: [{
-        k: 'tb',
-        v: 'Trung bình'
-      }, {
-        k: 'k',
-        v: 'Khá'
-      }, {
-        k: 't',
-        v: 'Tốt'
-      }],
-      opts_mark: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       checkToShow: false,
       form: new Form({
         student_id: this.$route.params.student_id,
@@ -3128,7 +3140,146 @@ __webpack_require__.r(__webpack_exports__);
       })
     };
   },
+  computed: {
+    getListCriMan: function getListCriMan() {
+      return this.$store.getters.getMarkCriMan;
+    },
+    getListCriSel: function getListCriSel() {
+      return this.$store.getters.getMarkCriSel;
+    },
+    isDisabledStudent: function isDisabledStudent() {
+      //enabled doan vien
+      return !this.checkFoD('stu');
+    },
+    isDisabledClass: function isDisabledClass() {
+      //enabled doan vien
+      return !this.checkFoD('cla');
+    },
+    isDisabledFaculty: function isDisabledFaculty() {
+      //enabled doan vien
+      return !this.checkFoD('fac');
+    },
+    isDisabledSchool: function isDisabledSchool() {
+      //enabled doan vien
+      return !this.checkFoD('sch');
+    }
+  },
+  created: function created() {
+    this.loadListCriteria();
+  },
+  mounted: function mounted() {
+    this.$store.dispatch('fetch_criteria');
+  },
   methods: {
+    //------------------------- set enabled or disabled for input with condition date and function user---------------
+    checkDate: function checkDate(startDate, endDate) {
+      //Date: condition of date, allow enabled
+      var newStartDate = new Date(startDate);
+      var newEndDate = new Date(endDate);
+      var currentDate = new Date();
+
+      if (newStartDate.getTime() <= currentDate.getTime() && currentDate.getTime() <= newEndDate.getTime()) {
+        return 1;
+      }
+
+      return 0;
+    },
+    checkFunc: function checkFunc(funcs, conFunc) {
+      //funcs: list functions of user
+      //conFunc: condition of function
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = funcs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var func = _step.value;
+
+          if (func == conFunc) {
+            return 1;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return 0;
+    },
+    checkFoD: function checkFoD(colFunc) {
+      // check funtion and date together
+      // column hold function
+      // get condition date from database (include: startDate, endDate)
+      // get func condition of user from database
+      // get list funcs of user
+      //example
+      var listFunction = [];
+      listFunction.push(this.student_info.role_id);
+      console.log(listFunction);
+      var startDate = '2019-04-22';
+      var endDate = '2019-04-30';
+      var conFunc = 'cla'; //end example
+
+      var isRightDate = this.checkDate(startDate, endDate);
+      var isRightFunction = this.checkFunc(listFunction, conFunc); //check date, check function of user and check col contain function of user
+
+      if (isRightDate && isRightFunction && conFunc == colFunc) {
+        return true;
+      }
+
+      return false;
+    },
+    //-------------------------  end set enabled or disabled for input with condition date and function user---------------
+    //-------------------------  set self assessment -------------------------------
+    avgMark: function avgMark(mark) {
+      var D = 3;
+      var C = 5;
+      var B = 7;
+      var A = 9;
+      var result = "Kém";
+
+      switch (true) {
+        case mark < D:
+          result = "Kém";
+          break;
+
+        case mark < C:
+          result = "Yếu";
+          break;
+
+        case mark < B:
+          result = "Trung Bình";
+          break;
+
+        case mark < A:
+          result = "Khá";
+          break;
+
+        default:
+          result = "Giỏi";
+      }
+
+      return result;
+    },
+    criManSelfAssessment: function criManSelfAssessment(mark, index) {
+      this.form.cri_man.self_assessment[index] = this.avgMark(mark);
+      this.$forceUpdate();
+    },
+    criSelfSelfAssessment: function criSelfSelfAssessment(mark, index) {
+      this.form.cri_self.self_assessment[index] = this.avgMark(mark);
+      this.$forceUpdate();
+    },
+    //-------------------------  end set self assessment ---------------------------
     loadListCriteria: function loadListCriteria() {
       var _this = this;
 
@@ -3142,6 +3293,7 @@ __webpack_require__.r(__webpack_exports__);
             var data = _ref2.data;
             return data.forEach(function (e) {
               _this.form.cri_man.criteria_id.push(e.criteria_id), _this.form.cri_man.self_assessment.push(e.self_assessment), _this.form.cri_man.mark_student.push(e.mark_student), _this.form.cri_man.mark_classroom.push(e.mark_classroom), _this.form.cri_man.mark_faculty.push(e.mark_faculty), _this.form.cri_man.mark_school.push(e.mark_school);
+              _this.a = 1;
             });
           });
           axios.get('/api/getMarkCriSel/' + _this.form.student_id).then(function (_ref3) {
@@ -3177,22 +3329,13 @@ __webpack_require__.r(__webpack_exports__);
           });
         } else {
           _this2.$Progress.fail();
+
+          toast({
+            type: 'error',
+            title: 'Có lỗi trong quá trình nhập'
+          });
         }
       });
-    }
-  },
-  created: function created() {
-    this.loadListCriteria();
-  },
-  mounted: function mounted() {
-    this.$store.dispatch('fetch_criteria');
-  },
-  computed: {
-    getListCriMan: function getListCriMan() {
-      return this.$store.getters.getMarkCriMan;
-    },
-    getListCriSel: function getListCriSel() {
-      return this.$store.getters.getMarkCriSel;
     }
   }
 });
@@ -58272,285 +58415,257 @@ var render = function() {
                           return _c("tr", { key: "cri_man" + index }, [
                             _c("td", [
                               _c("span", [_vm._v(_vm._s(index + 1) + ". ")]),
-                              _vm._v(_vm._s(cri_man.content))
-                            ]),
-                            _vm._v(" "),
-                            _c("td", { staticClass: "text-center p-1" }, [
+                              _vm._v(" "),
+                              _c("span", [_vm._v(_vm._s(cri_man.content))]),
+                              _vm._v(" "),
                               _c(
-                                "select",
+                                "div",
                                 {
                                   directives: [
                                     {
-                                      name: "validate",
-                                      rawName: "v-validate",
-                                      value: "required",
-                                      expression: "'required'"
-                                    },
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_man.self_assessment[index],
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has(
+                                        "errorCriMan" + (index + 1)
+                                      ),
                                       expression:
-                                        "form.cri_man.self_assessment[index]"
+                                        "errors.has('errorCriMan'+(index+1))"
                                     }
                                   ],
-                                  staticClass: "form-control",
-                                  class: {
-                                    "is-invalid": _vm.errors.has(
-                                      "criman_" + cri_man.id
-                                    )
-                                  },
-                                  attrs: {
-                                    name: "criman_" + cri_man.id,
-                                    disabled: _vm.form.checkArray[0]
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_man.self_assessment,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
-                                  }
+                                  staticClass: "text-danger"
                                 },
                                 [
-                                  _c(
-                                    "option",
-                                    { attrs: { value: "", disabled: "" } },
-                                    [_vm._v("- Chọn ĐG -")]
-                                  ),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.opts_selfassess, function(
-                                    self_assess,
-                                    index
-                                  ) {
-                                    return _c(
-                                      "option",
-                                      {
-                                        key: index,
-                                        domProps: { value: self_assess.k }
-                                      },
-                                      [_vm._v(_vm._s(self_assess.v))]
-                                    )
-                                  })
-                                ],
-                                2
+                                  _vm._v(
+                                    "\r\n                                    Vui lòng nhập điểm (Từ 0 đến 10)\r\n                                "
+                                  )
+                                ]
                               )
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center p-1" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_man.mark_student[index],
-                                      expression:
-                                        "form.cri_man.mark_student[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[0] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_man.mark_student,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_man.self_assessment[index],
+                                    expression:
+                                      "form.cri_man.self_assessment[index]"
                                   }
+                                ],
+                                staticClass: "form-control",
+                                staticStyle: { "max-width": "150px" },
+                                attrs: { type: "text", disabled: "" },
+                                domProps: {
+                                  value: _vm.form.cri_man.self_assessment[index]
                                 },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_man.self_assessment,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center p-1" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.cri_man.mark_student[index],
+                                    expression:
+                                      "form.cri_man.mark_student[index]"
+                                  }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriMan" + (index + 1),
+                                  disabled: _vm.isDisabledStudent
+                                },
+                                domProps: {
+                                  value: _vm.form.cri_man.mark_student[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criManSelfAssessment(
+                                      _vm.form.cri_man.mark_student[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_man.mark_student,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_man.mark_classroom[index],
-                                      expression:
-                                        "form.cri_man.mark_classroom[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[1] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_man.mark_classroom,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_man.mark_classroom[index],
+                                    expression:
+                                      "form.cri_man.mark_classroom[index]"
                                   }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriMan" + (index + 1),
+                                  disabled: _vm.isDisabledClass
                                 },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
+                                domProps: {
+                                  value: _vm.form.cri_man.mark_classroom[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criManSelfAssessment(
+                                      _vm.form.cri_man.mark_classroom[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_man.mark_classroom,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_man.mark_faculty[index],
-                                      expression:
-                                        "form.cri_man.mark_faculty[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[2] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_man.mark_faculty,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.cri_man.mark_faculty[index],
+                                    expression:
+                                      "form.cri_man.mark_faculty[index]"
                                   }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriMan" + (index + 1),
+                                  disabled: _vm.isDisabledFaculty
                                 },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
+                                domProps: {
+                                  value: _vm.form.cri_man.mark_faculty[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criManSelfAssessment(
+                                      _vm.form.cri_man.mark_faculty[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_man.mark_faculty,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_man.mark_school[index],
-                                      expression:
-                                        "form.cri_man.mark_school[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[3] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_man.mark_school,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.cri_man.mark_school[index],
+                                    expression:
+                                      "form.cri_man.mark_school[index]"
                                   }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriMan" + (index + 1),
+                                  disabled: _vm.isDisabledSchool
                                 },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
+                                domProps: {
+                                  value: _vm.form.cri_man.mark_school[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criManSelfAssessment(
+                                      _vm.form.cri_man.mark_school[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_man.mark_school,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ])
                           ])
                         }),
@@ -58569,6 +58684,29 @@ var render = function() {
                                     "\r\n                                "
                                 )
                               ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has(
+                                        "errorCriSef" + (index + 1)
+                                      ),
+                                      expression:
+                                        "errors.has('errorCriSef'+(index+1))"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [
+                                  _vm._v(
+                                    "\r\n                                    Vui lòng nhập điểm (Từ 0 đến 10)\r\n                                "
+                                  )
+                                ]
+                              ),
                               _vm._v(" "),
                               _c("textarea", {
                                 directives: [
@@ -58597,7 +58735,7 @@ var render = function() {
                                 attrs: {
                                   rows: "3",
                                   name: "criself_" + cri_self.id,
-                                  disabled: _vm.form.checkArray[0]
+                                  disabled: _vm.isDisabledStudent
                                 },
                                 domProps: {
                                   value: _vm.form.cri_self.content_regis[index]
@@ -58637,287 +58775,232 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center p-1" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "validate",
-                                      rawName: "v-validate",
-                                      value: "required",
-                                      expression: "'required'"
-                                    },
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_self.self_assessment[
-                                          index
-                                        ],
-                                      expression:
-                                        "form.cri_self.self_assessment[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  class: {
-                                    "is-invalid": _vm.errors.has(
-                                      "criself_selfassess" + cri_self.id
-                                    )
-                                  },
-                                  attrs: {
-                                    name: "criself_selfassess" + cri_self.id,
-                                    disabled: _vm.form.checkArray[0]
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_self.self_assessment,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_self.self_assessment[index],
+                                    expression:
+                                      "form.cri_self.self_assessment[index]"
                                   }
-                                },
-                                [
-                                  _c(
-                                    "option",
-                                    { attrs: { value: "", disabled: "" } },
-                                    [_vm._v("- Chọn ĐG -")]
-                                  ),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.opts_selfassess, function(
-                                    self_assess,
-                                    index
-                                  ) {
-                                    return _c(
-                                      "option",
-                                      {
-                                        key: index,
-                                        domProps: { value: self_assess.k }
-                                      },
-                                      [_vm._v(_vm._s(self_assess.v))]
-                                    )
-                                  })
                                 ],
-                                2
-                              )
+                                staticClass: "form-control",
+                                staticStyle: { "max-width": "150px" },
+                                attrs: { type: "text", disabled: "" },
+                                domProps: {
+                                  value:
+                                    _vm.form.cri_self.self_assessment[index]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_self.self_assessment,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ]),
                             _vm._v(" "),
                             _c("td", { staticClass: "text-center p-1" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_self.mark_student[index],
-                                      expression:
-                                        "form.cri_self.mark_student[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[0] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_self.mark_student,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
-                                  }
-                                },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_self.mark_classroom[index],
-                                      expression:
-                                        "form.cri_self.mark_classroom[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[1] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_self.mark_classroom,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
-                                  }
-                                },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_self.mark_faculty[index],
-                                      expression:
-                                        "form.cri_self.mark_faculty[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: { disabled: _vm.form.checkArray[2] },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_self.mark_faculty,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
-                                  }
-                                },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("td", { staticClass: "text-center" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.form.cri_self.mark_school[index],
-                                      expression:
-                                        "form.cri_self.mark_school[index]"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: {
-                                    name: "cri_self_marksch_" + cri_self.id,
-                                    id: "cri_self_marksch_" + cri_self.id,
-                                    disabled: _vm.form.checkArray[3]
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
                                   },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.form.cri_self.mark_school,
-                                        index,
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_self.mark_student[index],
+                                    expression:
+                                      "form.cri_self.mark_student[index]"
                                   }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriSef" + (index + 1),
+                                  disabled: _vm.isDisabledStudent
                                 },
-                                _vm._l(_vm.opts_mark, function(mark, index) {
-                                  return _c(
-                                    "option",
-                                    { key: index, domProps: { value: mark } },
-                                    [_vm._v(_vm._s(mark))]
-                                  )
-                                }),
-                                0
-                              )
+                                domProps: {
+                                  value: _vm.form.cri_self.mark_student[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criSelfSelfAssessment(
+                                      _vm.form.cri_self.mark_student[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_self.mark_student,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_self.mark_classroom[index],
+                                    expression:
+                                      "form.cri_self.mark_classroom[index]"
+                                  }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriSef" + (index + 1),
+                                  disabled: _vm.isDisabledClass
+                                },
+                                domProps: {
+                                  value: _vm.form.cri_self.mark_classroom[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criSelfSelfAssessment(
+                                      _vm.form.cri_self.mark_classroom[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_self.mark_classroom,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.form.cri_self.mark_faculty[index],
+                                    expression:
+                                      "form.cri_self.mark_faculty[index]"
+                                  }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriSef" + (index + 1),
+                                  disabled: _vm.isDisabledFaculty
+                                },
+                                domProps: {
+                                  value: _vm.form.cri_self.mark_faculty[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.criSelfSelfAssessment(
+                                      _vm.form.cri_self.mark_faculty[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_self.mark_faculty,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-center" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|between:0,10",
+                                    expression: "'required|between:0,10'"
+                                  },
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.cri_self.mark_school[index],
+                                    expression:
+                                      "form.cri_self.mark_school[index]"
+                                  }
+                                ],
+                                staticClass: "form-control p-0 text-center",
+                                staticStyle: { "max-width": "50px" },
+                                attrs: {
+                                  type: "number",
+                                  name: "errorCriSef" + (index + 1),
+                                  disabled: _vm.isDisabledSchool
+                                },
+                                domProps: {
+                                  value: _vm.form.cri_self.mark_school[index]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    _vm.onChangeAssessment(
+                                      _vm.form.cri_self.mark_school[index],
+                                      index
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form.cri_self.mark_school,
+                                      index,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ])
                           ])
                         })
@@ -83117,8 +83200,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\portal_union_official-lab\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\portal_union_official-lab\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\BCKH\portal_union_official\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\BCKH\portal_union_official\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
