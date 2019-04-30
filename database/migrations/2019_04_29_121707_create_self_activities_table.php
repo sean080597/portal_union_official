@@ -15,6 +15,10 @@ class CreateSelfActivitiesTable extends Migration
     {
         Schema::create('self_activities', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title');
+            $table->string('description')->nullable();
+            $table->tinyInteger('total_score')->unsigned();
+            $table->string('activity_content');
             $table->timestamps();
         });
     }

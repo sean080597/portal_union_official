@@ -50,4 +50,11 @@ class User extends Authenticatable
         return $this->student();
     }
 
+    public function parents(){
+        return $this->hasMany(
+            'App\ParentOfUser',
+            'user_id'
+        );
+    }
+
 }

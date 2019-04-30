@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
+    protected $role;
+
+    public function __construct(Role $role){
+        return $this->role = $role;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Role::orderBy('name', 'ASC')->get();
+        return $this->role->oldest('name')->get();
     }
 
     public function indexWithoutSchoolLeaderAccs()
@@ -31,7 +36,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->role->create($request->all());
+        return response([
+            'result' => 'Tạo thành công'
+        ],200);
     }
 
     /**
@@ -42,7 +50,8 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return $role;
     }
 
     /**
@@ -54,7 +63,11 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $role = Role::findOrFail($id);
+       $role->update($request->all());
+        return response([
+            'result' => 'Cập nhật thành công.'
+        ],200);
     }
 
     /**
@@ -65,6 +78,10 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+        return response([
+            'result' => 'Đã xóa'
+        ],200);
     }
 }

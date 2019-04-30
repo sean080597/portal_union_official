@@ -15,6 +15,9 @@ class CreateSchoolsActivitiesTable extends Migration
     {
         Schema::create('schools_activities', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title');
+            $table->string('description')->nullable();
+            $table->tinyInteger('total_score')->unsigned();
             $table->timestamps();
         });
     }

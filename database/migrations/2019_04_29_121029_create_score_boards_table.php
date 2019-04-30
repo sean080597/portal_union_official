@@ -15,6 +15,10 @@ class CreateScoreBoardsTable extends Migration
     {
         Schema::create('score_boards', function (Blueprint $table) {
             $table->increments('id');
+            $table->year('year');
+            $table->boolean('completion');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
