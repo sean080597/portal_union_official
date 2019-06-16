@@ -21,4 +21,11 @@ class SelfActivity extends Model
             'score_board_id'
         );
     }
+
+    public function images(){
+        return $this->morphMany(
+            'App\Image',
+            'imageable'
+        );
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\SchoolsActivity;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SchoolsActivityController extends Controller
 {
@@ -14,17 +15,7 @@ class SchoolsActivityController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return SchoolsActivity::oldest('title')->get();
     }
 
     /**
@@ -35,7 +26,8 @@ class SchoolsActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        SchoolsActivity::create($request->all());
+        return response(['result' => 'Tạo thành công'],200);
     }
 
     /**
@@ -44,20 +36,10 @@ class SchoolsActivityController extends Controller
      * @param  \App\SchoolsActivity  $schoolsActivity
      * @return \Illuminate\Http\Response
      */
-    public function show(SchoolsActivity $schoolsActivity)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\SchoolsActivity  $schoolsActivity
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SchoolsActivity $schoolsActivity)
-    {
-        //
+        $schoolsActivity = SchoolsActivity::findOrFail($id);
+        return $schoolsActivity;
     }
 
     /**
@@ -67,9 +49,11 @@ class SchoolsActivityController extends Controller
      * @param  \App\SchoolsActivity  $schoolsActivity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SchoolsActivity $schoolsActivity)
+    public function update(Request $request, $id)
     {
-        //
+        $schoolsActivity = SchoolsActivity::findOrFail($id);
+        $schoolsActivity->update($request->all());
+        return response(['result' => 'Cập nhật thành công'],200);
     }
 
     /**
@@ -78,8 +62,10 @@ class SchoolsActivityController extends Controller
      * @param  \App\SchoolsActivity  $schoolsActivity
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SchoolsActivity $schoolsActivity)
+    public function destroy($id)
     {
-        //
+        $schoolsActivity = SchoolsActivity::findOrFail($id);
+        $schoolsActivity->delete();
+        return response(['result' => 'Đã xóa thành công'],200);
     }
 }

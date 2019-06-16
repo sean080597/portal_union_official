@@ -15,11 +15,12 @@ class CreateScoreboardSelfactivityTable extends Migration
     {
         Schema::create('scoreboard_selfactivity', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('activity_content');
             $table->float('average_score')->default(0);
-            $table->float('student_score')->default(0);
-            $table->float('class_score')->default(0);
-            $table->float('faculty_score')->default(0);
-            $table->float('school_score')->default(0);
+            $table->boolean('confirmingStudent')->default(false);
+            $table->boolean('confirmingClass')->default(false);
+            $table->boolean('confirmingFaculty')->default(false);
+            $table->boolean('confirmingSchool')->default(false);
             $table->integer('score_board_id')->unsigned();
             $table->integer('self_activity_id')->unsigned();
             $table->foreign('score_board_id')->references('id')->on('score_boards')->onDelete('cascade');

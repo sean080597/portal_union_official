@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSelfActivitiesTable extends Migration
+class CreateImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateSelfActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('self_activities', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->string('description')->nullable();
-            $table->tinyInteger('total_score')->unsigned();
+            $table->string('image');
+            //Polimorpic relations
+            $table->integer('imageable_id')->unsigned();
+            $table->string('imageable_type');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateSelfActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('self_activities');
+        Schema::dropIfExists('images');
     }
 }

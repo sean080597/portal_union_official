@@ -16,9 +16,13 @@ class CreateScoreBoardsTable extends Migration
         Schema::create('score_boards', function (Blueprint $table) {
             $table->increments('id');
             $table->year('year');
-            $table->boolean('completion');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('averageScore')->default(0);
+            $table->boolean('confirmingStudent')->default(false);
+            $table->boolean('confirmingClass')->default(false);
+            $table->boolean('confirmingFaculty')->default(false);
+            $table->boolean('confirmingSchool')->default(false);
+            $table->char('student_id', 10);
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->timestamps();
         });
     }

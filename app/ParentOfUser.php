@@ -19,10 +19,10 @@ class ParentOfUser extends Model
         'student_id'
     ];
 
-    public function user(){
+    public function student(){
         return $this->belongsTo(
-            'App\User',
-            'user_id'
+            'App\Student',
+            'student_id'
         );
     }
 }

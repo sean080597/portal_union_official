@@ -8,7 +8,11 @@ class ScoreBoard extends Model
 {
     protected $fillable = [
         'year',
-        'completion',
+        'averageScore',
+        'confirmingStudent',
+        'confirmingClass',
+        'confirmingFaculty',
+        'confirmingSchool',
         'user_id'
     ];
 
@@ -22,6 +26,13 @@ class ScoreBoard extends Model
             'scoreboard_schoolsactivity',
             'score_board_id',
             'schools_activity_id'
+        )->withPivot(
+            'id',
+            'average_score',
+            'confirmingStudent',
+            'confirmingClass',
+            'confirmingFaculty',
+            'confirmingSchool'
         );
     }
 
@@ -31,6 +42,21 @@ class ScoreBoard extends Model
             'scoreboard_selfactivity',
             'score_board_id',
             'self_activity_id'
+        )->withPivot(
+            'id',
+            'activity_content',
+            'average_score',
+            'confirmingStudent',
+            'confirmingClass',
+            'confirmingFaculty',
+            'confirmingSchool'
+        );
+    }
+
+    public function student(){
+        return $this->belongsTo(
+            'App\Student',
+            'student_id'
         );
     }
 }

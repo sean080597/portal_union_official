@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\SelfActivity;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SelfActivityController extends Controller
 {
@@ -14,17 +15,7 @@ class SelfActivityController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return SelfActivity::oldest('title')->get();
     }
 
     /**
@@ -35,7 +26,8 @@ class SelfActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        SelfActivity::create($request->all());
+        return response(['result' => 'Tạo thành công'],200);
     }
 
     /**
@@ -44,20 +36,10 @@ class SelfActivityController extends Controller
      * @param  \App\SelfActivity  $selfActivity
      * @return \Illuminate\Http\Response
      */
-    public function show(SelfActivity $selfActivity)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\SelfActivity  $selfActivity
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SelfActivity $selfActivity)
-    {
-        //
+        $selfActivity = SelfActivity::findOrFail($id);
+        return $selfActivity;
     }
 
     /**
@@ -67,9 +49,11 @@ class SelfActivityController extends Controller
      * @param  \App\SelfActivity  $selfActivity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SelfActivity $selfActivity)
+    public function update(Request $request, $id)
     {
-        //
+        $selfActivity = SelfActivity::findOrFail($id);
+        $selfActivity->update($request->all());
+        return response(['result' => 'Cập nhật thành công'],200);
     }
 
     /**
@@ -78,8 +62,10 @@ class SelfActivityController extends Controller
      * @param  \App\SelfActivity  $selfActivity
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SelfActivity $selfActivity)
+    public function destroy($id)
     {
-        //
+        $selfActivity = SelfActivity::findOrFail($id);
+        $selfActivity->delete();
+        return response(['result' => 'Đã xóa thành công'],200);
     }
 }

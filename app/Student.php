@@ -65,4 +65,21 @@ class Student extends Model
         return $this->belongsToMany('App\CriteriaSelregis', 'student_criteria_selregis',
         'student_id', 'criteria_id')->withPivot('content_regis', 'self_assessment', 'mark_student', 'mark_classroom', 'mark_faculty', 'mark_school');
     }
+
+    //--------------------- cam --------------------------
+    public function parents(){
+        return $this->hasMany(
+            'App\ParentOfUser',
+            'student_id'
+        );
+    }
+
+    public function scoreBoards(){
+        return $this->hasMany(
+            'App\ScoreBoard',
+            'student_id'
+        );
+    }
+    //----------------------end cam ----------------------
+
 }
