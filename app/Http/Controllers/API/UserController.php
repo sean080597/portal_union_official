@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        //$this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +38,7 @@ class UserController extends Controller
             'student_id' => 'unique:students,id'
         ]);
 
-        User::create([
+        $newUser = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => bcrypt($request['password']),
@@ -48,7 +48,9 @@ class UserController extends Controller
         if(!empty($request['student_id'])){
             Student::create([
                 'id' => $request['student_id'],
-                'name' => $request['name']
+                'name' => $request['name'],
+                'class_room_id' => $request['class_room_id'],
+                'user_id' => $newUser->id
             ]);
         }
         return response()->json(['isSuccess' => true]);
@@ -62,7 +64,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::with('role')->findOrFail($id);
+        return $user;
     }
 
     /**
@@ -85,7 +88,7 @@ class UserController extends Controller
             $request->merge(['password' => bcrypt($request['password'])]);
         }
         $user->update($request->all());
-        return ['message' => 'Updated Faculty'];
+        return ['message' => 'Updated'];
     }
 
     /**

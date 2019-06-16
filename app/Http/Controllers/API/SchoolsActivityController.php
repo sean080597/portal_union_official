@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Role;
+use App\SchoolsActivity;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class RoleController extends Controller
+class SchoolsActivityController extends Controller
 {
-    protected $role;
-
-    public function __construct(Role $role){
-        return $this->role = $role;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,12 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return $this->role->oldest('name')->get();
-    }
-
-    public function indexWithoutSchoolLeaderAccs()
-    {
-        return Role::whereNotIn('id', ['sec', 'de1', 'de2'])->orderBy('name', 'ASC')->get();
+        return SchoolsActivity::oldest('title')->get();
     }
 
     /**
@@ -36,52 +26,46 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->role->create($request->all());
-        return response([
-            'result' => 'Tạo thành công'
-        ],200);
+        SchoolsActivity::create($request->all());
+        return response(['result' => 'Tạo thành công'],200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\SchoolsActivity  $schoolsActivity
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $role = Role::findOrFail($id);
-        return $role;
+        $schoolsActivity = SchoolsActivity::findOrFail($id);
+        return $schoolsActivity;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\SchoolsActivity  $schoolsActivity
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-       $role = Role::findOrFail($id);
-       $role->update($request->all());
-        return response([
-            'result' => 'Cập nhật thành công.'
-        ],200);
+        $schoolsActivity = SchoolsActivity::findOrFail($id);
+        $schoolsActivity->update($request->all());
+        return response(['result' => 'Cập nhật thành công'],200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\SchoolsActivity  $schoolsActivity
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
-        return response([
-            'result' => 'Đã xóa'
-        ],200);
+        $schoolsActivity = SchoolsActivity::findOrFail($id);
+        $schoolsActivity->delete();
+        return response(['result' => 'Đã xóa thành công'],200);
     }
 }

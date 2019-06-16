@@ -17,4 +17,12 @@ export const routes = [
     { path: '/evaluate-classroom-dashboard/:classroom_id', component: require('./components/EvaluateClassRoom_StatisticDashboard.vue').default },
     { path: '/evaluate-classroom-detail/:classroom_id', component: require('./components/EvaluateClassRoom_StatisticDetail.vue').default },
     { path: '*', component: require('./components/NotFound.vue').default },
+
+    // ---------------- cam -------------------------
+
+    //vue score board
+    { path: '/bang-danh-gia/:student_id/:year', component: require('./components/ScoreBoard.vue').default},
+
+
+
 ];

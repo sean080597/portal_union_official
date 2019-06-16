@@ -25,6 +25,31 @@ Route::apiResources(['classroom_admin' => 'API\ClassRoomController']);
 Route::apiResources(['student_admin' => 'API\StudentController']);
 Route::apiResources(['criteria_mandatory' => 'API\CriteriaMandatoryController']);
 Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelfregisController']);
+//-------------------------- cam -------------------------
+Route::apiResources(['school_activities' => 'API\SchoolsActivityController']);
+Route::apiResources(['self_activities' => 'API\SelfActivityController']);
+
+// _________________________ score board __________________________
+    Route::apiResources(['score_board' => 'API\ScoreBoardController']);
+    Route::get('/showScore/{student_id}/{currentYear}','API\ScoreBoardController@showScore');
+    Route::post('/storeSchoolsActivitiesScore/{scoreBoard_id}/{schoolsActivity_id}','API\ScoreBoardController@storeSchoolsActivityScore');
+    Route::put('/updateSchoolsActivitiesScore/{scoreBoard_id}/{schoolsActivity_id}','API\ScoreBoardController@updateSchoolsActivityScore');
+    Route::post('/storeSelfActivitiesScore/{scoreBoard_id}/{selfActivity_id}','API\ScoreBoardController@storeSelfActivityScore');
+    Route::put('/updateSelfActivitiesScore/{scoreBoard_id}/{selfActivity_id}','API\ScoreBoardController@updateSelfActivityScore');
+
+
+//____________________________ image ______________________________
+
+    Route::put('/moveImage','API\ImageController@moveImage');
+    Route::get('/showImagesSchoolActivity/{id}','API\ImageController@showImagesSchoolActivity');
+    Route::get('/showImagesSelfActivity/{id}','API\ImageController@showImagesSelfActivity');
+    Route::post('/storeImagesSchoolActivity/{id}/{name}','API\ImageController@storeImagesSchoolActivity');
+    Route::post('/storeImagesSelfActivity/{id}/{name}','API\ImageController@storeImagesSelfActivity');
+    Route::delete('/deleteImagesSchoolActivity/{name}','API\ImageController@deleteImagesSchoolActivity');
+
+//____________________________ end image __________________________
+
+//--------------------------- end cam --------------------------------------------
 
 //Client
 //Faculty
