@@ -111,6 +111,29 @@
                             @endcan
                         </ul>
                     </li>
+                    <li>
+                        <a href="#ql-dg" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">
+                            Kiểm tra đánh giá
+                        </a>
+                        <ul class="collapse list-unstyled" id="ql-dg">
+                            <li>
+                                <router-link to="/report-classroom/{{ !empty(auth()->user()->student) ? auth()->user()->student->class_room_id : '' }}">Kiểm tra lớp</router-link>
+                            </li>
+                            <li><router-link to="/report-faculty/{{ !empty(auth()->user()->student) ? auth()->user()->getFaculty->id : '' }}">Kiểm tra khoa</router-link></li>
+                            <li><router-link to="/report-school">Kiểm tra toàn bộ</router-link></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#ql-cv" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">
+                            Công việc của tôi
+                        </a>
+                        <ul class="collapse list-unstyled" id="ql-cv">
+                            <li><router-link to="">Công việc của tôi (lớp)</router-link></li>
+                            <li><router-link to="">Công việc của tôi (khoa)</router-link></li>
+                            <li><router-link to="">Công việc của tôi (trường)</router-link></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Thống kê</a></li>
                     <li><a href="#">Hỗ trợ</a></li>
                 </ul>
             </nav><!-- End nav sidebar -->

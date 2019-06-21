@@ -37,6 +37,9 @@ Route::apiResources(['self_activities' => 'API\SelfActivityController']);
     Route::post('/storeSelfActivitiesScore/{scoreBoard_id}/{selfActivity_id}','API\ScoreBoardController@storeSelfActivityScore');
     Route::put('/updateSelfActivitiesScore/{scoreBoard_id}/{selfActivity_id}','API\ScoreBoardController@updateSelfActivityScore');
 
+    Route::get('/getReportByClassID/{class_id}', 'API\ScoreBoardController@getReportByClassID');
+    Route::get('/getReportByFaculty/{fac_id}', 'API\ScoreBoardController@getReportByFaculty');
+    Route::get('/getReportBySchool', 'API\ScoreBoardController@getReportBySchool');
 
 //____________________________ image ______________________________
 
