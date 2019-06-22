@@ -20,7 +20,7 @@
                         <th class="text-center">Điểm TB</th>
                         <th class="width-80 text-center">Xếp Loại</th>
                         <th class="width-80 text-center">Tình trạng</th>
-                        <th class=" text-center">Tác vụ</th>
+                        <th class=" text-center">Xem</th>
                         <th class="text-center">Ghi chú</th>
                     </tr>
                 </thead>
@@ -31,13 +31,15 @@
                         <td>{{stu.name}}</td>
                         <td class="text-center">{{ stu.birthday | myDateFormat }}</td>
                         <td class="text-center">{{stu.averageScore}}</td>
-                        <td class="text-center">Giỏi</td>
+                        <td class="text-center">{{caclRank(stu.averageScore)}}</td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-success" v-if="stu.confirmingStudent != 0">Hoàn thành</span>
                             <span class="badge badge-pill badge-warning" v-else>Chưa xong</span>
                         </td>
                         <td class="text-center">
-                            <a href="#" class="text-primary"><i class="fas fa-pencil-alt"></i></a>
+                            <router-link :to="'/bang-danh-gia/' + stu.id + '/' + new Date().getFullYear()" class="text-primary">
+                            <i class="far fa-eye"></i>
+                        </router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">note</span>
@@ -65,6 +67,12 @@ export default {
             .then(({data}) => (
                 this.records = data
             ))
+        },
+        caclRank(score) {
+            if(score > 84) return 'Xuất sắc'
+            if(score > 69) return 'Khá'
+            if(score > 49) return 'Trung bình'
+            return 'Yếu'
         }
     },
 

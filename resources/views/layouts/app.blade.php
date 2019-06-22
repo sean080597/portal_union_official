@@ -128,9 +128,9 @@
                             Công việc của tôi
                         </a>
                         <ul class="collapse list-unstyled" id="ql-cv">
-                            <li><router-link to="">Công việc của tôi (lớp)</router-link></li>
-                            <li><router-link to="">Công việc của tôi (khoa)</router-link></li>
-                            <li><router-link to="">Công việc của tôi (trường)</router-link></li>
+                            <li><router-link to="/mytask-classroom/{{ !empty(auth()->user()->student) ? auth()->user()->student->class_room_id : '' }}">Công việc của tôi (lớp)</router-link></li>
+                            <li><router-link to="/mytask-faculty/{{ !empty(auth()->user()->student) ? auth()->user()->getFaculty->id : '' }}">Công việc của tôi (khoa)</router-link></li>
+                            <li><router-link to="/mytask-school">Công việc của tôi (trường)</router-link></li>
                         </ul>
                     </li>
                     <li><a href="#">Thống kê</a></li>

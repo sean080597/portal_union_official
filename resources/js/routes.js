@@ -17,9 +17,16 @@ export const routes = [
     { path: '/evaluate-classroom-dashboard/:classroom_id', component: require('./components/EvaluateClassRoom_StatisticDashboard.vue').default },
     { path: '/evaluate-classroom-detail/:classroom_id', component: require('./components/EvaluateClassRoom_StatisticDetail.vue').default },
 
+    // report
     { path: '/report-classroom/:classroom_id', component: require('./components/report/Report_Class.vue').default },
     { path: '/report-faculty/:fac_id', component: require('./components/report/Report_Faculty.vue').default },
     { path: '/report-school', component: require('./components/report/Report_School.vue').default },
+
+    //mytask
+    { path: '/mytask-classroom/:classroom_id', component: require('./components/mytask/task_class.vue').default },
+    { path: '/mytask-faculty/:fac_id', component: require('./components/mytask/task_faculty.vue').default },
+    { path: '/mytask-school', component: require('./components/mytask/task_school.vue').default },
+
     { path: '*', component: require('./components/NotFound.vue').default },
 
     // ---------------- cam -------------------------
