@@ -41,6 +41,10 @@ Route::apiResources(['self_activities' => 'API\SelfActivityController']);
     Route::get('/getReportByFaculty/{fac_id}', 'API\ScoreBoardController@getReportByFaculty');
     Route::get('/getReportBySchool', 'API\ScoreBoardController@getReportBySchool');
 
+    Route::get('/getMyTaskByClassID/{class_id}', 'API\ScoreBoardController@getMyTaskByClassID');
+    Route::get('/getMyTaskByFaculty/{fac_id}', 'API\ScoreBoardController@getMyTaskByFaculty');
+    Route::get('/getMyTaskBySchool', 'API\ScoreBoardController@getMyTaskBySchool');
+
 //____________________________ image ______________________________
 
     Route::put('/moveImage','API\ImageController@moveImage');
