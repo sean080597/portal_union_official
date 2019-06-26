@@ -33540,7 +33540,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       chartOptions: {
         xaxis: {
-          type: "numeric",
           categories: [],
           title: {
             text: "SỐ LƯỢNG SV",

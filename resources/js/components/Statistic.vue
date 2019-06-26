@@ -29,7 +29,6 @@ export default {
     return {
       chartOptions: {
         xaxis: {
-          type: "numeric",
           categories: [],
           title: {
             text: "SỐ LƯỢNG SV",

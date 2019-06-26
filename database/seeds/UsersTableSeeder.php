@@ -34,14 +34,6 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
-                'name' => 'Admin Cam',
-                'email' => 'admincam@gmail.com',
-                'password' => bcrypt('123456'),
-                'role_id' => 'adm',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-            ],
-            [
                 'name' => 'Hội Sinh Viên',
                 'email' => 'hoisinhvien@gmail.com',
                 'password' => bcrypt('sean080597'),

@@ -75,13 +75,13 @@
                                 <div class="form-group">
                                     <label for="taikhoan">Tài khoản:</label>
                                     <div class="input-group">
-                                        <input type="email" id="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" required autofocus>
+                                        <input type="text" id="stuid" name="stuid" class="form-control{{ $errors->has('stuid') ? ' is-invalid' : '' }}" value="{{ old('stuid') }}" required autofocus>
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                         </div>
-                                        @if ($errors->has('email'))
+                                        @if ($errors->has('stuid'))
                                             <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('email') }}</strong>
+                                                <strong>{{ $errors->first('stuid') }}</strong>
                                             </span>
                                         @endif
                                     </div>
