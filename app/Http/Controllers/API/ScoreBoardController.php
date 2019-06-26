@@ -246,4 +246,21 @@ class ScoreBoardController extends Controller
                     ON tb_count_classes.id = tb_evaluated_classes.faculty_id'));
         return $result;
     }
+
+    //========================== Statistic by Average Score ========================================
+    public function getStatisticScoreBoard($year){
+        $query = DB::table('score_boards')
+                ->select(DB::raw('averageScore, COUNT(*) count, year'))
+                ->groupBy(DB::raw('averageScore, year'))
+                ->orderBy('count')
+                ->where('year', $year)
+                ->get();
+        $result['count'] = $query->pluck('count');
+        $result['statistic'] = array('name' => ''.$query[0]->year, 'data' => $query->pluck('averageScore'));
+        return response()->json($result, 200);
+    }
+
+    public function getAllAvgScoreYear(){
+        return DB::table('score_boards')->select('year')->distinct()->get();
+    }
 }

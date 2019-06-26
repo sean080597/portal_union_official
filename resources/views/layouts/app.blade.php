@@ -133,7 +133,7 @@
                             <li><router-link to="/mytask-school">Công việc của tôi (trường)</router-link></li>
                         </ul>
                     </li>
-                    <li><a href="#">Thống kê</a></li>
+                    <li><router-link to="/statistic">Thống kê</router-link></li>
                     <li><a href="#">Hỗ trợ</a></li>
                 </ul>
             </nav><!-- End nav sidebar -->

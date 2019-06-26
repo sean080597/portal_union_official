@@ -27,6 +27,9 @@ export const routes = [
     { path: '/mytask-faculty/:fac_id', component: require('./components/mytask/task_faculty.vue').default },
     { path: '/mytask-school', component: require('./components/mytask/task_school.vue').default },
 
+    //chart
+    { path: '/statistic', component: require('./components/Statistic.vue').default },
+
     { path: '*', component: require('./components/NotFound.vue').default },
 
     // ---------------- cam -------------------------
