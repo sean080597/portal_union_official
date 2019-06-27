@@ -252,11 +252,11 @@ class ScoreBoardController extends Controller
         $query = DB::table('score_boards')
                 ->select(DB::raw('averageScore, COUNT(*) count, year'))
                 ->groupBy(DB::raw('averageScore, year'))
-                ->orderBy('count')
+                ->orderBy('averageScore')
                 ->where('year', $year)
                 ->get();
-        $result['count'] = $query->pluck('count');
-        $result['statistic'] = array('name' => ''.$query[0]->year, 'data' => $query->pluck('averageScore'));
+        $result['averageScore'] = $query->pluck('averageScore');
+        $result['statistic'] = array('name' => ''.$query[0]->year, 'data' => $query->pluck('count'));
         return response()->json($result, 200);
     }
 

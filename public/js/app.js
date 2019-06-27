@@ -33510,6 +33510,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_apexcharts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-apexcharts */ "./node_modules/vue-apexcharts/dist/vue-apexcharts.js");
 /* harmony import */ var vue_apexcharts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_apexcharts__WEBPACK_IMPORTED_MODULE_0__);
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -33540,9 +33544,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       chartOptions: {
         xaxis: {
-          categories: [],
           title: {
-            text: "SỐ LƯỢNG SV",
+            text: "ĐIỂM TB",
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -33562,7 +33565,7 @@ __webpack_require__.r(__webpack_exports__);
             offsetY: 0
           },
           title: {
-            text: "ĐIỂM TB",
+            text: "SỐ LƯỢNG SV",
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -33571,6 +33574,10 @@ __webpack_require__.r(__webpack_exports__);
               fontFamily: "Helvetica, Arial, sans-serif",
               cssClass: "apexcharts-xaxis-title"
             }
+          },
+          labels: {// formatter: function(val, index) {
+            //   return val.toFixed(0);
+            // }
           }
         },
         chart: {
@@ -33606,7 +33613,11 @@ __webpack_require__.r(__webpack_exports__);
       this.$Progress.start();
       axios.get("/api/getStatisticScoreBoard/" + year).then(function (_ref2) {
         var data = _ref2.data;
-        _this2.chartOptions.xaxis.categories = data.count;
+        _this2.chartOptions = _objectSpread({}, _this2.chartOptions, {
+          xaxis: {
+            categories: data.averageScore
+          }
+        });
         _this2.series = [data.statistic];
 
         _this2.$Progress.finish();
@@ -33617,9 +33628,9 @@ __webpack_require__.r(__webpack_exports__);
     this.getSelectYear();
     this.getStatistic(new Date().getFullYear());
   },
-  mounted: function mounted() {//   console.log(this.records)
-    //   console.log(this.series)
-  }
+  mounted: function mounted() {//   console.log(this.chartOptions.xaxis.categories)
+  },
+  updated: function updated() {}
 });
 
 /***/ }),

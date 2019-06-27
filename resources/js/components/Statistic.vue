@@ -29,9 +29,8 @@ export default {
     return {
       chartOptions: {
         xaxis: {
-          categories: [],
           title: {
-            text: "SỐ LƯỢNG SV",
+            text: "ĐIỂM TB",
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -51,7 +50,7 @@ export default {
             offsetY: 0
           },
           title: {
-            text: "ĐIỂM TB",
+            text: "SỐ LƯỢNG SV",
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -60,6 +59,11 @@ export default {
               fontFamily: "Helvetica, Arial, sans-serif",
               cssClass: "apexcharts-xaxis-title"
             }
+          },
+          labels: {
+            // formatter: function(val, index) {
+            //   return val.toFixed(0);
+            // }
           }
         },
         chart: {
@@ -90,7 +94,14 @@ export default {
     getStatistic(year) {
       this.$Progress.start();
       axios.get("/api/getStatisticScoreBoard/" + year).then(({ data }) => {
-        this.chartOptions.xaxis.categories = data.count;
+        this.chartOptions = {
+          ...this.chartOptions,
+          ...{
+            xaxis: {
+              categories: data.averageScore
+            }
+          }
+        };
         this.series = [data.statistic];
         this.$Progress.finish();
       });
@@ -103,8 +114,9 @@ export default {
   },
 
   mounted() {
-    //   console.log(this.records)
-    //   console.log(this.series)
-  }
+    //   console.log(this.chartOptions.xaxis.categories)
+  },
+
+  updated() {}
 };
 </script>

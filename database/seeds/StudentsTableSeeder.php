@@ -27,7 +27,7 @@ class StudentsTableSeeder extends Seeder
 
     public function run()
     {
-        $count = 7;
+        $count = 6;
         self::insert_stu('1511061004', 'Lưu Quốc Cường', "15DTH12", $count++);
         self::insert_stu('1511060993', 'Trương Quốc Cẩm', "15DTH12", $count++);
         self::insert_stu('1511061043', 'Nguyễn Thanh Đăng', "15DTH12", $count++);

@@ -52,7 +52,7 @@ class LoginController extends Controller
 
         // Check Condition Mobile No. Found or Not
         if($request->get('stuid') != $stud->id) {
-            \Session::put('errors', 'Your mobile number not match in our system..!!');
+            \Session::put('errors', 'Your input not match in our system..!!');
             return back();
         }
 
