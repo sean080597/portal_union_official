@@ -36,7 +36,7 @@ Các phần chưa làm:
             - Page: tạo ra 1 trang, để lọc ra danh sách các lớp trong khoa hoàn thành hay chưa (dựa vào tổng sinh viên trong lớp/ UI như cũ), trong mỗi cái sẽ có 1 nút (cái icon con mắt lúc trước) dẫn đến trang kiểm tra lớp đã tạo bên trên kèm theo id của lớp đó để lọc
         1.1.3 Kiểm tra toàn bộ:
             - Link: dẫn đến page thôi
-            - Page: lọc ra danh sách các khoa trong trường, hoàn thành hay chưa (dựa vào tổng sinh viên trong khoa/ UI như cũ), trong mỗi cái có 1 cái nút link tới lớp đó, click vào thì hiện trang của lớp như 1.1.2
+            - Page: lọc ra danh sách các khoa trongá trường, hoàn thành hay chưa (dựa vào tổng sinh viên trong khoa/ UI như cũ), trong mỗi ci có 1 cái nút link tới lớp đó, click vào thì hiện trang của lớp như 1.1.2
     ------------------------------------------------------------------------------------------------
     2.2 Task (Kiểm tra xem mình có những công việc gì)
     - Gồm 3 link con: 
