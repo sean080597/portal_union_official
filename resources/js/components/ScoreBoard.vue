@@ -552,7 +552,7 @@ export default {
             // get list funcs of user
 
             //example
-            const listFunction = ['adm','cla']
+            const listFunction = ['adm','fac']
             listFunction.push(this.student_info.role_id)
             console.log(listFunction)
             const startDate = '2019-04-22'

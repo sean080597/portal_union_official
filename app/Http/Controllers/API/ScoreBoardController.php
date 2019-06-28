@@ -146,4 +146,9 @@ class ScoreBoardController extends Controller
             'result' => 'Update thành công.'
         ],200);
     }
+
+    public function getTotalCurrentScoreBoard(){
+
+    }
+
 }

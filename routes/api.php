@@ -28,6 +28,7 @@ Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelfregisController'])
 //-------------------------- cam -------------------------
 Route::apiResources(['school_activities' => 'API\SchoolsActivityController']);
 Route::apiResources(['self_activities' => 'API\SelfActivityController']);
+Route::apiResources(['temps' => 'API\TempController']);
 
 // _________________________ score board __________________________
     Route::apiResources(['score_board' => 'API\ScoreBoardController']);

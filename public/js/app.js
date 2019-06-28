@@ -2231,6 +2231,34 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateAllScoreBoard.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CreateAllScoreBoard.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Dashboard.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Dashboard.vue?vue&type=script&lang=js& ***!
@@ -3194,6 +3222,264 @@ __webpack_require__.r(__webpack_exports__);
     getListCriSel: function getListCriSel() {
       return this.$store.getters.getMarkCriSel;
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EventStoreScoreBoards.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EventStoreScoreBoards.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateAllScoreBoard_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateAllScoreBoard.vue */ "./resources/js/components/CreateAllScoreBoard.vue");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    AllScoreBoard: _CreateAllScoreBoard_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      errorList: {
+        startYear: false,
+        endYear: false,
+        endDate: false
+      },
+      form: new Form({
+        role: "",
+        startDate: "",
+        endDate: "",
+        currentYear: ""
+      })
+    };
+  },
+  computed: {
+    //------------------------ validate select option --------------
+    isShowedOption: function isShowedOption() {
+      if (this.isUpdatedCurrentYear()) {
+        return true;
+      }
+
+      return false;
+    },
+    //==============================================================
+    //------------------------ validate date -----------------------
+    invalidStartYear: function invalidStartYear() {
+      if (this.errorList.startYear) {
+        return true;
+      }
+
+      return false;
+    },
+    invalidEndYear: function invalidEndYear() {
+      if (this.errorList.endYear) {
+        return true;
+      }
+
+      return false;
+    },
+    invalidEndDate: function invalidEndDate() {
+      if (this.errorList.endDate) {
+        return true;
+      }
+
+      return false;
+    },
+    hasErrors: function hasErrors() {
+      var disabled = true;
+      var totalError = 0;
+      var hasAnyFieldNull = this.hasAnyFieldNull();
+      var errors = Object.entries(this.errorList);
+
+      for (var _i = 0; _i < errors.length; _i++) {
+        var _errors$_i = _slicedToArray(errors[_i], 2),
+            index = _errors$_i[0],
+            error = _errors$_i[1];
+
+        if (error == true) {
+          totalError++;
+        }
+      }
+
+      if (totalError == 0 && !hasAnyFieldNull) {
+        disabled = false;
+      }
+
+      return disabled;
+    } //=============================================================
+
+  },
+  created: function created() {
+    this.loadTempData();
+  },
+  mounted: function mounted() {},
+  methods: {
+    //------------------ load Data -------------------------
+    loadTempData: function loadTempData() {
+      var _this = this;
+
+      this.$Progress.start();
+      axios.get('/api/temps').then(function (data) {
+        _this.form.role = data.data[0].value;
+        _this.form.startDate = data.data[1].value;
+        _this.form.endDate = data.data[2].value;
+        _this.form.currentYear = data.data[3].value;
+
+        _this.$Progress.finish();
+      });
+    },
+    //======================================================
+    //------------------ update data -----------------------
+    updateTempData: function updateTempData() {
+      var _this2 = this;
+
+      this.$Progress.start();
+      var currentDate = new Date();
+      var currentYear = currentDate.getFullYear();
+      axios.put('/api/temps/role', {
+        'value': this.form.role
+      }).then(function () {
+        axios.put('/api/temps/startDate', {
+          'value': _this2.form.startDate
+        }).then(function () {
+          axios.put('/api/temps/endDate', {
+            'value': _this2.form.endDate
+          }).then(function () {
+            axios.put('/api/temps/currentYear', {
+              'value': currentYear
+            }).then(function (data) {
+              toast({
+                type: 'success',
+                title: data.data.result
+              });
+
+              _this2.loadTempData();
+
+              _this2.$Progress.finish();
+            });
+          });
+        });
+      });
+    },
+    //======================================================
+    //------------------ validate date ---------------------
+    validateStartDate: function validateStartDate(selectedDate) {
+      var isCurrentYear = this.isCurrentYear(selectedDate);
+
+      if (!isCurrentYear) {
+        this.errorList.startYear = true;
+      } else {
+        this.errorList.startYear = false;
+      }
+    },
+    validateEndDate: function validateEndDate(startDate, endDate) {
+      var isCurrentYear = this.isCurrentYear(endDate);
+      var isAfterStartDate = this.isAfterStartDate(startDate, endDate);
+
+      if (!isCurrentYear) {
+        this.errorList.endYear = true;
+      } else {
+        this.errorList.endYear = false;
+      }
+
+      if (!isAfterStartDate) {
+        this.errorList.endDate = true;
+      } else {
+        this.errorList.endDate = false;
+      }
+    },
+    isCurrentYear: function isCurrentYear(selectedDate) {
+      var currentDate = new Date();
+      var currentYear = currentDate.getFullYear();
+      var selectDate = new Date(selectedDate);
+      var selectYear = selectDate.getFullYear();
+
+      if (currentYear == selectYear) {
+        return true;
+      }
+
+      return false;
+    },
+    isAfterStartDate: function isAfterStartDate(startDate, endDate) {
+      if (startDate < endDate) {
+        return true;
+      }
+
+      return false;
+    },
+    //======================================================
+    //---------------- validate null -----------------------
+    hasAnyFieldNull: function hasAnyFieldNull() {
+      var isRoleNull = this.form.role == "" || this.form.role == null;
+      var isStartDateNull = this.form.startDate == "" || this.form.startDate == null;
+      var isEndDateNull = this.form.endDate == "" || this.form.endDate == null;
+
+      if (isRoleNull || isStartDateNull || isEndDateNull) {
+        return true;
+      }
+
+      return false;
+    },
+    //======================================================
+    //-------------------- validate select option ----------
+    isUpdatedCurrentYear: function isUpdatedCurrentYear() {
+      var currentDate = new Date();
+      var currentYear = currentDate.getFullYear();
+
+      if (this.form.currentYear == currentYear) {
+        return true;
+      }
+
+      return false;
+    } //======================================================
+
   }
 });
 
@@ -4379,7 +4665,7 @@ __webpack_require__.r(__webpack_exports__);
       // get func condition of user from database
       // get list funcs of user
       //example
-      var listFunction = ['adm', 'cla'];
+      var listFunction = ['adm', 'fac'];
       listFunction.push(this.student_info.role_id);
       console.log(listFunction);
       var startDate = '2019-04-22';
@@ -58034,6 +58320,57 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateAllScoreBoard.vue?vue&type=template&id=e823c484&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CreateAllScoreBoard.vue?vue&type=template&id=e823c484& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("div", { staticClass: "form-group" }, [
+        _c("h1", { staticClass: "text-primary" }, [_vm._v("Tiến Trình")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "progress" }, [
+          _c(
+            "div",
+            { staticClass: "progress-bar", staticStyle: { width: "100%" } },
+            [_vm._v("100%")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Bắt đầu")]),
+        _vm._v(" "),
+        _c("button", { staticClass: "btn btn-primary" }, [_vm._v("Tiếp tục")]),
+        _vm._v(" "),
+        _c("h5", { staticClass: "text-danger" }, [_vm._v("Thành công")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Dashboard.vue?vue&type=template&id=040e2ab9&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Dashboard.vue?vue&type=template&id=040e2ab9& ***!
@@ -60028,6 +60365,185 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EventStoreScoreBoards.vue?vue&type=template&id=188a613d&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EventStoreScoreBoards.vue?vue&type=template&id=188a613d& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "form-group col-lg-12" }, [
+        _c("label", [_vm._v("Chọn vai trò cho đánh giá")]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.form.role,
+                expression: "form.role"
+              }
+            ],
+            staticClass: "form-control",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.form,
+                  "role",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "stu" } }, [_vm._v("Sinh viên")]),
+            _vm._v(" "),
+            _c(
+              "option",
+              { attrs: { value: "cla", disabled: !_vm.isShowedOption } },
+              [_vm._v("Chi đoàn lớp")]
+            ),
+            _vm._v(" "),
+            _c(
+              "option",
+              { attrs: { value: "fac", disabled: !_vm.isShowedOption } },
+              [_vm._v("Chi đoàn khoa")]
+            ),
+            _vm._v(" "),
+            _c(
+              "option",
+              { attrs: { value: "sch", disabled: !_vm.isShowedOption } },
+              [_vm._v("Đoàn trường")]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group col-lg-6 col-md-12" }, [
+        _c("label", [_vm._v("Chọn ngày bắt đầu")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.form.startDate,
+              expression: "form.startDate"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "date" },
+          domProps: { value: _vm.form.startDate },
+          on: {
+            change: function($event) {
+              _vm.validateStartDate(_vm.form.startDate)
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.form, "startDate", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.invalidStartYear
+          ? _c("span", { staticClass: "text-danger" }, [
+              _vm._v("Vui lòng chọn năm hiện tại")
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group col-lg-6 col-md-12" }, [
+        _c("label", [_vm._v("Chọn ngày kết thúc")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.form.endDate,
+              expression: "form.endDate"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "date" },
+          domProps: { value: _vm.form.endDate },
+          on: {
+            change: function($event) {
+              _vm.validateEndDate(_vm.form.startDate, _vm.form.endDate)
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.form, "endDate", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.invalidEndYear
+          ? _c("span", { staticClass: "text-danger" }, [
+              _vm._v("Vui lòng chọn năm hiện tại")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.invalidEndDate
+          ? _c("span", { staticClass: "text-danger" }, [
+              _vm._v("Vui lòng chọn ngày sau ngày bắt đầu")
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group col-lg-12" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { disabled: _vm.hasErrors },
+            on: {
+              click: function($event) {
+                _vm.updateTempData()
+              }
+            }
+          },
+          [_vm._v("Xác nhận")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12" }, [_c("AllScoreBoard")], 1)
+    ])
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -83604,6 +84120,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/CreateAllScoreBoard.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/CreateAllScoreBoard.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateAllScoreBoard_vue_vue_type_template_id_e823c484___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateAllScoreBoard.vue?vue&type=template&id=e823c484& */ "./resources/js/components/CreateAllScoreBoard.vue?vue&type=template&id=e823c484&");
+/* harmony import */ var _CreateAllScoreBoard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateAllScoreBoard.vue?vue&type=script&lang=js& */ "./resources/js/components/CreateAllScoreBoard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CreateAllScoreBoard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateAllScoreBoard_vue_vue_type_template_id_e823c484___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateAllScoreBoard_vue_vue_type_template_id_e823c484___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/CreateAllScoreBoard.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/CreateAllScoreBoard.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/CreateAllScoreBoard.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateAllScoreBoard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateAllScoreBoard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateAllScoreBoard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateAllScoreBoard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/CreateAllScoreBoard.vue?vue&type=template&id=e823c484&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/CreateAllScoreBoard.vue?vue&type=template&id=e823c484& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateAllScoreBoard_vue_vue_type_template_id_e823c484___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateAllScoreBoard.vue?vue&type=template&id=e823c484& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateAllScoreBoard.vue?vue&type=template&id=e823c484&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateAllScoreBoard_vue_vue_type_template_id_e823c484___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateAllScoreBoard_vue_vue_type_template_id_e823c484___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Dashboard.vue":
 /*!***********************************************!*\
   !*** ./resources/js/components/Dashboard.vue ***!
@@ -84100,6 +84685,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EvaluateProfile_vue_vue_type_template_id_5998eb35_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/EventStoreScoreBoards.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/EventStoreScoreBoards.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _EventStoreScoreBoards_vue_vue_type_template_id_188a613d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EventStoreScoreBoards.vue?vue&type=template&id=188a613d& */ "./resources/js/components/EventStoreScoreBoards.vue?vue&type=template&id=188a613d&");
+/* harmony import */ var _EventStoreScoreBoards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EventStoreScoreBoards.vue?vue&type=script&lang=js& */ "./resources/js/components/EventStoreScoreBoards.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _EventStoreScoreBoards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EventStoreScoreBoards_vue_vue_type_template_id_188a613d___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _EventStoreScoreBoards_vue_vue_type_template_id_188a613d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/EventStoreScoreBoards.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/EventStoreScoreBoards.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/EventStoreScoreBoards.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EventStoreScoreBoards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./EventStoreScoreBoards.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EventStoreScoreBoards.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EventStoreScoreBoards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/EventStoreScoreBoards.vue?vue&type=template&id=188a613d&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/EventStoreScoreBoards.vue?vue&type=template&id=188a613d& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EventStoreScoreBoards_vue_vue_type_template_id_188a613d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./EventStoreScoreBoards.vue?vue&type=template&id=188a613d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EventStoreScoreBoards.vue?vue&type=template&id=188a613d&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EventStoreScoreBoards_vue_vue_type_template_id_188a613d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EventStoreScoreBoards_vue_vue_type_template_id_188a613d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -85144,6 +85798,10 @@ var routes = [{
 {
   path: '/bang-danh-gia/:student_id/:year',
   component: __webpack_require__(/*! ./components/ScoreBoard.vue */ "./resources/js/components/ScoreBoard.vue").default
+}, //event
+{
+  path: '/create-event-score-board/',
+  component: __webpack_require__(/*! ./components/EventStoreScoreBoards.vue */ "./resources/js/components/EventStoreScoreBoards.vue").default
 }];
 
 /***/ }),

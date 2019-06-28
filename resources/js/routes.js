@@ -23,6 +23,9 @@ export const routes = [
     //vue score board
     { path: '/bang-danh-gia/:student_id/:year', component: require('./components/ScoreBoard.vue').default},
 
+    //event
+    { path: '/create-event-score-board/', component: require('./components/EventStoreScoreBoards.vue').default},
+
 
 
 ];
