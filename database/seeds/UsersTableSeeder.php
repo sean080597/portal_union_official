@@ -34,14 +34,6 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
-                'name' => 'Admin Cam',
-                'email' => 'admincam@gmail.com',
-                'password' => bcrypt('123456'),
-                'role_id' => 'adm',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-            ],
-            [
                 'name' => 'Hội Sinh Viên',
                 'email' => 'hoisinhvien@gmail.com',
                 'password' => bcrypt('sean080597'),
@@ -74,7 +66,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
-            //user_id = 7
+            //user_id = 6
             [
                 'name' => 'LQC Doan Khoa',
                 'email' => 'cuong.luusean@gmail.com',
@@ -83,16 +75,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
-            //user_id = 8
-            [
-                'name' => 'LQC Doan Khoa Cam',
-                'email' => 'doankhoacam@gmail.com',
-                'password' => bcrypt('sean080597'),
-                'role_id' => 'fac',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-            ],
-            //user_id = 9
+            //user_id = 7
             [
                 'name' => 'TQC Chi Doan',
                 'email' => 'camcam1132000@gmail.com',
@@ -101,7 +84,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
-            //user_id = 10
+            //user_id = 8
             [
                 'name' => 'Nguyễn Thanh Đăng',
                 'email' => 'nguyenthanhdang1008@gmail.com',
@@ -110,7 +93,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
-            //user_id = 11
+            //user_id = 9
             [
                 'name' => 'Lê Đặng Phú',
                 'email' => 'phu250497@gmail.com',
@@ -323,6 +306,7 @@ class UsersTableSeeder extends Seeder
         self::insert_user_stu('Văn Trung Châu', 'vantrungchau2396@gmail.com', 'sean080597');
         self::insert_user_stu('Nguyễn Thị Ngọc Châu', 'nguyenthingocchau3348@gmail.com', 'sean080597');
         self::insert_user_stu('Đỗ Quán Châu', 'doquanchau3259@gmail.com', 'sean080597');
+        /*
         self::insert_user_stu('Nguyễn Đinh Ngọc Chen', 'nguyendinhngocchen0070@gmail.com', 'sean080597');
         self::insert_user_stu('Vũ Minh Chí', 'vuminhchi2584@gmail.com', 'sean080597');
         self::insert_user_stu('Hàng Thị Kim Chi', 'hangthikimchi3349@gmail.com', 'sean080597');
@@ -4305,5 +4289,6 @@ class UsersTableSeeder extends Seeder
         self::insert_user_stu('Văn Đình Tùng', 'vandinhtung2446@gmail.com',  'sean080597');
         self::insert_user_stu('Đặng Ngọc Nam', 'dangngocnam2526@gmail.com',  'sean080597');
         self::insert_user_stu('Nguyễn Gia Bảo', 'nguyengiabao2532@gmail.com',  'sean080597');
+        */
     }
 }

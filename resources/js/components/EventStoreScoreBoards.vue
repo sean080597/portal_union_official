@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <AllScoreBoard></AllScoreBoard>
+                <AllScoreBoard :currentYear="currentYear"></AllScoreBoard>
             </div>
         </div>    
     </div>
@@ -55,6 +55,10 @@
             }
         },
         computed: {
+            //------------------------ change ------------------------------
+            currentYear(){
+                return this.form.currentYear;
+            },
             //------------------------ validate select option --------------
             isShowedOption(){
                 if(this.isUpdatedCurrentYear()){
@@ -123,7 +127,7 @@
 
             //------------------ update data -----------------------
             updateTempData(){
-                this.$Progress.start()
+                this.$Progress.start() 
                 const currentDate = new Date()
                 const currentYear = currentDate.getFullYear()
                 axios.put('/api/temps/role',{'value':this.form.role})
@@ -144,10 +148,6 @@
                         })
                     })    
                 })
-                
-                
-                
-            
             },
             //======================================================
 

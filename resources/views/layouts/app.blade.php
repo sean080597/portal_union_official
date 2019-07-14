@@ -56,25 +56,7 @@
                     </div>
                     <h4>{{ auth()->user()->name }}</h4>
                 </section>
-                <ul class="list-unstyled components" id="test">
-                    <li class="active">
-                        <router-link to="/">Trang Chủ</router-link>
-                    </li>
-                    @can('isAdmin')
-                    <li>
-                        <router-link to="/developer">Developer</router-link>
-                    </li>
-                    <li>
-                        <a href="#quan-ly-admin" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Quản lý</a>
-                        <ul class="collapse list-unstyled" id="quan-ly-admin">
-                            <li><router-link to="/students-admin">Đoàn viên</router-link></li>
-                            <li><router-link to="/classrooms-admin">Lớp</router-link></li>
-                            <li><router-link to="/faculties-admin">Khoa</router-link></li>
-                            <li><router-link to="/users-admin">Tài khoản</router-link></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Thống Kê</a></li>
-                    @endcan
+                <ul class="list-unstyled components" id="test" style="display:none">
                     <li>
                         <a href="#thong-tin-dv" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">Thông tin đoàn viên</a>
                         <ul class="collapse list-unstyled" id="thong-tin-dv">
@@ -87,32 +69,11 @@
                                 <li><router-link to="/classrooms/{{ auth()->user()->getFaculty->id }}">Thông tin khoa</router-link></li>
                                 @endcan
                             @endcannot
-                            @can('isAdminOrAccSchool')
-                            <li><router-link to="/faculties">Thông tin trường</router-link></li>
-                            @endcan
+                          
                         </ul>
                     </li>
-                    <li>
-                        <a href="#ql-dv" class="dropdown-toggle" data-toggle="collapse" aria-expanded="false">
-                            ĐG đoàn viên
-                        </a>
-                        <ul class="collapse list-unstyled" id="ql-dv">
-                            @cannot('isAdminOrAccSchool')
-                                <li><router-link to="/evaluate-profile/{{ auth()->user()->student->id }}">ĐG cá nhân</router-link></li>
-                                @cannot('isAccStudent')
-                                <li><router-link to="/evaluate-classroom-dashboard/{{ auth()->user()->student->class_room_id }}">Lớp quản lý</router-link></li>
-                                @endcannot
-                                @can('isAccFaculty')
-                                <li><router-link to="/evaluate-faculty-dashboard/{{ auth()->user()->getFaculty->id }}">Khoa quản lý</router-link></li>
-                                @endcan
-                            @endcannot
-                            @can('isAdminOrAccSchool')
-                            <li><a href="#">Trường quản lý</a></li>
-                            @endcan
-                        </ul>
-                    </li>
-                    <li><a href="#">Hỗ trợ</a></li>
                 </ul>
+                <sidebar-link></sidebar-link>
             </nav><!-- End nav sidebar -->
             <div id="content" class="container-fluid">
             <!-- Setting -------------------------------------------------->

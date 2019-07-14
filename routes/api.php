@@ -30,6 +30,13 @@ Route::apiResources(['school_activities' => 'API\SchoolsActivityController']);
 Route::apiResources(['self_activities' => 'API\SelfActivityController']);
 Route::apiResources(['temps' => 'API\TempController']);
 
+//__________________________ Event _______________________________
+
+Route::get('/createEvaluationEvent/{id}/{year}', 'API\EventController@createEvaluationEvent');
+Route::get('/getTotalStudent', 'API\EventController@getTotalStudent');
+Route::get('/getCurrentScoreboard/{year}', 'API\EventController@getCurrentScoreboard');
+Route::get('/getMissCurrentScoreboard/{year}', 'API\EventController@getMissCurrentScoreboard');
+
 // _________________________ score board __________________________
     Route::apiResources(['score_board' => 'API\ScoreBoardController']);
     Route::get('/showScore/{student_id}/{currentYear}','API\ScoreBoardController@showScore');
@@ -38,6 +45,16 @@ Route::apiResources(['temps' => 'API\TempController']);
     Route::post('/storeSelfActivitiesScore/{scoreBoard_id}/{selfActivity_id}','API\ScoreBoardController@storeSelfActivityScore');
     Route::put('/updateSelfActivitiesScore/{scoreBoard_id}/{selfActivity_id}','API\ScoreBoardController@updateSelfActivityScore');
 
+    Route::get('/getReportByClassID/{class_id}', 'API\ScoreBoardController@getReportByClassID');
+    Route::get('/getReportByFaculty/{fac_id}', 'API\ScoreBoardController@getReportByFaculty');
+    Route::get('/getReportBySchool', 'API\ScoreBoardController@getReportBySchool');
+
+    Route::get('/getMyTaskByClassID/{class_id}', 'API\ScoreBoardController@getMyTaskByClassID');
+    Route::get('/getMyTaskByFaculty/{fac_id}', 'API\ScoreBoardController@getMyTaskByFaculty');
+    Route::get('/getMyTaskBySchool', 'API\ScoreBoardController@getMyTaskBySchool');
+
+    Route::get('/getStatisticScoreBoard/{year}', 'API\ScoreBoardController@getStatisticScoreBoard');
+    Route::get('/getAllAvgScoreYear', 'API\ScoreBoardController@getAllAvgScoreYear');
 
 //____________________________ image ______________________________
 

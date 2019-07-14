@@ -13,11 +13,11 @@ class ScoreBoard extends Model
         'confirmingClass',
         'confirmingFaculty',
         'confirmingSchool',
-        'user_id'
+        'student_id'
     ];
 
     protected $hidden = [
-        'user_id'
+        'student_id'
     ];
 
     public function schoolsActivities(){
