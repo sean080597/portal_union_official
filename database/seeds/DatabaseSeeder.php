@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UpdateFacClaTableSeeder::class);
         $this->call(SchoolsActitvitiesTableSeeder::class);
         $this->call(SelfActitvitiesTableSeeder::class);
-        $this->call(ScoreBoardTableSeeder::class);
-        $this->call(ScoreBoardSchoolsActivitiesTableSeeder::class);
-        $this->call(ScoreBoardSelfActivitiesTableSeeder::class);
+        //$this->call(ScoreBoardTableSeeder::class);
+        //$this->call(ScoreBoardSchoolsActivitiesTableSeeder::class);
+        //$this->call(ScoreBoardSelfActivitiesTableSeeder::class);
+        $this->call(TempSeeder::class);
     }
 }

@@ -28,6 +28,14 @@ Route::apiResources(['criteria_selfregis' => 'API\CriteriaSelfregisController'])
 //-------------------------- cam -------------------------
 Route::apiResources(['school_activities' => 'API\SchoolsActivityController']);
 Route::apiResources(['self_activities' => 'API\SelfActivityController']);
+Route::apiResources(['temps' => 'API\TempController']);
+
+//__________________________ Event _______________________________
+
+Route::get('/createEvaluationEvent/{id}/{year}', 'API\EventController@createEvaluationEvent');
+Route::get('/getTotalStudent', 'API\EventController@getTotalStudent');
+Route::get('/getCurrentScoreboard/{year}', 'API\EventController@getCurrentScoreboard');
+Route::get('/getMissCurrentScoreboard/{year}', 'API\EventController@getMissCurrentScoreboard');
 
 // _________________________ score board __________________________
     Route::apiResources(['score_board' => 'API\ScoreBoardController']);

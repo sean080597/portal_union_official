@@ -281,6 +281,7 @@
 export default {
     data(){
         return {
+            curUser : this.$gate.user,
             checkToShow : false, //show score board page if it has a student
             isShowedSchoolInfo : false, // show email of fac, class, school
             student_info : {},   // infomation of student
@@ -289,7 +290,11 @@ export default {
             year: this.$route.params.year,
             displayBtnUpload: false,
             deleteImages: [],
-
+            event : {
+                role: '',
+                startDate: '',
+                endDate: ''
+            },
             //------------
             images: [],
             image:'',
@@ -337,6 +342,9 @@ export default {
     },
     created() {
         this.loadStudent()
+        this.getEventRole()
+        this.getEventStartDate()
+        this.getEventEndDate()
     },
     mounted() {
         
@@ -538,7 +546,7 @@ export default {
             //funcs: list functions of user
             //conFunc: condition of function
             for(let func of funcs){
-                if(func == conFunc){
+                if(func == conFunc || func == 'adm'){
                     return 1
                 }
             }
@@ -552,12 +560,12 @@ export default {
             // get list funcs of user
 
             //example
-            const listFunction = ['adm','cla']
-            listFunction.push(this.student_info.role_id)
+            const listFunction = [this.curUser.role_id]
+            //listFunction.push(this.student_info.role_id)
             console.log(listFunction)
-            const startDate = '2019-04-22'
-            const endDate = '2019-06-30' // ngay bat dau va ket thuc
-            const conFunc = 'cla' //voi dieu kien la chuc nang class
+            const startDate = this.event.startDate
+            const endDate = this.event.endDate
+            const conFunc = this.event.role
             //end example
 
             const isRightDate = this.checkDate(startDate, endDate)
@@ -688,6 +696,26 @@ export default {
         },
 
         
+        //======================================================================
+        //--------------- get event temp --------------------------------------------
+        getEventRole(){
+            axios.get('/api/temps/role')
+            .then((data) => {
+                this.event.role = data.data.value
+            })
+        },
+        getEventStartDate(){
+            axios.get('/api/temps/startDate')
+            .then((data) => {
+                this.event.startDate = data.data.value
+            })
+        },
+        getEventEndDate(){
+            axios.get('/api/temps/endDate')
+            .then((data) => {
+                this.event.endDate = data.data.value
+            })
+        }
         //======================================================================
     },
 }

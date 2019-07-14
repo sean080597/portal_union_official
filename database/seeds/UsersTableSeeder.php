@@ -306,6 +306,7 @@ class UsersTableSeeder extends Seeder
         self::insert_user_stu('Văn Trung Châu', 'vantrungchau2396@gmail.com', 'sean080597');
         self::insert_user_stu('Nguyễn Thị Ngọc Châu', 'nguyenthingocchau3348@gmail.com', 'sean080597');
         self::insert_user_stu('Đỗ Quán Châu', 'doquanchau3259@gmail.com', 'sean080597');
+        /*
         self::insert_user_stu('Nguyễn Đinh Ngọc Chen', 'nguyendinhngocchen0070@gmail.com', 'sean080597');
         self::insert_user_stu('Vũ Minh Chí', 'vuminhchi2584@gmail.com', 'sean080597');
         self::insert_user_stu('Hàng Thị Kim Chi', 'hangthikimchi3349@gmail.com', 'sean080597');
@@ -4288,5 +4289,6 @@ class UsersTableSeeder extends Seeder
         self::insert_user_stu('Văn Đình Tùng', 'vandinhtung2446@gmail.com',  'sean080597');
         self::insert_user_stu('Đặng Ngọc Nam', 'dangngocnam2526@gmail.com',  'sean080597');
         self::insert_user_stu('Nguyễn Gia Bảo', 'nguyengiabao2532@gmail.com',  'sean080597');
+        */
     }
 }

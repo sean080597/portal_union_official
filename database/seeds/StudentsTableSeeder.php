@@ -27,7 +27,12 @@ class StudentsTableSeeder extends Seeder
 
     public function run()
     {
-        $count = 6;
+        $count = 1;
+        self::insert_stu('admin00001', 'admin',"", $count++);
+        self::insert_stu('hoisv00001', 'Hội sinh viên', "", $count++);
+        self::insert_stu('bttruong01', 'Bí Thư Trường', "", $count++);
+        self::insert_stu('pbttruong1', 'P.Bí Thư Trường', "", $count++);
+        self::insert_stu('pbttruong2', 'P.Bí Thư Trường', "", $count++);
         self::insert_stu('1511061004', 'Lưu Quốc Cường', "15DTH12", $count++);
         self::insert_stu('1511060993', 'Trương Quốc Cẩm', "15DTH12", $count++);
         self::insert_stu('1511061043', 'Nguyễn Thanh Đăng', "15DTH12", $count++);
@@ -234,6 +239,7 @@ class StudentsTableSeeder extends Seeder
         self::insert_stu('1811062396', 'Văn Trung Châu', '18DTHD5', $count++);
         self::insert_stu('1811063348', 'Nguyễn Thị Ngọc Châu', '18DTHD5', $count++);
         self::insert_stu('1811063259', 'Đỗ Quán Châu', '18DTHD6', $count++);
+        /*
         self::insert_stu('1811060070', 'Nguyễn Đinh Ngọc Chen', '18DTHA2', $count++);
         self::insert_stu('1811062584', 'Vũ Minh Chí', '18DTHC6', $count++);
         self::insert_stu('1811063349', 'Hàng Thị Kim Chi', '18DTHE1', $count++);
@@ -4216,5 +4222,6 @@ class StudentsTableSeeder extends Seeder
         self::insert_stu('1711062446', 'Văn Đình Tùng', '17DTHD3', $count++);
         self::insert_stu('1711062526', 'Đặng Ngọc Nam', '17DTHD3', $count++);
         self::insert_stu('1711062532', 'Nguyễn Gia Bảo', '17DTHD3', $count++);
+        */
     }
 }

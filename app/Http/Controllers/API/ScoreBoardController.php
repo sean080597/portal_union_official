@@ -39,7 +39,8 @@ class ScoreBoardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $scoreBoard = ScoreBoard::create(['student_id' => $request->student_id, 'year' => $request->year]);
+        return $scoreBoard->id;
     }
 
     /**
@@ -98,7 +99,7 @@ class ScoreBoardController extends Controller
         return ['school' => $schoolScores, 'self' => $selfScores];
     }
 
-    public function storeSchoolsActivityScore($scoreBoard_id, $schoolsActivity_id, Request $request){
+    public function storeSchoolsActivityScore($scoreBoard_id, $schoolsActivity_id){
         $scoreBoard = ScoreBoard::findOrFail($scoreBoard_id);
         $scoreBoard->schoolsActivities()->attach($schoolsActivity_id,[
             'average_score' => 0,
@@ -122,7 +123,7 @@ class ScoreBoardController extends Controller
             'result' => 'Update thành công.'
         ],200);
     }
-    public function storeSelfActivityScore($scoreBoard_id, $selfActivity_id, Request $request){
+    public function storeSelfActivityScore($scoreBoard_id, $selfActivity_id){
         $scoreBoard = ScoreBoard::findOrFail($scoreBoard_id);
         $scoreBoard->selfActivities()->attach($selfActivity_id,[
             'activity_content' => '',
@@ -147,6 +148,10 @@ class ScoreBoardController extends Controller
         return response([
             'result' => 'Update thành công.'
         ],200);
+    }
+
+    public function getTotalCurrentScoreBoard(){
+
     }
 
     //========================== Report ========================================

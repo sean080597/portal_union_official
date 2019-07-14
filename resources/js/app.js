@@ -106,6 +106,7 @@ Vue.component(
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('not-found', require('./components/NotFound.vue').default);
+Vue.component('sidebar-link', require('./components/SidebarLink.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
