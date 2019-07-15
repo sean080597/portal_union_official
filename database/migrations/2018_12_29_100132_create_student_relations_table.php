@@ -14,7 +14,7 @@ class CreateStudentRelationsTable extends Migration
     public function up()
     {
         Schema::create('student_relations', function (Blueprint $table) {
-            $table->char('student_id', 10);
+            $table->string('student_id', 10);
             $table->integer('relation_id')->unsigned();
             $table->primary(array('student_id', 'relation_id'));
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');

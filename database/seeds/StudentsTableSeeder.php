@@ -28,11 +28,11 @@ class StudentsTableSeeder extends Seeder
     public function run()
     {
         $count = 1;
-        self::insert_stu('admin00001', 'admin',"", $count++);
-        self::insert_stu('hoisv00001', 'Hội sinh viên', "", $count++);
-        self::insert_stu('bttruong01', 'Bí Thư Trường', "", $count++);
-        self::insert_stu('pbttruong1', 'P.Bí Thư Trường', "", $count++);
-        self::insert_stu('pbttruong2', 'P.Bí Thư Trường', "", $count++);
+        self::insert_stu('1011000001', 'admin',"", $count++);
+        self::insert_stu('1011000002', 'Hội sinh viên', "", $count++);
+        self::insert_stu('1011000003', 'Bí Thư Trường', "", $count++);
+        self::insert_stu('1011000004', 'P.Bí Thư Trường', "", $count++);
+        self::insert_stu('1011000005', 'P.Bí Thư Trường', "", $count++);
         self::insert_stu('1511061004', 'Lưu Quốc Cường', "15DTH12", $count++);
         self::insert_stu('1511060993', 'Trương Quốc Cẩm', "15DTH12", $count++);
         self::insert_stu('1511061043', 'Nguyễn Thanh Đăng', "15DTH12", $count++);

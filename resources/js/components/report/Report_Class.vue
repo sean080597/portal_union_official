@@ -37,9 +37,9 @@
                             <span class="badge badge-pill badge-warning" v-else>Chưa xong</span>
                         </td>
                         <td class="text-center">
-                            <router-link :to="'/bang-danh-gia/' + stu.id + '/' + new Date().getFullYear()" class="text-primary">
-                            <i class="far fa-eye"></i>
-                        </router-link>
+                            <router-link :to="'/bang-danh-gia/' + stu.id + '/' + new Date().getFullYear()" class="text-primary" style="visibility: hidden;">
+                                <i class="far fa-eye"></i>
+                            </router-link>
                         </td>
                         <td class="text-center">
                             <span class="badge badge-pill badge-secondary">note</span>

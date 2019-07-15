@@ -105,8 +105,9 @@ export default {
         },
         async insertListScoreboard(){
             this.isRun = true
+            let count = 0
             for(let student of this.listStudentId){
-                setTimeout(function(){console.log('runing...')},2000)
+                setTimeout(function(){console.log(++count)},2000)
                 const {data} = await axios.get('/api/createEvaluationEvent/' + student.id + '/' + this.currentYear)
                 this.current++
             }

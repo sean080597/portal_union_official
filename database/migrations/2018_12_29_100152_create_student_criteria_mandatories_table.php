@@ -15,7 +15,7 @@ class CreateStudentCriteriaMandatoriesTable extends Migration
     {
         Schema::create('student_criteria_mandatories', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->char('student_id', 10);
+            $table->string('student_id', 10);
             $table->integer('criteria_id')->unsigned();
             $table->string('self_assessment', 30);
             $table->tinyInteger('mark_student')->unsigned()->default('0');

@@ -26,7 +26,6 @@
                 Kiểm tra đánh giá
             </a>
             <ul class="collapse list-unstyled" id="ql-dg1">
-                <li v-if="isNotSchool"><router-link :to="getStudentReport">Đánh giá cá nhân</router-link></li>
                 <li v-if="isClass">
                     <router-link :to="getClassReport">Kiểm tra lớp</router-link>
                 </li>
@@ -39,11 +38,13 @@
                 Công việc của tôi
             </a>
             <ul class="collapse list-unstyled" id="ql-cv1">
+                <li v-if="isNotSchool"><router-link :to="getStudentReport">Công việc của tôi</router-link></li>
                 <li v-if="isClass"><router-link :to="getClassTask">Công việc của tôi (lớp)</router-link></li>
                 <li v-if="isFaculty"><router-link :to="getFacultyTask">Công việc của tôi (khoa)</router-link></li>
                 <li v-if="isSchool"><router-link to="/mytask-school">Công việc của tôi (trường)</router-link></li>
             </ul>
         </li>
+        <li v-if="isSchool"><router-link to="/create-event-score-board">Cài đặt đánh giá</router-link></li>
         <li v-if="isSchool"><router-link to="/statistic">Thống kê</router-link></li>
     </ul>
 </template>
@@ -62,37 +63,40 @@ export default {
             return false
         },
         isNotSchool(){
-            if(this.$gate.isAccSchool()){
+            if(this.$gate.isAccSchool() || this.$gate.isAdmin()){
                 return false
             }
             return true
         },
         isSchool(){
-            if(this.isAdmin || this.$gate.isAccSchool()){
+            if(this.$gate.isAdmin() || this.$gate.isAccSchool()){
                 return true
             }
             return false
         },
         isFaculty(){
-            if(this.isAdmin || this.$gate.isAccFaculty()){
+            if(this.$gate.isAccFaculty()){
                 return true
             }
             return false
         },
         isClass(){
-            if(this.isAdmin || this.$gate.isAccClass()){
+            if(this.$gate.isAccClass()){
                 return true
             }
             return false
         },
         isStudent(){
-            if(this.isAdmin || this.$gate.isAccStudent()){
+            if(this.$gate.isAccStudent()){
                 return true
             }
             return false
         },
         getUserProfile(){
-            return {path : '/student-profile/' + this.curUser.student.id}
+            if(!this.isAdmin){
+                return {path : '/student-profile/' + this.curUser.student.id}
+            }
+            return {path : '/student-profile/'}
         },
         getClassProfile(){
             return {path : '/student-profile/' + this.curUser.student.class_room_id}

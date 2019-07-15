@@ -31230,82 +31230,83 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _insertListScoreboard = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, student, _ref, data;
+        var count, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, student, _ref, data;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 this.isRun = true;
+                count = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 4;
+                _context.prev = 5;
                 _iterator = this.listStudentId[Symbol.iterator]();
 
-              case 6:
+              case 7:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 17;
+                  _context.next = 18;
                   break;
                 }
 
                 student = _step.value;
                 setTimeout(function () {
-                  console.log('runing...');
+                  console.log(++count);
                 }, 2000);
-                _context.next = 11;
+                _context.next = 12;
                 return axios.get('/api/createEvaluationEvent/' + student.id + '/' + this.currentYear);
 
-              case 11:
+              case 12:
                 _ref = _context.sent;
                 data = _ref.data;
                 this.current++;
 
-              case 14:
+              case 15:
                 _iteratorNormalCompletion = true;
-                _context.next = 6;
+                _context.next = 7;
                 break;
 
-              case 17:
-                _context.next = 23;
+              case 18:
+                _context.next = 24;
                 break;
 
-              case 19:
-                _context.prev = 19;
-                _context.t0 = _context["catch"](4);
+              case 20:
+                _context.prev = 20;
+                _context.t0 = _context["catch"](5);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 23:
-                _context.prev = 23;
+              case 24:
                 _context.prev = 24;
+                _context.prev = 25;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 26:
-                _context.prev = 26;
+              case 27:
+                _context.prev = 27;
 
                 if (!_didIteratorError) {
-                  _context.next = 29;
+                  _context.next = 30;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 29:
-                return _context.finish(26);
-
               case 30:
-                return _context.finish(23);
+                return _context.finish(27);
 
               case 31:
+                return _context.finish(24);
+
+              case 32:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[4, 19, 23, 31], [24,, 26, 30]]);
+        }, _callee, this, [[5, 20, 24, 32], [25,, 27, 31]]);
       }));
 
       function insertListScoreboard() {
@@ -33913,7 +33914,20 @@ __webpack_require__.r(__webpack_exports__);
     //------------------------ submit form ---------------------------------
     submitForm: function submitForm() {
       var totalScore = this.caculateTotalScore();
-      var currentRole = [0, 0, 1, 0]; //use function
+      var role = this.curUser.role_id;
+      var currentRole = [0, 0, 0, 0]; //use function
+
+      if (role == 'adm') {
+        currentRole = [1, 1, 1, 1];
+      } else if (role == 'sch') {
+        currentRole[3] = 1;
+      } else if (role == 'fac') {
+        currentRole[2] = 1;
+      } else if (role == 'cla') {
+        currentRole[1] = 1;
+      } else if (role == 'stu') {
+        currentRole[0] = 1;
+      }
 
       var score_board_id = this.form.school_activities[0].pivot.score_board_id;
       axios.put('/api/score_board/' + score_board_id, {
@@ -34070,6 +34084,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -34085,43 +34100,49 @@ __webpack_require__.r(__webpack_exports__);
       return false;
     },
     isNotSchool: function isNotSchool() {
-      if (this.$gate.isAccSchool()) {
+      if (this.$gate.isAccSchool() || this.$gate.isAdmin()) {
         return false;
       }
 
       return true;
     },
     isSchool: function isSchool() {
-      if (this.isAdmin || this.$gate.isAccSchool()) {
+      if (this.$gate.isAdmin() || this.$gate.isAccSchool()) {
         return true;
       }
 
       return false;
     },
     isFaculty: function isFaculty() {
-      if (this.isAdmin || this.$gate.isAccFaculty()) {
+      if (this.$gate.isAccFaculty()) {
         return true;
       }
 
       return false;
     },
     isClass: function isClass() {
-      if (this.isAdmin || this.$gate.isAccClass()) {
+      if (this.$gate.isAccClass()) {
         return true;
       }
 
       return false;
     },
     isStudent: function isStudent() {
-      if (this.isAdmin || this.$gate.isAccStudent()) {
+      if (this.$gate.isAccStudent()) {
         return true;
       }
 
       return false;
     },
     getUserProfile: function getUserProfile() {
+      if (!this.isAdmin) {
+        return {
+          path: '/student-profile/' + this.curUser.student.id
+        };
+      }
+
       return {
-        path: '/student-profile/' + this.curUser.student.id
+        path: '/student-profile/'
       };
     },
     getClassProfile: function getClassProfile() {
@@ -94647,18 +94668,6 @@ var render = function() {
           "ul",
           { staticClass: "collapse list-unstyled", attrs: { id: "ql-dg1" } },
           [
-            _vm.isNotSchool
-              ? _c(
-                  "li",
-                  [
-                    _c("router-link", { attrs: { to: _vm.getStudentReport } }, [
-                      _vm._v("Đánh giá cá nhân")
-                    ])
-                  ],
-                  1
-                )
-              : _vm._e(),
-            _vm._v(" "),
             _vm.isClass
               ? _c(
                   "li",
@@ -94716,6 +94725,18 @@ var render = function() {
           "ul",
           { staticClass: "collapse list-unstyled", attrs: { id: "ql-cv1" } },
           [
+            _vm.isNotSchool
+              ? _c(
+                  "li",
+                  [
+                    _c("router-link", { attrs: { to: _vm.getStudentReport } }, [
+                      _vm._v("Công việc của tôi")
+                    ])
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
             _vm.isClass
               ? _c(
                   "li",
@@ -94754,6 +94775,20 @@ var render = function() {
           ]
         )
       ]),
+      _vm._v(" "),
+      _vm.isSchool
+        ? _c(
+            "li",
+            [
+              _c(
+                "router-link",
+                { attrs: { to: "/create-event-score-board" } },
+                [_vm._v("Cài đặt đánh giá")]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _vm.isSchool
         ? _c(
@@ -99959,6 +99994,7 @@ var render = function() {
                         "router-link",
                         {
                           staticClass: "text-primary",
+                          staticStyle: { visibility: "hidden" },
                           attrs: {
                             to:
                               "/bang-danh-gia/" +
