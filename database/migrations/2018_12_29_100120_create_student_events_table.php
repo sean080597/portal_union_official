@@ -14,7 +14,7 @@ class CreateStudentEventsTable extends Migration
     public function up()
     {
         Schema::create('student_events', function (Blueprint $table) {
-            $table->char('student_id', 10);
+            $table->string('student_id', 10);
             $table->integer('event_id')->unsigned();
             $table->primary(array('student_id', 'event_id'));
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');

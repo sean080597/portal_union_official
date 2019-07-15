@@ -15,7 +15,7 @@ class CreateStudentCriteriaSelregisTable extends Migration
     {
         Schema::create('student_criteria_selregis', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->char('student_id', 10);
+            $table->string('student_id', 10);
             $table->integer('criteria_id')->unsigned();
             $table->text('content_regis');
             $table->string('self_assessment', 30);

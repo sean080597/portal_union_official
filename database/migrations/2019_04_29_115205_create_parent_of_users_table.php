@@ -20,7 +20,7 @@ class CreateParentOfUsersTable extends Migration
             $table->char('phone', 10)->nullable();
             $table->string('job')->nullable();
             $table->boolean('sex')->nullable();//dad or mom
-            $table->char('student_id', 10);
+            $table->string('student_id', 10);
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->timestamps();
         });

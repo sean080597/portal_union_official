@@ -665,7 +665,19 @@ export default {
         //------------------------ submit form ---------------------------------
         submitForm(){
             let totalScore = this.caculateTotalScore()
-            let currentRole = [0,0,1,0] //use function
+            let role = this.curUser.role_id
+            let currentRole = [0,0,0,0] //use function
+            if(role == 'adm'){
+                currentRole = [1,1,1,1]
+            }else if(role == 'sch'){
+                currentRole[3] = 1
+            }else if(role == 'fac'){
+                currentRole[2] = 1
+            }else if(role == 'cla'){
+                currentRole[1] = 1
+            }else if(role == 'stu'){
+                currentRole[0] = 1
+            }
             let score_board_id = this.form.school_activities[0].pivot.score_board_id
             axios.put('/api/score_board/' + score_board_id,{
                 'averageScore':totalScore, 

@@ -21,7 +21,7 @@ class CreateScoreBoardsTable extends Migration
             $table->boolean('confirmingClass')->default(false);
             $table->boolean('confirmingFaculty')->default(false);
             $table->boolean('confirmingSchool')->default(false);
-            $table->char('student_id', 10);
+            $table->string('student_id', 10);
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->timestamps();
         });
