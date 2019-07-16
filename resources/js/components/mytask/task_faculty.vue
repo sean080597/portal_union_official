@@ -33,7 +33,7 @@
                   class="badge badge-pill badge-success"
                   v-if="item.evaluated == item.total"
                 >Đã đánh giá</span>
-                <span class="badge badge-pill badge-warning" v-else>Chưa đánh gía</span>
+                <span class="badge badge-pill badge-warning" v-else>Chưa đánh giá</span>
               </td>
               <td class="text-center">{{ item.evaluated }}/{{ item.total }}</td>
               <td class="text-center">

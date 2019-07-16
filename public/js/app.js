@@ -98558,7 +98558,7 @@ var render = function() {
                       : _c(
                           "span",
                           { staticClass: "badge badge-pill badge-warning" },
-                          [_vm._v("Chưa đánh gía")]
+                          [_vm._v("Chưa đánh giá")]
                         )
                   ]),
                   _vm._v(" "),
@@ -118145,8 +118145,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\BCKH\portal_union_official\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\BCKH\portal_union_official\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\portal_union_official\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\portal_union_official\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
